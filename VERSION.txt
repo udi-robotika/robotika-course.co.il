@@ -1,4 +1,9 @@
 ROBOTIKA-COURSE.co.il
+Current version: V52 (jokes.html only — other pages remain V51)
+Based on: V51
+Fix: images/jokes/arduino-joke-01.png resized to 70% of original dimensions (1254x1254 → 877x877, ~2.3MB → ~960KB), per Udi's request to shrink the joke image by 30%
+---
+ROBOTIKA-COURSE.co.il
 Current version: V51
 Based on: V49 (main site pages) / V50 (lesson-6, left untouched this round)
 Footer: version bumped to V51 across all 34 shared-nav pages + lessons/course-43 + makelab/july-2026 hub
