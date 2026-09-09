@@ -1,4 +1,11 @@
 ROBOTIKA-COURSE.co.il
+Current version: V47
+Based on: V46
+Footer: version bumped to V47 across all pages
+New: /course-july-2026/lesson-6/ — MAKELAB יהוד, שיעור 6 (ESP32 setup, servo motor, smart-bin project) + homework, noindex, unlisted
+Updated: /course-july-2026/ hub now links to lesson 6 (was an empty "coming soon" placeholder)
+---
+ROBOTIKA-COURSE.co.il
 Current version: V46
 Based on: V45
 Footer: version bumped to V46 across all pages

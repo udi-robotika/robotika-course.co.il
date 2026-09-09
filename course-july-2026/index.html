@@ -65,6 +65,7 @@
     background: #c7d1e0; color: #fff;
     display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.15rem;
   }
+  a.lesson-row .num { background: linear-gradient(135deg, var(--accent), var(--accent2)); }
   .lesson-row h3 { font-size: 1.1rem; margin-bottom: 3px; }
   .lesson-row p { color: var(--muted); font-size: 0.9rem; }
   .lesson-row .tag {
@@ -72,6 +73,9 @@
     border-radius: 999px; padding: 4px 12px; background: #eef1f6; color: var(--muted);
     white-space: nowrap;
   }
+  a.lesson-row .tag { background: rgba(34,211,238,0.1); color: var(--accent); }
+  a.lesson-row { transition: transform .15s, border-color .15s; }
+  a.lesson-row:hover { transform: translateY(-3px); border-color: var(--accent); }
   .lesson-row.upcoming { opacity: .6; }
 
   footer {
@@ -104,20 +108,22 @@
   </div>
 
   <div class="lessons-list">
-    <div class="lesson-row upcoming">
-      <div class="num">1</div>
+    <a class="lesson-row" href="/course-july-2026/lesson-6/">
+      <div class="num">6</div>
       <div>
-        <h3>שיעור 1</h3>
-        <p>הסיכום יתווסף כאן לאחר המפגש הראשון.</p>
+        <h3>שיעור 6 — ESP32, מנוע סרוו ופח חכם</h3>
+        <p>התקנת תמיכה ב-ESP32 ב-Arduino IDE, איך סרוו עובד, ובניית מנגנון פח חכם עם זרוע וסרוו.</p>
       </div>
-      <span class="tag">בקרוב</span>
-    </div>
+      <span class="tag">כולל שיעורי בית</span>
+    </a>
   </div>
+
+  <p style="text-align:center;color:var(--muted);font-size:.9rem;margin-top:18px">מפגשים קודמים ונוספים יתווספו כאן בהמשך.</p>
 </main>
 
 <footer>
   © 2026 קורס רובוטיקה וארדואינו — MAKELAB יהוד
-<span class="version-tag">גרסה V46</span></footer>
+<span class="version-tag">גרסה V47</span></footer>
 
 </body>
 </html>
