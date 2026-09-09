@@ -1,4 +1,11 @@
 ROBOTIKA-COURSE.co.il
+Current version: V50
+Based on: V49
+Note: this version bump applies only to /makelab/july-2026/lesson-6/index.html (per Udi's explicit request not to touch other pages this time) — footer version tag on all other pages remains V49
+Added: new section "מה זה בכלל ESP32?" to lesson 6 — history (Espressif, released Sept 2016, successor to ESP8266), why choose it over Arduino Uno (Wi-Fi/Bluetooth built in, 240MHz dual-core vs 16MHz single-core, ~520KB vs ~2KB RAM), full comparison table, and a 3.3V vs 5V safety warning
+No web images embedded (hotlinked images into a permanent public page risk breaking or copyright issues) — used an original comparison table/chips instead; flagged this decision to Udi
+---
+ROBOTIKA-COURSE.co.il
 Current version: V49
 Based on: V48
 Footer: version bumped to V49 across all pages

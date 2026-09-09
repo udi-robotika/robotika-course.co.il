@@ -21,13 +21,51 @@
 </head>
 <body>
   <header><div class="wrap"><span class="badge">MAKELAB יהוד · שיעור 6 מתוך 10</span><h1>ESP32, מנוע סרוו ו<span class="accent">פח חכם</span></h1><p>מהתקנת הלוח ועד תנועה מכנית מדויקת</p></div></header>
-  <nav class="subnav"><div class="wrap"><a href="/makelab/july-2026/">⟵ כל השיעורים</a><a href="#esp">מתחילים עם ESP32</a><a href="#servo">איך סרוו עובד?</a><a href="#build">הפח החכם</a><a href="#homework">שיעורי בית</a></div></nav>
+  <nav class="subnav"><div class="wrap"><a href="/makelab/july-2026/">⟵ כל השיעורים</a><a href="#what-is-esp32">מה זה ESP32?</a><a href="#esp">מתחילים עם ESP32</a><a href="#servo">איך סרוו עובד?</a><a href="#build">הפח החכם</a><a href="#homework">שיעורי בית</a></div></nav>
   <main class="wrap">
     <section class="card"><h2>מסלול השיעור</h2><div class="timeline"><div class="step"><b>1 · התקנה</b>הוספנו לתוכנת Arduino IDE תמיכה בלוחות ESP32.</div><div class="step"><b>2 · העלאה ראשונה</b>בחרנו ESP32 Dev Module והעלינו תוכנית בסיסית.</div><div class="step"><b>3 · סרוו</b>למדנו כיצד מנוע סרוו בנוי וכיצד שולטים בזווית שלו.</div><div class="step"><b>4 · בנייה</b>חיברנו זרוע לסרוו וקיבענו אותו למכסה הפח.</div></div></section>
 
-    <section class="card" id="esp"><h2><span class="num">1</span>מתחילים לעבוד עם ESP32</h2><p>כדי שתוכנת <b>Arduino IDE</b> תכיר את ה־ESP32, התקנו את חבילת הלוחות שלו דרך <b>Boards Manager</b>. ההורדה וההתקנה הראשונית עשויות להימשך זמן, משום שהחבילה כוללת כלי תכנות וקבצים רבים.</p><div class="grid"><article class="mini"><h3>בחירת הלוח</h3><p>בחרנו בתפריט הלוחות את <b>ESP32 Dev Module</b>. הבחירה אומרת לתוכנה לאיזה בקר אנחנו עומדים להעלות את הקוד.</p></article><article class="mini"><h3>בחירת החיבור</h3><p>בחרנו את יציאת ה־USB המתאימה והעלינו תוכנית בסיסית. כך בדקנו שהמחשב, הכבל והלוח מתקשרים.</p></article></div><aside class="note"><strong>טיפ:</strong> התקנת חבילת ה־ESP32 נעשית פעם אחת בכל מחשב. לאחר ההתקנה, העלאת תוכניות חדשות מהירה בהרבה.</aside></section>
+    <section class="card" id="what-is-esp32"><h2><span class="num">1</span>מה זה בכלל ESP32?</h2>
+      <p><b>ESP32</b> הוא שבב מיקרו-בקר (microcontroller) שמפתחת ומייצרת חברה סינית בשם <b>Espressif Systems</b>, ובו משתמשים עשרות יצרני לוחות ברחבי העולם (כולל הלוח שאנחנו עובדים איתו). הוא יצא לשוק לראשונה ב-<b>6 בספטמבר 2016</b>, כממשיך של דגם קודם וחלש יותר בשם <b>ESP8266</b>.</p>
+      <p>בשונה מארדואינו קלאסי (כמו Uno), שהוא בעיקר "מוח" פשוט ואמין לפרויקטים בסיסיים, ESP32 תוכנן מההתחלה בשביל עולם ה-<b>IoT</b> — מכשירים מחוברים לאינטרנט: מדבקת מזג אוויר חכמה, מצלמת אבטחה ביתית, רובוט שנשלט מהנייד, פח חכם שמדווח כשהוא מלא, ועוד.</p>
+      <div class="parts"><span class="part">Wi‑Fi מובנה</span><span class="part">Bluetooth (Classic + BLE)</span><span class="part">שני ליבות עיבוד</span><span class="part">עד 240MHz</span><span class="part">כ-520KB זיכרון RAM</span><span class="part">מחיר נמוך</span></div>
 
-    <section class="card" id="servo"><h2><span class="num">2</span>מהו מנוע סרוו?</h2><p>סרוו הוא מנגנון שיודע להגיע לזווית שנבקש ולשמור עליה. בסרוו קטן טיפוסי ניתן בדרך כלל לנוע בקירוב בין <b>0° ל־180°</b>, אך הטווח המדויק תלוי בדגם.</p><div class="parts"><span class="part">מנוע DC קטן</span><span class="part">גלגלי שיניים</span><span class="part">פוטנציומטר</span><span class="part">מעגל בקרה</span><span class="part">ציר יציאה</span></div><div class="signal"><div><b>ESP32</b><br>שולח פולסים המייצגים זווית</div><span class="arrow">←</span><div><b>מעגל הבקרה</b><br>משווה בין הזווית הרצויה לזווית שנמדדה</div><span class="arrow">←</span><div><b>מנוע + פוטנציומטר</b><br>נעים עד שהציר מגיע למקום הנכון</div></div><p>התקשורת מזכירה PWM, אך כאן משמעות <b>רוחב הפולס</b> היא הזווית הרצויה. בסרוו נפוץ נשלח פולס בערך כל 20 אלפיות השנייה.</p><aside class="note safe"><strong>חיבור בטוח:</strong> חוט האות מתחבר לפין מתאים ב־ESP32, אך את מתח הסרוו מומלץ לספק ממקור 5V מתאים — במיוחד תחת עומס. חובה לחבר <b>GND משותף</b> בין ספק הכוח ל־ESP32. אין לחבר את מתח הסרוו לפין 3.3V.</aside>
+      <h3 style="margin-top:22px">למה בוחרים ESP32 ולא ארדואינו רגיל?</h3>
+      <div class="grid">
+        <article class="mini"><h3>תקשורת אלחוטית מובנית</h3><p>ל-ESP32 יש <b>Wi‑Fi</b> ו-<b>Bluetooth</b> כבר בתוך השבב עצמו. לארדואינו Uno הרגיל אין בכלל תקשורת אלחוטית — כדי להוסיף אותה צריך רכיב הרחבה נפרד, עלות נוספת וחיווט נוסף.</p></article>
+        <article class="mini"><h3>הרבה יותר מהיר</h3><p>ESP32 עובד בתדר של עד <b>240 מגה-הרץ</b>, לעומת <b>16 מגה-הרץ</b> בלבד בארדואינו Uno — כלומר פי 15 מהר יותר בערך. יש לו גם <b>שתי ליבות עיבוד</b> (dual-core), כך שהוא יכול לבצע כמה משימות "במקביל".</p></article>
+        <article class="mini"><h3>הרבה יותר זיכרון</h3><p>לארדואינו Uno יש רק כ-2 קילובייט זיכרון עבודה (RAM). ל-ESP32 יש כ-520 קילובייט — פי מאות. זה מאפשר קוד מורכב, מסכי תצוגה, ושמירת נתונים בזמן ריצה בלי "להיגמר".</p></article>
+        <article class="mini"><h3>אותה סביבת תכנות</h3><p>למרות ההבדלים, אפשר לתכנת ESP32 באותה תוכנה בדיוק שכבר מכירים — <b>Arduino IDE</b>, ועם אותה שפה (C/C++). זו הסיבה שהמעבר אליו קל יחסית.</p></article>
+      </div>
+
+      <h3 style="margin-top:22px">טבלת השוואה מהירה</h3>
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;margin-top:8px;font-size:15px">
+          <thead>
+            <tr style="background:#f3fbfb">
+              <th style="text-align:right;padding:10px 12px;border-bottom:2px solid var(--line)">מאפיין</th>
+              <th style="text-align:right;padding:10px 12px;border-bottom:2px solid var(--line)">Arduino Uno</th>
+              <th style="text-align:right;padding:10px 12px;border-bottom:2px solid var(--line)">ESP32</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td style="padding:9px 12px;border-bottom:1px solid var(--line)">מעבד</td><td style="padding:9px 12px;border-bottom:1px solid var(--line)">ליבה אחת, 16MHz</td><td style="padding:9px 12px;border-bottom:1px solid var(--line)">שתי ליבות, עד 240MHz</td></tr>
+            <tr><td style="padding:9px 12px;border-bottom:1px solid var(--line)">זיכרון RAM</td><td style="padding:9px 12px;border-bottom:1px solid var(--line)">כ-2 קילובייט</td><td style="padding:9px 12px;border-bottom:1px solid var(--line)">כ-520 קילובייט</td></tr>
+            <tr><td style="padding:9px 12px;border-bottom:1px solid var(--line)">Wi‑Fi</td><td style="padding:9px 12px;border-bottom:1px solid var(--line)">אין (דרוש רכיב נפרד)</td><td style="padding:9px 12px;border-bottom:1px solid var(--line)">מובנה</td></tr>
+            <tr><td style="padding:9px 12px;border-bottom:1px solid var(--line)">Bluetooth</td><td style="padding:9px 12px;border-bottom:1px solid var(--line)">אין</td><td style="padding:9px 12px;border-bottom:1px solid var(--line)">מובנה (כולל BLE)</td></tr>
+            <tr><td style="padding:9px 12px;border-bottom:1px solid var(--line)">מתח לוגי</td><td style="padding:9px 12px;border-bottom:1px solid var(--line)">5V</td><td style="padding:9px 12px;border-bottom:1px solid var(--line)">3.3V</td></tr>
+            <tr><td style="padding:9px 12px">מספר פינים</td><td style="padding:9px 12px">14 דיגיטליים + 6 אנלוגיים</td><td style="padding:9px 12px">כ-30 פינים, ADC ברזולוציה גבוהה יותר (12-bit)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <aside class="note safe"><strong>שימו לב — הבדל חשוב במתח:</strong> ה-GPIO של ESP32 עובד ב-<b>3.3V</b> ולא ב-5V כמו בארדואינו. חיבור ישיר של רכיב שמוציא אות 5V לפין של ESP32 עלול <b>לפגוע בשבב לצמיתות</b>. כשעוברים מארדואינו ל-ESP32 — תמיד בודקים את מתח ההפעלה של כל רכיב לפני החיבור.</aside>
+      <p style="margin-top:14px;color:var(--muted);font-size:15px">לסיכום: ESP32 לא "מחליף" את הארדואינו הרגיל — הוא מתאים במיוחד לפרויקטים שדורשים חיבור לאינטרנט, מהירות, או זיכרון גדול, כמו הפח החכם שנבנה בהמשך השיעור.</p>
+    </section>
+
+    <section class="card" id="esp"><h2><span class="num">2</span>מתחילים לעבוד עם ESP32</h2><p>כדי שתוכנת <b>Arduino IDE</b> תכיר את ה־ESP32, התקנו את חבילת הלוחות שלו דרך <b>Boards Manager</b>. ההורדה וההתקנה הראשונית עשויות להימשך זמן, משום שהחבילה כוללת כלי תכנות וקבצים רבים.</p><div class="grid"><article class="mini"><h3>בחירת הלוח</h3><p>בחרנו בתפריט הלוחות את <b>ESP32 Dev Module</b>. הבחירה אומרת לתוכנה לאיזה בקר אנחנו עומדים להעלות את הקוד.</p></article><article class="mini"><h3>בחירת החיבור</h3><p>בחרנו את יציאת ה־USB המתאימה והעלינו תוכנית בסיסית. כך בדקנו שהמחשב, הכבל והלוח מתקשרים.</p></article></div><aside class="note"><strong>טיפ:</strong> התקנת חבילת ה־ESP32 נעשית פעם אחת בכל מחשב. לאחר ההתקנה, העלאת תוכניות חדשות מהירה בהרבה.</aside></section>
+
+    <section class="card" id="servo"><h2><span class="num">3</span>מהו מנוע סרוו?</h2><p>סרוו הוא מנגנון שיודע להגיע לזווית שנבקש ולשמור עליה. בסרוו קטן טיפוסי ניתן בדרך כלל לנוע בקירוב בין <b>0° ל־180°</b>, אך הטווח המדויק תלוי בדגם.</p><div class="parts"><span class="part">מנוע DC קטן</span><span class="part">גלגלי שיניים</span><span class="part">פוטנציומטר</span><span class="part">מעגל בקרה</span><span class="part">ציר יציאה</span></div><div class="signal"><div><b>ESP32</b><br>שולח פולסים המייצגים זווית</div><span class="arrow">←</span><div><b>מעגל הבקרה</b><br>משווה בין הזווית הרצויה לזווית שנמדדה</div><span class="arrow">←</span><div><b>מנוע + פוטנציומטר</b><br>נעים עד שהציר מגיע למקום הנכון</div></div><p>התקשורת מזכירה PWM, אך כאן משמעות <b>רוחב הפולס</b> היא הזווית הרצויה. בסרוו נפוץ נשלח פולס בערך כל 20 אלפיות השנייה.</p><aside class="note safe"><strong>חיבור בטוח:</strong> חוט האות מתחבר לפין מתאים ב־ESP32, אך את מתח הסרוו מומלץ לספק ממקור 5V מתאים — במיוחד תחת עומס. חובה לחבר <b>GND משותף</b> בין ספק הכוח ל־ESP32. אין לחבר את מתח הסרוו לפין 3.3V.</aside>
       <h3 style="margin-top:24px">דוגמה: תנועה מ־0° עד 180° וחזרה</h3><pre><code>#include &lt;ESP32Servo.h&gt;
 
 Servo lidServo;
@@ -50,7 +88,7 @@ void loop() {
 }</code></pre><aside class="note"><strong>שימו לב:</strong> מספר הפין בדוגמה הוא הצעה בלבד. יש להתאים אותו לחיבור האמיתי בלוח שלכם ולהימנע מפינים שמיועדים לרכיבים אחרים.</aside></section>
 
 
-    <section class="card" id="build"><h2><span class="num">3</span>הפרויקט: פח חכם</h2><p>תכננו מנגנון שמרים את מכסה הפח בכ־<b>90°</b>. קיבענו את מנוע הסרוו לפח בעזרת דבק חם וחיברנו לציר מקל/זרוע מ־<b>RTPLA</b>. הזרוע מתרגמת את סיבוב הסרוו להרמת המכסה.</p><div class="grid"><article class="mini"><h3>מצב סגור</h3><p>הסרוו נמצא בזווית ההתחלתית והמכסה מונח על הפח.</p></article><article class="mini"><h3>מצב פתוח</h3><p>הסרוו נע לזווית שנבחרה — בערך 90° — והזרוע מרימה את המכסה.</p></article></div><pre><code>#include &lt;ESP32Servo.h&gt;
+    <section class="card" id="build"><h2><span class="num">4</span>הפרויקט: פח חכם</h2><p>תכננו מנגנון שמרים את מכסה הפח בכ־<b>90°</b>. קיבענו את מנוע הסרוו לפח בעזרת דבק חם וחיברנו לציר מקל/זרוע מ־<b>RTPLA</b>. הזרוע מתרגמת את סיבוב הסרוו להרמת המכסה.</p><div class="grid"><article class="mini"><h3>מצב סגור</h3><p>הסרוו נמצא בזווית ההתחלתית והמכסה מונח על הפח.</p></article><article class="mini"><h3>מצב פתוח</h3><p>הסרוו נע לזווית שנבחרה — בערך 90° — והזרוע מרימה את המכסה.</p></article></div><pre><code>#include &lt;ESP32Servo.h&gt;
 
 Servo lidServo;
 const int servoPin = 13;
@@ -66,12 +104,12 @@ void loop() {
   delay(2000);
 }</code></pre><aside class="note"><strong>השלב הנוכחי:</strong> עדיין אין חיישן. התוכנית מפעילה את הפח אוטומטית לפי זמן קבוע. בהמשך נוסיף חיישן שיזהה יד או אדם ורק אז יפתח את המכסה.</aside></section>
 
-    <section class="card" id="homework"><h2><span class="num">4</span>משימות לשיעורי הבית</h2><div class="homework"><article class="task"><span class="tag">חובה</span><h3>משימה 1 — בדיקת ESP32</h3><p>פתחו תוכנית חדשה, בחרו ESP32 Dev Module והעלו תוכנית בסיסית. כתבו לעצמכם איזה Port עבד.</p></article><article class="task"><span class="tag">חובה</span><h3>משימה 2 — שלוש זוויות</h3><p>הזיזו את הסרוו ל־0°, לאחר מכן ל־45°, לאחר מכן ל־90°, ובסוף חזרה ל־0°. כל מצב יישאר למשך שנייה.</p></article><article class="task"><span class="tag">חובה</span><h3>משימה 3 — לולאת תנועה</h3><p>כתבו לולאת <code>for</code> שמזיזה את הסרוו בהדרגה מ־0° עד 90°. לאחר מכן כתבו לולאה שמחזירה אותו.</p></article><article class="task"><span class="tag">חובה</span><h3>משימה 4 — כוונון המכסה</h3><p>מצאו את הזווית הנכונה לפתיחה מלאה בלי שהסרוו דוחף את המכסה מעבר לגבול המכני. תעדו את זווית הסגירה וזווית הפתיחה.</p></article></div></section>
+    <section class="card" id="homework"><h2><span class="num">5</span>משימות לשיעורי הבית</h2><div class="homework"><article class="task"><span class="tag">חובה</span><h3>משימה 1 — בדיקת ESP32</h3><p>פתחו תוכנית חדשה, בחרו ESP32 Dev Module והעלו תוכנית בסיסית. כתבו לעצמכם איזה Port עבד.</p></article><article class="task"><span class="tag">חובה</span><h3>משימה 2 — שלוש זוויות</h3><p>הזיזו את הסרוו ל־0°, לאחר מכן ל־45°, לאחר מכן ל־90°, ובסוף חזרה ל־0°. כל מצב יישאר למשך שנייה.</p></article><article class="task"><span class="tag">חובה</span><h3>משימה 3 — לולאת תנועה</h3><p>כתבו לולאת <code>for</code> שמזיזה את הסרוו בהדרגה מ־0° עד 90°. לאחר מכן כתבו לולאה שמחזירה אותו.</p></article><article class="task"><span class="tag">חובה</span><h3>משימה 4 — כוונון המכסה</h3><p>מצאו את הזווית הנכונה לפתיחה מלאה בלי שהסרוו דוחף את המכסה מעבר לגבול המכני. תעדו את זווית הסגירה וזווית הפתיחה.</p></article></div></section>
 
     <section class="card challenge"><span class="tag">אתגר למתקדמים</span><h2 style="margin-top:10px">פתיחה רכה וסגירה איטית</h2><p>במקום לקפוץ מיד בין 0° ל־90°, הזיזו את המכסה בהדרגה. פתחו אותו מהר יחסית, המתינו שתי שניות וסגרו אותו לאט יותר. רמז: השתמשו בשתי לולאות ובערכי <code>delay()</code> שונים.</p></section>
     <section class="card check"><h2>לפני השיעור הבא</h2><label><input type="checkbox">אני יודע לבחור ESP32 Dev Module</label><label><input type="checkbox">אני יודע להסביר אילו רכיבים נמצאים בתוך הסרוו</label><label><input type="checkbox">אני זוכר לחבר GND משותף</label><label><input type="checkbox">מצאתי זוויות מתאימות לפתיחה ולסגירה</label><br><button class="print" onclick="window.print()">הדפסה / שמירה כ־PDF</button></section>
   </main>
   <footer>MAKELAB יהוד · שיעור 6 מתוך 10
-<span class="version-tag">גרסה V49</span></footer>
+<span class="version-tag">גרסה V50</span></footer>
 </body>
 </html>
