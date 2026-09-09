@@ -1,6 +1,7 @@
 ROBOTIKA-COURSE.co.il
-Current version: V72 (arduino-jokes.html only)
-Based on: V71
+Current version: V73 (sensors.html only)
+Based on: V67
+Fix: sensors.html card grid changed from auto-fit (~3 columns) to a fixed 5-column layout on desktop, with smaller images (120px → 80px) and tighter card padding. Added responsive fallbacks: 3 columns between 781-1000px, 2 columns under 780px (images 70px)
 Restructure: the two joke images now sit side by side in a 2-column gallery (stacks to 1 column under 600px). Each image is a clickable link with a "מה מאחורי הבדיחה →" hint, jumping via same-page anchor to its own detail section below (#detail-1 = Nietzsche quote source, #detail-2 = new explanation of the "חי" gematria/חיישנים pun for the birthday joke)
 Fix: moved the subtitle line ("קצת צחוקים בין הלחמות...") from under the top badge to the bottom of the page (after the joke cards, before the footer), per Udi's request to reduce wasted space at the top
 Added: second joke image (images/jokes/arduino-joke-02.png, 1254x1254, full resolution) — Arduino's 18th birthday pun ("מה קונים לארדואינו ליום הולדת 18? חי״ו-שנים!"), placed right after the Nietzsche quote source block
