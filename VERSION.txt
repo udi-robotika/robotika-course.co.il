@@ -1,4 +1,9 @@
 ROBOTIKA-COURSE.co.il
+Current version: V59 (arduino-jokes.html only — other pages remain V55)
+Based on: V58
+Fix: replaced images/jokes/arduino-joke-01.png with Udi's newer preferred render (same 1254x1254 resolution, with credit) — display still capped to 50% width via CSS
+---
+ROBOTIKA-COURSE.co.il
 Current version: V58 (arduino-jokes.html only — other pages remain V55)
 Based on: V57
 Fix (correction of misunderstanding): restored images/jokes/arduino-joke-01.png to full original resolution (1254x1254, ~2.3MB) — Udi wanted high resolution kept, just displayed smaller on the page. Changed approach: image file stays full-res, CSS now caps display width to 50% of the content column (max-width:50%, centered), with a mobile override back to 100% width under 700px so it doesn't become tiny on phones
