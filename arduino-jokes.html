@@ -94,19 +94,25 @@
   .jokes-title p { color: var(--muted); font-size: 0.98rem; max-width: 32ch; margin-inline: auto; line-height: 1.35; }
   .jokes-tagline { text-align: center; color: var(--muted); font-size: 0.95rem; max-width: 34ch; margin: 26px auto 0; line-height: 1.45; }
 
+  .joke-gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 22px; }
   .joke-image-card {
-    background: var(--bg-light); border: 1px solid #dbe3ee; border-radius: 16px;
-    overflow: hidden; margin-bottom: 22px;
-    max-width: 50%;
-    margin-inline: auto;
+    display: block; background: var(--bg-light); border: 1px solid #dbe3ee; border-radius: 16px;
+    overflow: hidden; text-decoration: none; position: relative;
+    transition: transform .15s, border-color .15s;
   }
+  .joke-image-card:hover { transform: translateY(-3px); border-color: var(--accent); }
   .joke-image-card img { display: block; width: 100%; height: auto; }
-  .joke-collab { text-align: center; color: var(--muted); font-size: .95rem; font-style: italic; margin: 4px auto 18px; max-width: 46ch; }
+  .joke-image-hint {
+    display: block; text-align: center; padding: 8px 6px; font-size: .82rem;
+    color: var(--accent); background: #f6fbfc; font-weight: 600;
+  }
+  .joke-detail { scroll-margin-top: 20px; }
+  .joke-collab { text-align: center; color: var(--muted); font-size: .95rem; font-style: italic; margin: 4px auto 12px; max-width: 46ch; }
   .joke-source { background: #f8fafc; border: 1px solid #dbe3ee; border-radius: 14px; padding: 16px 20px; margin-bottom: 22px; font-size: .92rem; color: var(--muted); line-height: 1.6; }
   .joke-source b { color: var(--text); }
   .joke-source .de { display: block; direction: ltr; text-align: left; margin-top: 4px; font-style: italic; }
-  @media (max-width: 700px) {
-    .joke-image-card { max-width: 100%; }
+  @media (max-width: 600px) {
+    .joke-gallery { grid-template-columns: 1fr; }
   }
 
   .joke-cards { display: grid; gap: 14px; }
@@ -186,19 +192,29 @@
     <span class="badge">הומור וארדואינו</span>
   </div>
 
-  <div class="joke-image-card">
-    <img src="images/jokes/arduino-joke-01.png" alt="בדיחת ארדואינו: ארדואינו טוען — מה שלא הורג, מחשמל">
+  <div class="joke-gallery">
+    <a href="#detail-1" class="joke-image-card">
+      <img src="images/jokes/arduino-joke-01.png" alt="בדיחת ארדואינו: ארדואינו טוען — מה שלא הורג, מחשמל">
+      <span class="joke-image-hint">מה מאחורי הבדיחה →</span>
+    </a>
+    <a href="#detail-2" class="joke-image-card">
+      <img src="images/jokes/arduino-joke-02.png" alt="בדיחת ארדואינו: מה קונים לארדואינו ליום הולדת 18? חי״ו-שנים!">
+      <span class="joke-image-hint">מה מאחורי הבדיחה →</span>
+    </a>
   </div>
 
-  <p class="joke-collab">שיתוף פעולה נדיר בין הפילוסוף הגרמני פרידריך ניצ'ה לבין המייקר והוגה הדעות אודי ואלך יצר את הבדיחה הבאה.</p>
-
-  <div class="joke-source">
-    <b>הציטוט המקורי:</b> הפילוסוף הגרמני פרידריך ניטשה אמר במקור, בגוף ראשון: "מה שלא הורג אותי, מחשל אותי".
-    <span class="de">בגרמנית: Was mich nicht umbringt, macht mich stärker.</span>
+  <div class="joke-detail" id="detail-1">
+    <p class="joke-collab">שיתוף פעולה נדיר בין הפילוסוף הגרמני פרידריך ניצ'ה לבין המייקר והוגה הדעות אודי ואלך יצר את הבדיחה הבאה.</p>
+    <div class="joke-source">
+      <b>הציטוט המקורי:</b> הפילוסוף הגרמני פרידריך ניטשה אמר במקור, בגוף ראשון: "מה שלא הורג אותי, מחשל אותי".
+      <span class="de">בגרמנית: Was mich nicht umbringt, macht mich stärker.</span>
+    </div>
   </div>
 
-  <div class="joke-image-card">
-    <img src="images/jokes/arduino-joke-02.png" alt="בדיחת ארדואינו: מה קונים לארדואינו ליום הולדת 18? חי״ו-שנים!">
+  <div class="joke-detail" id="detail-2">
+    <div class="joke-source">
+      <b>מה מאחורי הבדיחה:</b> באותיות עבריות, "חי" שווה בגימטרייה 18 (ח=8, י=10) — ומכאן המנהג לברך "עד 120" ולתת מתנות בכפולות של 18. אם מחברים את "חי" ל"שנים" ומוציאים את המקף מקבלים "חיושנים" — שנשמע כמו "חיישנים", הרכיב הכי בסיסי בכל פרויקט רובוטיקה.
+    </div>
   </div>
 
   <div class="joke-cards">
@@ -225,7 +241,7 @@
 
 <footer>
   © 2026 קורס רובוטיקה וארדואינו — הומור
-<span class="version-tag">גרסה V71</span></footer>
+<span class="version-tag">גרסה V72</span></footer>
 
 </body>
 </html>

@@ -1,6 +1,7 @@
 ROBOTIKA-COURSE.co.il
-Current version: V71 (arduino-jokes.html only)
-Based on: V70
+Current version: V72 (arduino-jokes.html only)
+Based on: V71
+Restructure: the two joke images now sit side by side in a 2-column gallery (stacks to 1 column under 600px). Each image is a clickable link with a "מה מאחורי הבדיחה →" hint, jumping via same-page anchor to its own detail section below (#detail-1 = Nietzsche quote source, #detail-2 = new explanation of the "חי" gematria/חיישנים pun for the birthday joke)
 Fix: moved the subtitle line ("קצת צחוקים בין הלחמות...") from under the top badge to the bottom of the page (after the joke cards, before the footer), per Udi's request to reduce wasted space at the top
 Added: second joke image (images/jokes/arduino-joke-02.png, 1254x1254, full resolution) — Arduino's 18th birthday pun ("מה קונים לארדואינו ליום הולדת 18? חי״ו-שנים!"), placed right after the Nietzsche quote source block
 Fix: found that /lessons/course-43/index.html and /lessons/course-43/lesson-1/index.html never received any of the mobile nav fixes from V63-V67, because those pages live in a subfolder and were built/edited separately from the main *.html glob used for the site-wide sed fixes. Applied the same final fix (flex-wrap nav, centered stacked header, direction:rtl, display:none dropdowns) to both files directly
