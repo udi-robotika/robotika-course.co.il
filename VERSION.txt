@@ -1,4 +1,9 @@
 ROBOTIKA-COURSE.co.il
+Current version: V56
+Based on: V55
+Removed: old /jokes.html redirect deleted entirely per Udi's request — only /arduino-jokes.html works now (same lesson learned as the earlier /course-july-2026/ deletion: Udi prefers old paths gone outright, not left as redirects)
+---
+ROBOTIKA-COURSE.co.il
 Current version: V55
 Based on: V51 (main site pages) / V54 (jokes page, renamed this round)
 Restructure: jokes.html renamed to arduino-jokes.html per Udi's request; old /jokes.html now redirects there. Nav link updated across all 34 shared pages.
