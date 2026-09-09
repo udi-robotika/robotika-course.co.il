@@ -62,10 +62,25 @@
   .nav-dropdown a:hover, .nav-dropdown a.active { color: var(--accent); background: #f1f5f9; }
   .nav-menu:hover .nav-dropdown, .nav-menu:focus-within .nav-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
   @media (max-width: 780px) {
-    header { flex-wrap: wrap; gap: 6px; padding-inline: 16px; }
-    .site-nav { display: grid !important; grid-template-columns: repeat(3,1fr); width: 100%; gap: 2px; }
-    .site-nav > a, .site-nav .nav-label { justify-content: center; text-align: center; padding: 7px 5px; font-size: .84rem; }
-    .nav-dropdown { right: 0; min-width: 205px; }
+    body { overflow-x: hidden; }
+    header { flex-direction: column; align-items: center; text-align: center; gap: 10px; padding: 16px 16px 12px; direction: rtl; }
+    header .logo { justify-content: center; font-size: 1.02rem; }
+    .site-nav { display: flex !important; flex-wrap: wrap; justify-content: center; width: 100%; gap: 6px; }
+    .site-nav > a, .site-nav .nav-label {
+      padding: 7px 13px; font-size: .82rem;
+      background: #f6f8fb; border: 1px solid #e5eaf1; border-radius: 999px;
+    }
+    .site-nav > a:hover, .site-nav > a.active, .site-nav .nav-label:hover, .site-nav .nav-label.active {
+      background: #eaf6f8; border-color: rgba(8,145,178,.35);
+    }
+    .site-nav > a.nav-cta { padding: 7px 15px; }
+    .nav-menu { position: static; }
+    .nav-dropdown {
+      display: none; position: static; min-width: 0; width: 100%;
+      box-shadow: none; border: 0; background: #fbfdfe; border-radius: 10px;
+      opacity: 1; visibility: visible; transform: none; margin-top: 4px;
+    }
+    .nav-menu:hover .nav-dropdown, .nav-menu:focus-within .nav-dropdown { display: flex; flex-direction: column; }
   }
 
   /* עמוד סיכומי שיעורים */
@@ -204,7 +219,7 @@
 
 <footer>
   © 2026 קורס רובוטיקה וארדואינו — קורס #43
-<span class="version-tag">גרסה V51</span></footer>
+<span class="version-tag">גרסה V69</span></footer>
 
 </body>
 </html>
