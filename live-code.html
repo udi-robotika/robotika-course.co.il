@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>לוח קודים חי | קורס רובוטיקה וארדואינו</title>
+<style>
+  :root { --accent:#0891b2; --accent2:#7c3aed; --text:#172033; --muted:#52647d; --line:#dbe3ee; --soft:#f6f8fb; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:'Segoe UI','Heebo',Arial,sans-serif; color:var(--text); background:#fff; }
+  header { direction:ltr; display:flex; justify-content:space-between; align-items:center; padding:7px 48px; border-bottom:1px solid #edf1f6; }
+  .logo { direction:rtl; color:var(--text); text-decoration:none; font-weight:700; font-size:1.15rem; }
+  .back { color:var(--muted); text-decoration:none; padding:8px 12px; border-radius:8px; }
+  .back:hover { color:var(--accent); background:#f1f5f9; }
+  main { width:min(1040px,calc(100% - 28px)); margin:22px auto 60px; }
+  .title-row { display:flex; justify-content:space-between; align-items:end; gap:16px; margin-bottom:18px; }
+  h1 { margin:0 0 5px; font-size:clamp(1.8rem,4vw,2.7rem); background:linear-gradient(90deg,var(--accent),var(--accent2)); color:transparent; background-clip:text; -webkit-background-clip:text; }
+  .subtitle { margin:0; color:var(--muted); }
+  .status { display:flex; align-items:center; gap:7px; color:var(--muted); font-size:.9rem; white-space:nowrap; }
+  .dot { width:9px; height:9px; border-radius:50%; background:#f59e0b; }
+  .dot.online { background:#22c55e; }
+  .composer { border:1px solid var(--line); border-radius:16px; padding:16px; box-shadow:0 10px 32px rgba(15,23,42,.06); }
+  input,textarea,button { font:inherit; }
+  input,textarea { width:100%; border:1px solid var(--line); border-radius:10px; padding:12px 14px; outline:none; }
+  input:focus,textarea:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(8,145,178,.10); }
+  textarea { margin-top:10px; min-height:245px; resize:vertical; direction:ltr; text-align:left; font-family:Consolas,'Courier New',monospace; line-height:1.45; tab-size:2; }
+  .publish { margin-top:10px; border:0; border-radius:10px; padding:12px 26px; color:#fff; font-weight:700; cursor:pointer; background:linear-gradient(90deg,var(--accent),var(--accent2)); }
+  .publish:hover { filter:brightness(.96); }
+  .publish:disabled { opacity:.55; cursor:not-allowed; }
+  .message { min-height:22px; color:#16803a; font-size:.9rem; padding-top:7px; }
+  .list-head { display:flex; justify-content:space-between; align-items:center; margin:28px 0 12px; }
+  .list-head h2 { margin:0; font-size:1.3rem; }
+  .count { color:var(--muted); font-size:.9rem; }
+  .empty { text-align:center; color:var(--muted); background:var(--soft); padding:34px; border-radius:14px; border:1px dashed var(--line); }
+  .codes { display:grid; gap:14px; }
+  .code-card { border:1px solid var(--line); border-radius:14px; overflow:hidden; background:#fff; }
+  .code-top { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:11px 14px; background:var(--soft); border-bottom:1px solid var(--line); }
+  .code-title { margin:0; font-size:1rem; overflow-wrap:anywhere; }
+  .actions { display:flex; gap:7px; flex-shrink:0; }
+  .action { border:1px solid var(--line); background:#fff; color:var(--text); padding:7px 11px; border-radius:8px; cursor:pointer; }
+  .action:hover { color:var(--accent); border-color:var(--accent); }
+  pre { margin:0; padding:16px; overflow:auto; direction:ltr; text-align:left; background:#171d25; color:#e8eef6; font:14px/1.55 Consolas,'Courier New',monospace; max-height:420px; }
+  @media (max-width:650px) {
+    header { padding:7px 14px; }
+    .logo { font-size:.96rem; }
+    .title-row { align-items:start; flex-direction:column; }
+    .code-top { align-items:flex-start; flex-direction:column; }
+    textarea { min-height:210px; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <a class="logo" href="index.html">🤖 קורס רובוטיקה וארדואינו</a>
+  <a class="back" href="index.html">חזרה לאתר</a>
+</header>
+
+<main>
+  <div class="title-row">
+    <div>
+      <h1>לוח קודים חי</h1>
+      <p class="subtitle">מדביקים קוד, מפרסמים — וכולם רואים.</p>
+    </div>
+    <div class="status"><span class="dot" id="statusDot"></span><span id="statusText">מתחבר ללוח…</span></div>
+  </div>
+
+  <form class="composer" id="codeForm">
+    <input id="title" maxlength="80" placeholder="כותרת, לדוגמה: חיישן מרחק" required>
+    <textarea id="code" maxlength="50000" placeholder="הדביקו כאן את הקוד…" spellcheck="false" required></textarea>
+    <button class="publish" id="publishButton" type="submit">פרסום הקוד</button>
+    <div class="message" id="message" aria-live="polite"></div>
+  </form>
+
+  <div class="list-head">
+    <h2>קודים שפורסמו</h2>
+    <span class="count" id="count"></span>
+  </div>
+  <div id="codes" class="codes"></div>
+</main>
+
+<script>
+  const codesEl = document.getElementById('codes');
+  const countEl = document.getElementById('count');
+  const messageEl = document.getElementById('message');
+  const statusDot = document.getElementById('statusDot');
+  const statusText = document.getElementById('statusText');
+  const form = document.getElementById('codeForm');
+  const titleInput = document.getElementById('title');
+  const codeInput = document.getElementById('code');
+  const publishButton = document.getElementById('publishButton');
+  let lastPublish = 0;
+  let items = [];
+  const escapeName = value => (value || 'code').replace(/[^a-zA-Z0-9א-ת_-]+/g,'-').replace(/^-+|-+$/g,'').slice(0,45) || 'code';
+
+  function render() {
+    codesEl.replaceChildren();
+    countEl.textContent = items.length ? `${items.length} קודים` : '';
+    if (!items.length) {
+      const empty = document.createElement('div');
+      empty.className = 'empty';
+      empty.textContent = 'עדיין לא פורסמו קודים.';
+      codesEl.append(empty);
+      return;
+    }
+    items.forEach(item => {
+      const card = document.createElement('article');
+      card.className = 'code-card';
+      const top = document.createElement('div');
+      top.className = 'code-top';
+      const title = document.createElement('h3');
+      title.className = 'code-title';
+      title.textContent = item.title;
+      const actions = document.createElement('div');
+      actions.className = 'actions';
+      const copy = document.createElement('button');
+      copy.className = 'action'; copy.type = 'button'; copy.textContent = 'העתקה';
+      copy.addEventListener('click',async () => {
+        await navigator.clipboard.writeText(item.code);
+        copy.textContent = 'הועתק ✓';
+        setTimeout(() => copy.textContent = 'העתקה',1200);
+      });
+      const download = document.createElement('button');
+      download.className = 'action'; download.type = 'button'; download.textContent = 'הורדת ino.';
+      download.addEventListener('click',() => {
+        const blob = new Blob([item.code],{type:'text/plain;charset=utf-8'});
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `${escapeName(item.title)}.ino`;
+        link.click();
+        setTimeout(() => URL.revokeObjectURL(link.href),1000);
+      });
+      actions.append(copy,download);
+      top.append(title,actions);
+      const pre = document.createElement('pre');
+      const code = document.createElement('code');
+      code.textContent = item.code;
+      pre.append(code);
+      card.append(top,pre);
+      codesEl.append(card);
+    });
+  }
+
+  async function loadCodes(quiet = false) {
+    try {
+      const response = await fetch('/api/codes',{cache:'no-store'});
+      if (!response.ok) throw new Error('storage');
+      const data = await response.json();
+      const incoming = Array.isArray(data.items) ? data.items : [];
+      const combined = new Map(items.map(item => [item.id,item]));
+      incoming.forEach(item => combined.set(item.id,item));
+      items = [...combined.values()].sort((a,b) => Number(b.created)-Number(a.created));
+      render();
+      statusDot.classList.add('online');
+      statusText.textContent = 'מחובר לאחסון';
+    } catch {
+      statusDot.classList.remove('online');
+      statusText.textContent = 'האחסון עדיין לא הופעל';
+      if (!quiet) {
+        codesEl.innerHTML = '<div class="empty">יש לחבר פעם אחת את אחסון האתר ב־Vercel.</div>';
+      }
+    }
+  }
+
+  loadCodes();
+  setInterval(() => loadCodes(true),3000);
+
+  form.addEventListener('submit',async event => {
+    event.preventDefault();
+    const now = Date.now();
+    if (now-lastPublish < 1500) return;
+    const title = titleInput.value.trim();
+    const code = codeInput.value.trim();
+    if (!title || !code) return;
+    lastPublish = now;
+    publishButton.disabled = true;
+    try {
+      const response = await fetch('/api/codes',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({title,code,website:''})
+      });
+      if (!response.ok) throw new Error('publish');
+      titleInput.value = '';
+      codeInput.value = '';
+      messageEl.textContent = 'הקוד נשמר באתר בהצלחה ✓';
+      await loadCodes(true);
+      setTimeout(() => messageEl.textContent = '',1800);
+      titleInput.focus();
+    } catch {
+      messageEl.style.color = '#b42318';
+      messageEl.textContent = 'לא ניתן לשמור כרגע. יש לבדוק שהאחסון מחובר.';
+      setTimeout(() => { messageEl.textContent = ''; messageEl.style.color = ''; },2600);
+    } finally {
+      publishButton.disabled = false;
+    }
+  });
+
+  codeInput.addEventListener('keydown',event => {
+    if (event.key === 'Tab') {
+      event.preventDefault();
+      const start = codeInput.selectionStart;
+      codeInput.setRangeText('  ',start,codeInput.selectionEnd,'end');
+    }
+  });
+</script>
+</body>
+</html>

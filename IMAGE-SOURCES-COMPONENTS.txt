@@ -1,0 +1,23 @@
+מקורות לתמונות הרכיבים — 2026-08-29
+
+Arduino Uno Type-C:
+https://shopee.com.my/Arduino-Uno-R3-USB-Type-C-CH340G-Atmega328P-Atmega-328P-328-P-i.13050358.1692565895
+
+לוח הרחבה Arduino Sensor Shield V5.0:
+https://www.pixelelectric.com/products/development-boards/arduino/shields/v5-0-expansion-board-shield/
+
+ESP32-S3 DevKit:
+https://www.rapidonline.com/espressif-esp32-s3-devkitc-1-n8r8-pcb-board-wi-fi-bt-usb-type-c-devkit-09-1106
+
+לוח הרחבה ESP32-S3:
+https://www.usinainfo.com.br/expansores-esp32/expansor-com-borne-para-esp32-s3-devkitc-1-44-pinos-9136.html
+
+מטריצת חיבורים 830 נקודות:
+https://geekworm.com/products/830-point-solderless-breadboard
+
+סט 120 חוטי Jumper באורך 20 ס״מ:
+https://www.mmobiel.com/120x-dupont-breadboard-jumper-wires-40-pin-m/f-m/m-f/f-20cm/8-inch
+
+מסך מגע קיבולי 3.5 אינץ׳ עם רמקול מובנה ל־ESP32-S3:
+https://he.aliexpress.com/item/1005012335695151.html
+(תמונה נחתכה מתוך צילום מסך של דף המוצר שאודי צירף)

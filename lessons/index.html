@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>סיכומי שיעורים — קורס רובוטיקה וארדואינו</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-light: #ffffff;
+    --accent: #0891b2;
+    --accent2: #7c3aed;
+    --text: #172033;
+    --muted: #52647d;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', 'Heebo', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+  header {
+    direction: ltr;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 48px 2px;
+  }
+  header .logo {
+    direction: rtl;
+    font-weight: 700;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--text);
+  }
+  header .logo span.icon { font-size: 1.6rem; }
+
+  footer {
+    text-align: center;
+    padding: 30px;
+    color: var(--muted);
+    font-size: 0.85rem;
+    border-top: 1px solid #e5eaf1;
+  }
+  .version-tag { display: block; margin-top: 6px; font-size: 0.78rem; opacity: 0.85; }
+
+  /* תפריט נפתח משותף לכל האתר */
+  .site-nav { display: flex; align-items: center; gap: 4px; position: relative; z-index: 100; direction: rtl; }
+  .site-nav > a, .site-nav .nav-label { color: var(--muted); text-decoration: none; margin: 0; padding: 9px 11px; font-size: .95rem; white-space: nowrap; border-radius: 8px; }
+  .site-nav > a:hover, .site-nav > a.active, .site-nav .nav-label:hover, .site-nav .nav-label.active { color: var(--accent); background: #f1f5f9; }
+  .site-nav > a.nav-cta { border: 1px solid var(--accent2); color: var(--accent2); font-weight: 700; background: rgba(124,58,237,.08); padding: 8px 15px; border-radius: 999px; }
+  .site-nav > a.nav-cta:hover, .site-nav > a.nav-cta.active { color: var(--accent2); background: rgba(124,58,237,.16); }
+  .nav-menu { position: relative; }
+  .nav-menu .nav-label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+  .nav-menu .nav-label::after { content: none; }
+  .nav-dropdown { position: absolute; top: calc(100% + 2px); right: 0; min-width: 220px; padding: 8px; background: #fff; border: 1px solid #dbe3ee; border-radius: 12px; box-shadow: 0 16px 38px rgba(15,23,42,.16); opacity: 0; visibility: hidden; transform: translateY(-5px); transition: opacity .16s ease, transform .16s ease, visibility .16s; }
+  .nav-dropdown a { display: block; margin: 0; padding: 9px 11px; color: var(--text); text-decoration: none; border-radius: 8px; font-size: .9rem; white-space: nowrap; }
+  .nav-dropdown a:hover, .nav-dropdown a.active { color: var(--accent); background: #f1f5f9; }
+  .nav-menu:hover .nav-dropdown, .nav-menu:focus-within .nav-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+  @media (max-width: 780px) {
+    header { flex-wrap: wrap; gap: 6px; padding-inline: 16px; }
+    .site-nav { display: grid !important; grid-template-columns: repeat(3,1fr); width: 100%; gap: 2px; }
+    .site-nav > a, .site-nav .nav-label { justify-content: center; text-align: center; padding: 7px 5px; font-size: .84rem; }
+    .nav-dropdown { right: 0; min-width: 205px; }
+  }
+
+  /* עמוד סיכומי שיעורים */
+  main.lessons-wrap { max-width: 880px; margin: 18px auto 40px; padding: 0 24px; }
+  .lessons-title { text-align: center; margin-bottom: 26px; }
+  .lessons-title .badge {
+    display: inline-block; background: rgba(34,211,238,0.1); color: var(--accent);
+    padding: 6px 18px; border-radius: 999px; font-size: 0.78rem; margin-bottom: 10px;
+    border: 1px solid rgba(34,211,238,0.3);
+  }
+  .lessons-title h1 {
+    font-size: 2.2rem; line-height: 1.25;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    margin-bottom: 8px;
+  }
+  .lessons-title p { color: var(--muted); font-size: 1.05rem; }
+
+  .lessons-list { display: grid; gap: 14px; }
+  a.lesson-row {
+    display: flex; align-items: center; gap: 18px;
+    background: var(--bg-light); border: 1px solid #dbe3ee; border-radius: 14px;
+    padding: 20px 22px; text-decoration: none; color: var(--text);
+    transition: transform .15s, border-color .15s;
+  }
+  a.lesson-row:hover { transform: translateY(-3px); border-color: var(--accent); }
+  .lesson-row .num {
+    flex-shrink: 0; width: 46px; height: 46px; border-radius: 12px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff;
+    display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.15rem;
+  }
+  .lesson-row h3 { font-size: 1.1rem; margin-bottom: 3px; }
+  .lesson-row p { color: var(--muted); font-size: 0.9rem; }
+  .lesson-row .tag {
+    margin-inline-start: auto; flex-shrink: 0; font-size: 0.78rem; font-weight: 700;
+    border-radius: 999px; padding: 4px 12px; background: rgba(34,211,238,0.1); color: var(--accent);
+    white-space: nowrap;
+  }
+  .lesson-row.upcoming { opacity: .5; pointer-events: none; }
+  .lesson-row.upcoming .num { background: #c7d1e0; }
+  .lesson-row.upcoming .tag { background: #eef1f6; color: var(--muted); }
+
+  @media (max-width: 600px) {
+    a.lesson-row { flex-wrap: wrap; }
+    .lesson-row .tag { margin-inline-start: 0; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="/index.html" class="logo"><span class="icon">🤖</span> קורס רובוטיקה וארדואינו · תכנות פיזי ועצמים חכמים</a>
+  <nav class="site-nav" aria-label="ניווט ראשי">
+    <a href="/index.html">בית</a>
+    <div class="nav-menu">
+      <a class="nav-label" href="/sensors.html">חיישנים</a>
+      <div class="nav-dropdown">
+        <a href="/sensors.html">כל החיישנים</a>
+        <a href="/sensor-ir.html">חיישן אינפרא־אדום IR</a>
+        <a href="/sensor-ultrasonic.html">חיישן אולטרסוניק</a>
+        <a href="/sensor-light.html">חיישן אור</a>
+        <a href="/sensor-laser.html">חיישן לייזר</a>
+        <a href="/sensor-vibration.html">חיישן רטט</a>
+        <a href="/sensor-potentiometer.html">פוטנציומטר</a>
+        <a href="/sensor-joystick.html">ג׳ויסטיק</a>
+      </div>
+    </div>
+    <div class="nav-menu">
+      <a class="nav-label" href="/basics.html">בסיס</a>
+      <div class="nav-dropdown">
+        <a href="/basics.html">כל נושאי הבסיס</a>
+        <a href="/basics-controller.html">בקר Arduino</a>
+        <a href="/basics-ide.html">סביבת Arduino IDE</a>
+        <a href="/basics-breadboard.html">לוח ניסויים</a>
+        <a href="/basics-wires.html">חוטי חיבור</a>
+        <a href="/basics-leds.html">נורות LED</a>
+        <a href="/basics-shield.html">מגן חיישנים</a>
+      </div>
+    </div>
+    <div class="nav-menu">
+      <a class="nav-label" href="/projects.html">פרויקטים</a>
+      <div class="nav-dropdown">
+        <a href="/projects.html">כל הפרויקטים</a>
+        <a href="/project-line-follower.html">עוקב קו — חיישן אחד</a>
+        <a href="/project-line-follower-two-sensors.html">עוקב קו — שני חיישנים</a>
+        <a href="/project-smart-car.html">מכונית חכמה Bluetooth</a>
+        <a href="/project-music-clock.html">נגן מוזיקה ושעון</a>
+        <a href="/project-smart-bin.html">פח חכם</a>
+        <a href="/project-word-clock.html">שעון מילים</a>
+        <a href="/project-laser-duel.html">קרב לייזר אוטונומי</a>
+      </div>
+    </div>
+    <div class="nav-menu">
+      <a class="nav-label" href="/communication.html">תקשורת</a>
+      <div class="nav-dropdown">
+        <a href="/communication.html">כל נושאי התקשורת</a>
+        <a href="/comm-bluetooth.html">Bluetooth</a>
+        <a href="/comm-ir.html">שלט אינפרא־אדום IR</a>
+        <a href="/comm-rf433.html">תקשורת RF433</a>
+      </div>
+    </div>
+    <a href="/recommended-components.html" class="nav-cta">רכיבים לקנייה</a>
+    <a href="/live-code.html" class="nav-cta">קוד משותף</a>
+    <a href="/lessons/" class="active">שיעורים</a>
+    <a href="/esp32.html">ESP32</a>
+  </nav>
+</header>
+
+<main class="lessons-wrap">
+  <div class="lessons-title">
+    <span class="badge">קורס רובוטיקה · 10 מפגשים</span>
+    <h1>סיכומי השיעורים</h1>
+    <p>מה למדנו בכל מפגש, ומה המשימות לשיעורי הבית</p>
+  </div>
+
+  <div class="lessons-list">
+    <a class="lesson-row" href="/lessons/lesson-1/">
+      <div class="num">1</div>
+      <div>
+        <h3>שיעור 1 — מתחילים עם Arduino</h3>
+        <p>פינים דיגיטליים ואנלוגיים, PWM, הבהוב LED, Sensor Shield וחיישן אור.</p>
+      </div>
+      <span class="tag">כולל שיעורי בית</span>
+    </a>
+
+    <div class="lesson-row upcoming">
+      <div class="num">2</div>
+      <div>
+        <h3>שיעור 2</h3>
+        <p>הסיכום יתווסף כאן לאחר המפגש הבא.</p>
+      </div>
+      <span class="tag">בקרוב</span>
+    </div>
+  </div>
+</main>
+
+<footer>
+  © 2026 קורס רובוטיקה וארדואינו — סיכומי שיעורים
+<span class="version-tag">גרסה V43</span></footer>
+
+</body>
+</html>

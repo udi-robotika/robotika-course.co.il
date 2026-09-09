@@ -1,0 +1,14 @@
+.buy-link {
+  display: inline-block;
+  margin: 0 8px 14px;
+  padding: 8px 13px;
+  border-radius: 9px;
+  background: #0891b2;
+  color: #fff;
+  text-decoration: none;
+  font-size: .84rem;
+  font-weight: 700;
+}
+
+.buy-link:hover { background: #0e7490; }
+.product-card:has(.buy-link) h2 { padding-bottom: 8px; }

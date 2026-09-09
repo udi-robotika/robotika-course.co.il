@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="סיכום שיעור 1 בקורס רובוטיקה: Arduino, פינים, PWM, LED וחיישן אור">
+  <title>שיעור 1 — קורס רובוטיקה וארדואינו</title>
+  <style>
+    :root{
+      --bg:#ffffff; --accent:#0891b2; --accent2:#7c3aed; --text:#172033; --muted:#52647d;
+      --ink:#172033;--blue:#246bfd;--cyan:#09b7c9;--orange:#ff9b42;--paper:#fff;--line:#dce6f2;--code:#111827;--ok:#087f5b
+    }
+    *{box-sizing:border-box;margin:0;padding:0} html{scroll-behavior:smooth}
+    body{color:var(--text);background:var(--bg);font-family:'Segoe UI','Heebo',Arial,sans-serif;line-height:1.65;font-size:17px}
+
+    /* == כותרת עליונה משותפת לאתר == */
+    .site-header{
+      direction:ltr;display:flex;justify-content:space-between;align-items:center;padding:4px 48px 2px;
+    }
+    .site-header .logo{direction:rtl;font-weight:700;font-size:1.2rem;display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text)}
+    .site-header .logo span.icon{font-size:1.6rem}
+    .site-nav{display:flex;align-items:center;gap:4px;position:relative;z-index:100;direction:rtl}
+    .site-nav>a,.site-nav .nav-label{color:var(--muted);text-decoration:none;margin:0;padding:9px 11px;font-size:.95rem;white-space:nowrap;border-radius:8px}
+    .site-nav>a:hover,.site-nav>a.active,.site-nav .nav-label:hover,.site-nav .nav-label.active{color:var(--accent);background:#f1f5f9}
+    .site-nav>a.nav-cta{border:1px solid var(--accent2);color:var(--accent2);font-weight:700;background:rgba(124,58,237,.08);padding:8px 15px;border-radius:999px}
+    .site-nav>a.nav-cta:hover,.site-nav>a.nav-cta.active{color:var(--accent2);background:rgba(124,58,237,.16)}
+    .nav-menu{position:relative}
+    .nav-menu .nav-label{display:flex;align-items:center;gap:6px;cursor:pointer}
+    .nav-dropdown{position:absolute;top:calc(100% + 2px);right:0;min-width:220px;padding:8px;background:#fff;border:1px solid #dbe3ee;border-radius:12px;box-shadow:0 16px 38px rgba(15,23,42,.16);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .16s ease,transform .16s ease,visibility .16s}
+    .nav-dropdown a{display:block;margin:0;padding:9px 11px;color:var(--text);text-decoration:none;border-radius:8px;font-size:.9rem;white-space:nowrap}
+    .nav-dropdown a:hover,.nav-dropdown a.active{color:var(--accent);background:#f1f5f9}
+    .nav-menu:hover .nav-dropdown,.nav-menu:focus-within .nav-dropdown{opacity:1;visibility:visible;transform:translateY(0)}
+    @media (max-width:780px){
+      .site-header{flex-wrap:wrap;gap:6px;padding-inline:16px}
+      .site-nav{display:grid !important;grid-template-columns:repeat(3,1fr);width:100%;gap:2px}
+      .site-nav>a,.site-nav .nav-label{justify-content:center;text-align:center;padding:7px 5px;font-size:.84rem}
+      .nav-dropdown{right:0;min-width:205px}
+    }
+    .site-footer{text-align:center;padding:30px;color:var(--muted);font-size:.85rem;border-top:1px solid #e5eaf1}
+    .version-tag{display:block;margin-top:6px;font-size:.78rem;opacity:.85}
+
+    /* == תוכן שיעור 1 == */
+    .lesson-wrap{width:min(1080px,calc(100% - 28px));margin:auto}
+    .lesson-hero{padding:34px 0 30px;background:#101b34;color:#fff;position:relative;overflow:hidden;margin-top:8px;border-radius:18px}
+    .lesson-hero:after{content:"UNO";position:absolute;left:5%;top:-45px;font:bold 180px Arial;color:#fff;opacity:.035;transform:rotate(-8deg)}
+    .lesson-hero .inner{padding:0 30px}
+    .eyebrow{display:inline-block;color:#8debf1;background:#173456;border:1px solid #2c5477;border-radius:99px;padding:5px 13px;font-weight:700;font-size:14px}
+    .lesson-hero h1{font-size:clamp(28px,5vw,46px);line-height:1.12;margin:14px 0 8px;letter-spacing:-1px}
+    .lesson-hero p{margin:0;color:#cbd8e8;font-size:18px}
+    .accent{color:#52d9e5}
+    .lesson-nav{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:3;box-shadow:0 5px 20px #23405a12;margin-top:14px}
+    .lesson-nav .lesson-wrap{display:flex;gap:18px;overflow:auto;white-space:nowrap;padding-block:12px}
+    .lesson-nav a{color:#344054;text-decoration:none;font-size:15px;font-weight:700}
+    .lesson-nav a:hover{color:var(--blue)}
+    main.lesson-main{padding:36px 0 56px}
+    .card{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:clamp(20px,4vw,34px);margin:0 0 22px;box-shadow:0 10px 32px #21436b10}
+    .card h2{margin:0 0 18px;font-size:28px;line-height:1.25}
+    .card h3{margin:4px 0 7px;font-size:20px}
+    .num{display:inline-grid;place-items:center;width:38px;height:38px;margin-left:8px;border-radius:11px;background:var(--blue);color:#fff;font-size:19px}
+    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+    .mini{padding:18px;border:1px solid var(--line);border-radius:14px;background:#f9fbfe}
+    .mini p{margin:5px 0 0;color:#475467}
+    .pins{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:15px}
+    .pin{background:#eef4ff;color:#1450be;border:1px solid #cbdcff;border-radius:10px;text-align:center;padding:10px 2px;font-weight:800}
+    .flow{display:flex;align-items:stretch;gap:9px}
+    .step{flex:1;border-top:4px solid var(--cyan);background:#f4fcfd;border-radius:12px;padding:15px}
+    .arrow{align-self:center;color:#98a2b3;font-size:25px}
+    .note{border-right:5px solid var(--orange);background:#fff8ef;border-radius:10px;padding:14px 17px;margin-top:17px}
+    .note strong{color:#9c4b08}
+    pre{direction:ltr;text-align:left;overflow:auto;background:var(--code);color:#e5edf8;border-radius:13px;padding:18px;font:14px/1.6 Consolas,monospace;margin:12px 0}
+    code{font-family:Consolas,monospace}
+    .homework{counter-reset:task;display:grid;gap:13px}
+    .task{position:relative;padding:18px 58px 18px 18px;border:1px solid var(--line);border-radius:14px;background:#fbfdff}
+    .task:before{counter-increment:task;content:counter(task);position:absolute;right:15px;top:16px;display:grid;place-items:center;width:31px;height:31px;border-radius:50%;background:#172033;color:#fff;font-weight:bold}
+    .task p{margin:5px 0;color:#475467}
+    .tag{display:inline-block;border-radius:99px;padding:2px 9px;font-size:13px;font-weight:bold;background:#dff7ee;color:var(--ok)}
+    .challenge{background:linear-gradient(135deg,#173457,#10213d);color:#fff;border:0}
+    .challenge p{color:#d3e0ed}
+    .challenge .tag{background:#ffedd9;color:#a94e00}
+    .checklist label{display:block;padding:10px 0;border-bottom:1px dashed var(--line);cursor:pointer}
+    .checklist input{width:19px;height:19px;vertical-align:middle;margin-left:8px;accent-color:var(--blue)}
+    .print{border:0;background:var(--blue);color:#fff;border-radius:10px;padding:11px 18px;font:700 15px Arial;cursor:pointer}
+    .print:hover{background:#1554cf}
+    @media(max-width:720px){.grid{grid-template-columns:1fr}.flow{flex-direction:column}.arrow{transform:rotate(90deg)}.pins{grid-template-columns:repeat(3,1fr)}}
+    @media print{.site-header,.lesson-nav,.print{display:none}main.lesson-main{padding-top:16px}.card{box-shadow:none;break-inside:avoid;margin-bottom:12px}}
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="/index.html" class="logo"><span class="icon">🤖</span> קורס רובוטיקה וארדואינו · תכנות פיזי ועצמים חכמים</a>
+  <nav class="site-nav" aria-label="ניווט ראשי">
+    <a href="/index.html">בית</a>
+    <div class="nav-menu">
+      <a class="nav-label" href="/sensors.html">חיישנים</a>
+      <div class="nav-dropdown">
+        <a href="/sensors.html">כל החיישנים</a>
+        <a href="/sensor-ir.html">חיישן אינפרא־אדום IR</a>
+        <a href="/sensor-ultrasonic.html">חיישן אולטרסוניק</a>
+        <a href="/sensor-light.html">חיישן אור</a>
+        <a href="/sensor-laser.html">חיישן לייזר</a>
+        <a href="/sensor-vibration.html">חיישן רטט</a>
+        <a href="/sensor-potentiometer.html">פוטנציומטר</a>
+        <a href="/sensor-joystick.html">ג׳ויסטיק</a>
+      </div>
+    </div>
+    <div class="nav-menu">
+      <a class="nav-label" href="/basics.html">בסיס</a>
+      <div class="nav-dropdown">
+        <a href="/basics.html">כל נושאי הבסיס</a>
+        <a href="/basics-controller.html">בקר Arduino</a>
+        <a href="/basics-ide.html">סביבת Arduino IDE</a>
+        <a href="/basics-breadboard.html">לוח ניסויים</a>
+        <a href="/basics-wires.html">חוטי חיבור</a>
+        <a href="/basics-leds.html">נורות LED</a>
+        <a href="/basics-shield.html">מגן חיישנים</a>
+      </div>
+    </div>
+    <div class="nav-menu">
+      <a class="nav-label" href="/projects.html">פרויקטים</a>
+      <div class="nav-dropdown">
+        <a href="/projects.html">כל הפרויקטים</a>
+        <a href="/project-line-follower.html">עוקב קו — חיישן אחד</a>
+        <a href="/project-line-follower-two-sensors.html">עוקב קו — שני חיישנים</a>
+        <a href="/project-smart-car.html">מכונית חכמה Bluetooth</a>
+        <a href="/project-music-clock.html">נגן מוזיקה ושעון</a>
+        <a href="/project-smart-bin.html">פח חכם</a>
+        <a href="/project-word-clock.html">שעון מילים</a>
+        <a href="/project-laser-duel.html">קרב לייזר אוטונומי</a>
+      </div>
+    </div>
+    <div class="nav-menu">
+      <a class="nav-label" href="/communication.html">תקשורת</a>
+      <div class="nav-dropdown">
+        <a href="/communication.html">כל נושאי התקשורת</a>
+        <a href="/comm-bluetooth.html">Bluetooth</a>
+        <a href="/comm-ir.html">שלט אינפרא־אדום IR</a>
+        <a href="/comm-rf433.html">תקשורת RF433</a>
+      </div>
+    </div>
+    <a href="/recommended-components.html" class="nav-cta">רכיבים לקנייה</a>
+    <a href="/live-code.html" class="nav-cta">קוד משותף</a>
+    <a href="/lessons/" class="active">שיעורים</a>
+    <a href="/esp32.html">ESP32</a>
+  </nav>
+</header>
+
+<div class="lesson-hero">
+  <div class="lesson-wrap inner">
+    <span class="eyebrow">קורס רובוטיקה · 10 מפגשים</span>
+    <h1>שיעור 1: מתחילים עם <span class="accent">Arduino</span></h1>
+    <p>פינים, LED, אות PWM וחיישן אור אנלוגי</p>
+  </div>
+</div>
+
+<nav class="lesson-nav"><div class="lesson-wrap"><a href="/lessons/">⟵ כל השיעורים</a><a href="#concepts">מושגי יסוד</a><a href="#practice">מה תרגלנו</a><a href="#sensor">חיישן האור</a><a href="#homework">שיעורי בית</a></div></nav>
+
+<main class="lesson-main lesson-wrap">
+  <section class="card" id="concepts"><h2><span class="num">1</span>מושגי היסוד שלמדנו</h2><div class="grid">
+    <article class="mini"><h3>פינים דיגיטליים</h3><p>יכולים לעבוד כ־<b>INPUT</b> לקליטת מידע או כ־<b>OUTPUT</b> לשליחת מידע. במצב רגיל יש שתי רמות: <b>HIGH</b> או <b>LOW</b>.</p></article>
+    <article class="mini"><h3>פינים אנלוגיים</h3><p>באמצעות <code>analogRead()</code> קוראים ערך משתנה מחיישן. ב־Arduino Uno מתקבל מספר בין <b>0 ל־1023</b>.</p></article>
+    <article class="mini"><h3>PWM — עוצמה מדומה</h3><p>הפקודה <code>analogWrite()</code> שולחת פולסים מהירים וכך מאפשרת לשלוט בעוצמת LED. הערך נע בין <b>0 ל־255</b>.</p></article>
+    <article class="mini"><h3>ששת פיני ה־PWM ב־Uno</h3><div class="pins"><span class="pin">~3</span><span class="pin">~5</span><span class="pin">~6</span><span class="pin">~9</span><span class="pin">~10</span><span class="pin">~11</span></div></article>
+  </div><aside class="note"><strong>חשוב לדייק:</strong> פיני A0–A5 משמשים לקריאה אנלוגית, אך אפשר להשתמש בהם גם כפינים דיגיטליים. הם אינם יציאות אנלוגיות אמיתיות. ב־Uno, השליטה המדורגת ב־LED נעשית בעזרת PWM בפינים המסומנים <b>~</b>.</aside></section>
+
+  <section class="card" id="practice"><h2><span class="num">2</span>מה עשינו בשיעור?</h2><div class="flow"><div class="step"><b>LED אחד</b><br>כתבנו קוד שמדליק ומכבה LED ויוצר הבהוב.</div><span class="arrow">←</span><div class="step"><b>שני LEDים</b><br>הדלקנו שני LEDים לסירוגין: כשאחד דולק, השני כבוי.</div><span class="arrow">←</span><div class="step"><b>חלש וחזק</b><br>השתמשנו ב־PWM וב־<code>analogWrite()</code> לשינוי העוצמה.</div></div>
+    <h3 style="margin-top:24px">דוגמה: שינוי עוצמת LED</h3><pre><code>const int ledPin = 9;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  analogWrite(ledPin, 50);   // אור חלש
+  delay(1000);
+  analogWrite(ledPin, 255);  // אור חזק
+  delay(1000);
+}</code></pre>
+  </section>
+
+  <section class="card" id="sensor"><h2><span class="num">3</span>Sensor Shield וחיישן אור</h2><p>הרכבנו על ה־Arduino את לוח ההרחבה <b>Sensor Shield V4</b>. הלוח מסדר ליד כל פין שלוש נקודות חיבור — אות, מתח ואדמה — וכך קל יותר לחבר חיישנים ורכיבים.</p>
+    <div class="flow"><div class="step"><b>קלט</b><br>חיישן האור מחובר ל־A0</div><span class="arrow">←</span><div class="step"><b>עיבוד</b><br>Arduino קורא ערך 0–1023 וממיר אותו</div><span class="arrow">←</span><div class="step"><b>פלט</b><br>LED בפין PWM משנה עוצמה</div></div>
+    <pre><code>const int lightPin = A0;
+const int ledPin = 9;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  int lightValue = analogRead(lightPin);
+  int ledValue = map(lightValue, 0, 1023, 0, 255);
+  ledValue = constrain(ledValue, 0, 255);
+  analogWrite(ledPin, ledValue);
+  delay(10);
+}</code></pre>
+    <aside class="note"><strong>שימו לב:</strong> בחלק מחיישני האור הערך עולה כשיש יותר אור, ובאחרים הוא דווקא יורד. אם הפעולה הפוכה מהרצוי, מחליפים במיפוי בין <code>0, 255</code> לבין <code>255, 0</code>.</aside>
+  </section>
+
+  <section class="card" id="homework"><h2><span class="num">4</span>משימות לשיעורי הבית</h2><div class="homework">
+    <article class="task"><span class="tag">חובה</span><h3>משימה 1 — הבהוב עצמאי</h3><p>כתבו מחדש, בלי להעתיק, תוכנית שמדליקה LED לחצי שנייה ומכבה אותו לשנייה.</p></article>
+    <article class="task"><span class="tag">חובה</span><h3>משימה 2 — שני LEDים לסירוגין</h3><p>חברו שני LEDים. בכל רגע רק אחד מהם יהיה דולק. נסו לשנות את מהירות ההחלפה.</p></article>
+    <article class="task"><span class="tag">חובה</span><h3>משימה 3 — שלוש עוצמות</h3><p>הפעילו LED בעוצמה חלשה, בינונית וחזקה — כל עוצמה למשך שנייה. השתמשו ב־<code>analogWrite()</code>.</p></article>
+    <article class="task"><span class="tag">חובה</span><h3>משימה 4 — מנורת אור חכמה</h3><p>קראו את חיישן האור ב־A0 ושנו את עוצמת ה־LED בהתאם. בדקו מה קורה כשמכסים את החיישן ביד.</p></article>
+  </div></section>
+
+  <section class="card challenge"><span class="tag">אתגר למתקדמים</span><h2 style="margin-top:10px">מנורת לילה אוטומטית</h2><p>שנו את הקוד כך שככל שהחדר נעשה <b>חשוך יותר</b>, ה־LED יאיר <b>חזק יותר</b>. כשהחדר מואר, ה־LED צריך להיחלש או להיכבות. רמז: הפכו את כיוון ה־<code>map()</code>.</p></section>
+
+  <section class="card checklist"><h2>לפני השיעור הבא</h2><label><input type="checkbox">הצלחתי להעלות קוד ל־Arduino</label><label><input type="checkbox">אני יודע להסביר מה ההבדל בין INPUT ל־OUTPUT</label><label><input type="checkbox">אני יודע לזהות פין PWM לפי הסימן ~</label><label><input type="checkbox">השלמתי לפחות את ארבע משימות החובה</label><br><button class="print" onclick="window.print()">הדפסה / שמירה כ־PDF</button></section>
+</main>
+
+<footer class="site-footer">
+  © 2026 קורס רובוטיקה וארדואינו — שיעור 1 מתוך 10
+<span class="version-tag">גרסה V43</span></footer>
+
+</body>
+</html>

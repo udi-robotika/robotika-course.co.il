@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>קורס רובוטיקה וארדואינו</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-light: #ffffff;
+    --accent: #0891b2;
+    --accent2: #7c3aed;
+    --text: #172033;
+    --muted: #52647d;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', 'Heebo', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+  header {
+    direction: ltr;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 48px 2px;
+  }
+  header .logo {
+    direction: rtl;
+    font-weight: 700;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--text);
+  }
+  header .logo span.icon {
+    font-size: 1.6rem;
+  }
+  nav a {
+    color: var(--muted);
+    text-decoration: none;
+    margin-inline-start: 28px;
+    font-size: 0.95rem;
+    transition: color .2s;
+  }
+  nav a:hover { color: var(--accent); }
+
+  .hero {
+    text-align: center;
+    padding: 6px 24px 12px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .hero .badge {
+    display: inline-block;
+    background: rgba(34,211,238,0.1);
+    color: var(--accent);
+    padding: 6px 18px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    margin-bottom: 8px;
+    white-space: nowrap;
+    border: 1px solid rgba(34,211,238,0.3);
+  }
+  .hero h1 {
+    font-size: 3rem;
+    line-height: 1.2;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 10px;
+  }
+  .hero p {
+    color: var(--muted);
+    font-size: 1.15rem;
+    line-height: 1.7;
+    margin-bottom: 0;
+  }
+  .cta {
+    display: inline-flex;
+    gap: 16px;
+  }
+  .btn {
+    padding: 14px 32px;
+    border-radius: 10px;
+    font-size: 1rem;
+    text-decoration: none;
+    font-weight: 600;
+    transition: transform .15s, box-shadow .15s;
+  }
+  .btn-primary {
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    color: #0b1120;
+  }
+  .btn-secondary {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid #dbe3ee;
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(34,211,238,0.2); }
+
+  .topics {
+    max-width: 800px;
+    margin: 6px auto 18px;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 13px;
+  }
+  @media (max-width: 720px) {
+    .topics { grid-template-columns: repeat(2, 1fr); }
+  }
+  .card {
+    background: var(--bg-light);
+    border: 1px solid #dbe3ee;
+    border-radius: 12px;
+    padding: 21px 18px;
+    text-align: center;
+    text-decoration: none;
+    color: var(--text);
+    display: block;
+    position: relative;
+    transition: transform .15s, border-color .15s;
+  }
+  a.card:hover { transform: translateY(-4px); border-color: var(--accent); }
+  a.card.featured { border-color: var(--accent2); }
+  a.card.featured .tag { position: absolute; top: 10px; left: 10px; background: var(--accent2); color: #0b1120; font-size: .6rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
+  .card .emoji { font-size: 2rem; margin-bottom: 10px; }
+  .card .category-image {
+    width: 100%;
+    height: 120px;
+    object-fit: contain;
+    display: block;
+    margin-bottom: 10px;
+  }
+  .card h3 { font-size: 0.9rem; margin-bottom: 5px; }
+  .card p { color: var(--muted); font-size: 0.88rem; line-height: 1.5; }
+
+  footer {
+    text-align: center;
+    padding: 30px;
+    color: var(--muted);
+    font-size: 0.85rem;
+    border-top: 1px solid #e5eaf1;
+  }
+  .version-tag { display: block; margin-top: 6px; font-size: 0.78rem; opacity: 0.85; }
+
+  .study-hub-link {
+    text-align: center;
+    padding: 4px 24px 22px;
+  }
+  .study-hub-link a {
+    display: inline-block;
+    padding: 12px 32px;
+    border-radius: 999px;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: transform .15s, box-shadow .15s;
+  }
+  .study-hub-link a:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(34,211,238,0.2);
+  }
+
+
+  /* תפריט נפתח משותף לכל האתר */
+  .site-nav { display: flex; align-items: center; gap: 4px; position: relative; z-index: 100; direction: rtl; }
+  .site-nav > a, .site-nav .nav-label { color: var(--muted); text-decoration: none; margin: 0; padding: 9px 11px; font-size: .95rem; white-space: nowrap; border-radius: 8px; }
+  .site-nav > a:hover, .site-nav > a.active, .site-nav .nav-label:hover, .site-nav .nav-label.active { color: var(--accent); background: #f1f5f9; }
+  .site-nav > a.nav-cta { border: 1px solid var(--accent2); color: var(--accent2); font-weight: 700; background: rgba(124,58,237,.08); padding: 8px 15px; border-radius: 999px; }
+  .site-nav > a.nav-cta:hover, .site-nav > a.nav-cta.active { color: var(--accent2); background: rgba(124,58,237,.16); }
+  .nav-menu { position: relative; }
+  .nav-menu .nav-label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+  .nav-menu .nav-label::after { content: none; }
+  .nav-dropdown { position: absolute; top: calc(100% + 2px); right: 0; min-width: 220px; padding: 8px; background: #fff; border: 1px solid #dbe3ee; border-radius: 12px; box-shadow: 0 16px 38px rgba(15,23,42,.16); opacity: 0; visibility: hidden; transform: translateY(-5px); transition: opacity .16s ease, transform .16s ease, visibility .16s; }
+  .nav-dropdown a { display: block; margin: 0; padding: 9px 11px; color: var(--text); text-decoration: none; border-radius: 8px; font-size: .9rem; white-space: nowrap; }
+  .nav-dropdown a:hover, .nav-dropdown a.active { color: var(--accent); background: #f1f5f9; }
+  .nav-menu:hover .nav-dropdown, .nav-menu:focus-within .nav-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+  @media (max-width: 780px) {
+    header { flex-wrap: wrap; gap: 6px; padding-inline: 16px; }
+    .site-nav { display: grid !important; grid-template-columns: repeat(3,1fr); width: 100%; gap: 2px; }
+    .site-nav > a, .site-nav .nav-label { justify-content: center; text-align: center; padding: 7px 5px; font-size: .84rem; }
+    .nav-dropdown { right: 0; min-width: 205px; }
+  }
+
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo"><span class="icon">🤖</span> קורס רובוטיקה וארדואינו · תכנות פיזי ועצמים חכמים</a>
+  <nav class="site-nav" aria-label="ניווט ראשי">
+    <a href="index.html" class="active">בית</a>
+    <div class="nav-menu">
+      <a class="nav-label" href="sensors.html">חיישנים</a>
+      <div class="nav-dropdown">
+        <a href="sensors.html">כל החיישנים</a>
+        <a href="sensor-ir.html">חיישן אינפרא־אדום IR</a>
+        <a href="sensor-ultrasonic.html">חיישן אולטרסוניק</a>
+        <a href="sensor-light.html">חיישן אור</a>
+        <a href="sensor-laser.html">חיישן לייזר</a>
+        <a href="sensor-vibration.html">חיישן רטט</a>
+        <a href="sensor-potentiometer.html">פוטנציומטר</a>
+        <a href="sensor-joystick.html">ג׳ויסטיק</a>
+      </div>
+    </div>
+    <div class="nav-menu">
+      <a class="nav-label" href="basics.html">בסיס</a>
+      <div class="nav-dropdown">
+        <a href="basics.html">כל נושאי הבסיס</a>
+        <a href="basics-controller.html">בקר Arduino</a>
+        <a href="basics-ide.html">סביבת Arduino IDE</a>
+        <a href="basics-breadboard.html">לוח ניסויים</a>
+        <a href="basics-wires.html">חוטי חיבור</a>
+        <a href="basics-leds.html">נורות LED</a>
+        <a href="basics-shield.html">מגן חיישנים</a>
+      </div>
+    </div>
+    <div class="nav-menu">
+      <a class="nav-label" href="projects.html">פרויקטים</a>
+      <div class="nav-dropdown">
+        <a href="projects.html">כל הפרויקטים</a>
+        <a href="project-line-follower.html">עוקב קו — חיישן אחד</a>
+        <a href="project-line-follower-two-sensors.html">עוקב קו — שני חיישנים</a>
+        <a href="project-smart-car.html">מכונית חכמה Bluetooth</a>
+        <a href="project-music-clock.html">נגן מוזיקה ושעון</a>
+        <a href="project-smart-bin.html">פח חכם</a>
+        <a href="project-word-clock.html">שעון מילים</a>
+        <a href="project-laser-duel.html">קרב לייזר אוטונומי</a>
+      </div>
+    </div>
+    <div class="nav-menu">
+      <a class="nav-label" href="communication.html">תקשורת</a>
+      <div class="nav-dropdown">
+        <a href="communication.html">כל נושאי התקשורת</a>
+        <a href="comm-bluetooth.html">Bluetooth</a>
+        <a href="comm-ir.html">שלט אינפרא־אדום IR</a>
+        <a href="comm-rf433.html">תקשורת RF433</a>
+      </div>
+    </div>
+    <a href="recommended-components.html" class="nav-cta">רכיבים לקנייה</a>
+    <a href="live-code.html" class="nav-cta">קוד משותף</a>
+    <a href="lessons/">שיעורים</a>
+    <a href="esp32.html">ESP32</a>
+  </nav>
+</header>
+
+<div class="topics">
+  <a href="sensors.html" class="card">
+    <img class="category-image" src="images/sensors.png" alt="מבחר חיישנים לארדואינו">
+    <h3>חיישנים</h3>
+  </a>
+  <a href="basics.html" class="card">
+    <img class="category-image" src="images/basics.jpg" alt="ארדואינו ולוח הרחבה">
+    <h3>בסיס</h3>
+  </a>
+  <a href="projects.html" class="card">
+    <img class="category-image" src="images/projects.png" alt="ערכת רכיבים לפרויקטים בארדואינו">
+    <h3>פרוייקטים</h3>
+  </a>
+  <a href="esp32.html" class="card">
+    <img class="category-image" src="images/esp32.jpg" alt="בקר ESP32-S3 עם Wi-Fi ו-Bluetooth">
+    <h3>ESP32</h3>
+  </a>
+  <a href="project-line-follower.html" class="card">
+    <img class="category-image" src="images/laser-duel.png" alt="רובוט אוטונומי עוקב קו">
+    <h3>רובוט אוטונומי עוקב קו</h3>
+  </a>
+  <a href="project-smart-car.html" class="card">
+    <img class="category-image" src="images/smart-car.jpg" alt="מכונית חכמה נשלטת ב-Bluetooth">
+    <h3>מכונית חכמה נשלטת ב‑Bluetooth</h3>
+  </a>
+  <a href="project-music-clock.html" class="card">
+    <img class="category-image" src="images/music-clock.png" alt="ארדואינו מסך ומודול שעון זמן אמת">
+    <h3>נגן מוסיקה ושעון</h3>
+  </a>
+  <a href="project-smart-bin.html" class="card">
+    <img class="category-image" src="images/smart-bin.jpg" alt="פח חכם עם חיישן ארדואינו">
+    <h3>פח חכם</h3>
+  </a>
+  <a href="communication.html" class="card">
+    <img class="category-image" src="images/communication.jpg" alt="מודולי תקשורת בלוטוס לארדואינו">
+    <h3>תקשורת</h3>
+  </a>
+  <a href="recommended-components.html" class="card featured">
+    <span class="tag">חדש</span>
+    <img class="category-image" src="images/arduino.png" alt="רכיבי Arduino ו-ESP32 מומלצים לתלמידים">
+    <h3>רכיבים מומלצים לתלמידים</h3>
+  </a>
+</div>
+
+<section class="hero">
+  <p>לומדים לבנות, לחבר ולתכנת — מחיישנים בסיסיים ועד רובוטים חכמים.
+  כל מה שצריך כדי להתחיל להפוך רעיונות למכשירים אמיתיים.</p>
+</section>
+
+<section class="study-hub-link">
+  <a href="https://sites.google.com/view/robotika-course" target="_blank" rel="noopener noreferrer">מתחם לימודים</a>
+</section>
+
+<footer>
+  © 2026 קורס רובוטיקה וארדואינו — עמוד פתיחה ראשוני
+<span class="version-tag">גרסה V43</span></footer>
+
+
+
+</body>
+</html>

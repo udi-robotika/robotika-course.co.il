@@ -1,0 +1,37 @@
+ROBOTIKA-COURSE.co.il
+Current version: V43
+Based on: V42
+Footer: version bumped to V43 across all 36 pages
+New section: /lessons/ — lesson summaries hub, linked from main nav ("שיעורים")
+New page: /lessons/lesson-1/ — שיעור 1 summary (Arduino pins, PWM, LED blink, Sensor Shield, light sensor) + homework tasks
+Main nav: added "שיעורים" link (between "קוד משותף" and "ESP32") across all 34 existing pages, pointing to /lessons/
+No existing page content, images, or the live-code Blob API/storage was modified
+Footer: version bumped to V42
+Deleted: components-course.html ("מומלץ לקורס" / "רכיבים מומלצים לקורס") removed entirely from the site — its 11 items are gone
+package-nav pill bar updated across all 5 remaining component pages to remove the dead link
+Hub page (recommended-components.html): category-grid card for "רכיבים מומלצים לקורס" removed — 4 cards remain
+New page: recommended-components.html
+Updated: 2026-08-29
+Cleanup: removed duplicate index (1).html
+Layout: navigation on the right and site title on the left across all pages
+Components: added four-page visual gallery with six cards per desktop row
+Images: added real product photos for the required starter components
+Local update: corrected three product images and added AliExpress purchase links
+Categories: renamed the starter category to "בסיס מומלץ"
+Categories: added "אודי ממליץ בחום" with three selected products
+Live code: added a simple anonymous classroom board with title, paste, publish, copy and .ino download
+Live code: persistent Vercel Blob storage, available from every computer and across future lessons
+Deployment: deploy-to-vercel.cmd now creates and connects Blob storage automatically on first run
+Live code fix: storage listing now reads every saved JSON file, follows pagination and retries failed reads
+Live code fix: refreshing no longer removes codes already loaded on the page
+Udi recommends page: added ESP32-S3 WROOM-1 N16R8 card as the first item
+Udi recommends page: reordered cards to ESP32-S3, TFT screen, GPIO expansion, Arduino Uno shield
+Hub page: updated item count for "אודי ממליץ בחום" from 3 to 4
+Udi recommends page: swapped in the real annotated ESP32-S3 WROOM-1 hardware photo
+Udi recommends page: swapped in the real TFT 2.4" product photo
+Homepage: added "מתחם לימודים" link row above the footer, linking to https://sites.google.com/view/robotika-course
+Component pages: reordered package-nav pills to בסיס מומלץ, אודי ממליץ בחום first (highlighted), then the rest, across all 5 component pages
+Main nav: renamed "לוח קודים" to "קוד משותף" across all 34 pages
+Main nav: removed the small dropdown arrow (⌄) after חיישנים/בסיס/פרויקטים/תקשורת, dropdown-on-hover behavior unchanged
+Main nav: styled "רכיבים לקנייה" and "קוד משותף" as a highlighted gradient pill button, across all 34 pages
+Main nav: restyled those two pills from solid gradient to an outlined purple pill, matching the package-nav featured look

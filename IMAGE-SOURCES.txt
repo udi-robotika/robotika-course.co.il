@@ -1,0 +1,10 @@
+תמונות בגרסה V01
+
+חיישנים: תמונה שסופקה על ידי המשתמש.
+בסיס: https://www.twinschip.com/Arduino_UNO_Sensor_Shield
+פרויקטים: https://www.blue-pcb.com/
+תקשורת: https://shopee.com.my/HC-05-HC-06-Host-Integrated-Bluetooth-Module-Wireless-Serial-Port-Transparent-Communication-Module-i.1452759750.27724477818
+קרב הלייזר האוטונומי: https://www.iemrobotics.com/products/line-following-robot-kit-using-arduino-uno
+מכונית חכמה: https://www.alibaba.com/showroom/4wd-arduino-robot.html
+נגן מוסיקה ושעון: https://www.instructables.com/Arduino-Tutorial-Clock-LCD/
+פח חכם: https://www.tekgenieservices.com/ict-robotics.html
