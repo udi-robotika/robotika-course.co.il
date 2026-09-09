@@ -1,6 +1,7 @@
 ROBOTIKA-COURSE.co.il
-Current version: V83 (sensors.html only)
-Based on: V82
+Current version: V84 (sensors.html only)
+Based on: V83
+Fix: matched the reference style Udi showed — switched from 5 to 4 columns and images enlarged significantly (115px → 190px desktop, 150px tablet, 120px mobile) so images now clearly dominate the card visually over the small text, same proportions as the reference screenshot
 Fix: card images enlarged (80px → 115px desktop, 70px → 95px mobile), text shrunk (h3 .95rem→.82rem, p .85rem→.72rem) across all cards including the extra-components section, per Udi's request
 Fix: light sensor card description shortened to fit 2 lines max — removed pin details ("4 פינים VCC, GND, DO, AO"), kept just "מודול LDR עם פלט אנלוגי ודיגיטלי"
 Added 8 more components to the "רכיבים נוספים — לא בשימוש בקורס" section: flame/fire sensor, PIR motion sensor, water level sensor, MPU-6050 gyro+accelerometer, gas sensor (MQ family), soil moisture sensor, VL53L0X ToF laser distance sensor, and a collection of extra microphone/sound modules. All images saved under images/sensors/extra/
