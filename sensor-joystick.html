@@ -45,8 +45,8 @@
   .nav-menu:hover .nav-dropdown, .nav-menu:focus-within .nav-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
   @media (max-width: 780px) {
     header { flex-wrap: wrap; gap: 6px; padding-inline: 16px; }
-    .site-nav { display: grid !important; grid-template-columns: repeat(3,1fr); width: 100%; gap: 2px; }
-    .site-nav > a, .site-nav .nav-label { justify-content: center; text-align: center; padding: 7px 5px; font-size: .84rem; }
+    .site-nav { display: flex !important; flex-wrap: wrap; justify-content: center; width: 100%; gap: 4px; }
+    .site-nav > a, .site-nav .nav-label { padding: 6px 10px; font-size: .82rem; }
     .nav-dropdown { right: 0; min-width: 205px; }
   }
 
@@ -157,7 +157,7 @@ void loop() {
   <p>לתרגם את ערכי ה-X וה-Y לכיוון תנועה (קדימה/אחורה/ימינה/שמאלה) ולשלוט בכך ברובוט על שני מנועים.</p>
 </main>
 
-<footer>© 2026 קורס רובוטיקה וארדואינו<span class="version-tag">גרסה V55</span></footer>
+<footer>© 2026 קורס רובוטיקה וארדואינו<span class="version-tag">גרסה V63</span></footer>
 
 
 

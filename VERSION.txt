@@ -1,6 +1,8 @@
 ROBOTIKA-COURSE.co.il
-Current version: V62 (arduino-jokes.html only — other pages remain V55)
-Based on: V61
+Current version: V63
+Based on: V62 (arduino-jokes.html) / V55 (rest of the shared-nav pages)
+Fix (site-wide, mobile only): the mobile navigation menu (@media max-width:780px) used a fixed 3-column CSS grid, which clipped/truncated longer nav items (e.g. "רכיבים לקנייה", "קוד משותף", "ESP32") on real phone screens — confirmed by Udi's screenshot. Changed to a flex-wrap layout so every nav item sizes to its own text and wraps naturally onto as many rows as needed, with no clipping. Applied identically across all 34 shared-nav pages and to components-gallery.css (used by the 5 components pages). live-code.html untouched (it has its own separate minimal header, no shared nav)
+Footer: version bumped to V63 across all affected pages
 Fix: merged the separate large H1 ("הומור וארדואינו") into the badge/pill above it — badge now shows the title text directly (larger, bold), the standalone H1 line removed, cleaned up now-unused CSS. One less line of vertical space at the top of the page
 ---
 ROBOTIKA-COURSE.co.il
