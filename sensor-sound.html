@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bluetooth | קורס רובוטיקה וארדואינו</title>
+<title>חיישן קול | קורס רובוטיקה וארדואינו</title>
 <style>
   :root { --bg: #ffffff; --bg-light: #ffffff; --accent: #0891b2; --accent2: #7c3aed; --text: #172033; --muted: #52647d; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -74,7 +74,7 @@
   <nav class="site-nav" aria-label="ניווט ראשי">
     <a href="index.html">בית</a>
     <div class="nav-menu">
-      <a class="nav-label" href="sensors.html">חיישנים</a>
+      <a class="nav-label active" href="sensors.html">חיישנים</a>
       <div class="nav-dropdown">
         <a href="sensors.html">כל החיישנים</a>
         <a href="sensor-ir.html">חיישן אינפרא־אדום IR</a>
@@ -85,7 +85,7 @@
         <a href="sensor-potentiometer.html">פוטנציומטר</a>
         <a href="sensor-joystick.html">ג׳ויסטיק</a>
         <a href="sensor-temp-humidity.html">חיישן טמפרטורה ולחות</a>
-        <a href="sensor-sound.html">חיישן קול</a>
+        <a href="sensor-sound.html" class="active">חיישן קול</a>
         <a href="sensor-rtc.html">שעון זמן אמת</a>
       </div>
     </div>
@@ -115,10 +115,10 @@
       </div>
     </div>
     <div class="nav-menu">
-      <a class="nav-label active" href="communication.html">תקשורת</a>
+      <a class="nav-label" href="communication.html">תקשורת</a>
       <div class="nav-dropdown">
         <a href="communication.html">כל נושאי התקשורת</a>
-        <a href="comm-bluetooth.html" class="active">Bluetooth</a>
+        <a href="comm-bluetooth.html">Bluetooth</a>
         <a href="comm-ir.html">שלט אינפרא־אדום IR</a>
         <a href="comm-rf433.html">תקשורת RF433</a>
       </div>
@@ -131,52 +131,50 @@
   </nav>
 </header>
 
-<div class="crumb"><a href="communication.html">תקשורת</a> ← Bluetooth</div>
+<div class="crumb"><a href="sensors.html">חיישנים</a> ← חיישן קול</div>
 
 <main>
-  <span class="badge">🔵 תקשורת אלחוטית</span>
-  <h1>Bluetooth</h1>
-  <p>מודול בלוטוס' (כמו HC-05 / HC-06) הופך את הארדואינו למכשיר שמדבר ישירות עם הטלפון החכם. הדרך הכי נוחה לעשות זאת בקורס היא עם אפליקציית <b>Dabble</b> - אפליקציה חינמית שמאפשרת לשלוט בארדואינו דרך ג'ויסטיק וירטואלי, כפתורים או שלט משחק, בלי לכתוב קוד בצד הטלפון בכלל.</p>
+  <span class="badge">🎙️ חיישן שמע</span>
+  <h1>חיישן קול</h1>
+  <p>חיישן הקול בנוי ממיקרופון קטן (אלקטרט) יחד עם מעגל משווה על גבי מודול. המודול נותן פלט דיגיטלי (D0) שקופץ ל-HIGH כשעוצמת הקול חוצה סף מסוים — למשל מחיאת כף או צעקה — ובחלק מהדגמים גם פלט אנלוגי (A0) שנותן קריאה רציפה של עוצמת הקול. את סף הרגישות אפשר לכוון עם הפוטנציומטר הכחול שעל המודול.</p>
 
-  <h2>איך זה עובד</h2>
+  <h2>מפרט</h2>
   <div class="specs">
     <ul>
-      <li><b>מודול בלוטוס' על הארדואינו:</b> מחובר לפיני TX/RX (תקשורת סיריאלית)</li>
-      <li><b>אפליקציית Dabble בטלפון:</b> מתחברת למודול ושולחת פקודות (כמו כיוון ג'ויסטיק) דרך בלוטוס'</li>
-      <li><b>ספריית Dabble בארדואינו:</b> קוראת את הפקודות שמגיעות ומתרגמת אותן לפעולה (למשל הפעלת מנועים)</li>
+      <li><b>מתח הפעלה:</b> 3.3V עד 5V</li>
+      <li><b>פלט דיגיטלי (D0):</b> HIGH/LOW לפי סף רגישות מכוונן</li>
+      <li><b>פלט אנלוגי (A0):</b> קריאה רציפה של עוצמת הקול (במודלים שתומכים בכך)</li>
+      <li><b>כיוונון:</b> פוטנציומטר על גבי המודול לקביעת רף הרגישות</li>
+      <li><b>שימושים נפוצים:</b> מתג "מחיאת כף", זיהוי רעש חריג, פרויקטים אינטראקטיביים</li>
     </ul>
   </div>
 
   <h2>חיבור</h2>
-  <p>VCC ל-5V, GND ל-GND, TX של המודול ל-RX של הארדואינו, RX של המודול ל-TX של הארדואינו (יש להצליב בין TX ל-RX).</p>
+  <p>VCC ל-5V, GND ל-GND, פין D0 לפין דיגיטלי (לזיהוי אירוע קול), ואם יש גם A0 — לכניסה אנלוגית לקריאת עוצמה רציפה.</p>
 
-  <h2>קוד לדוגמה - שליטה ברכב עם ג'ויסטיק מהאפליקציה</h2>
-  <pre>#define CUSTOM_SETTINGS
-#define INCLUDE_GAMEPAD_MODULE
-#include &lt;Dabble.h&gt;
+  <h2>קוד לדוגמה</h2>
+  <pre>const int soundPin = 2;  // D0
+const int ledPin = 13;
 
 void setup() {
-  Dabble.begin(9600);
+  pinMode(soundPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(9600);
 }
 
 void loop() {
-  Dabble.processInput();
+  int soundDetected = digitalRead(soundPin);
 
-  if (GamePad.isUpPressed()) {
-    forward();
-  } else if (GamePad.isDownPressed()) {
-    backward();
-  } else if (GamePad.isLeftPressed()) {
-    turnLeft();
-  } else if (GamePad.isRightPressed()) {
-    turnRight();
+  if (soundDetected == HIGH) {
+    Serial.println("קול חזק זוהה!");
+    digitalWrite(ledPin, HIGH);
   } else {
-    stopMotors();
+    digitalWrite(ledPin, LOW);
   }
 }</pre>
 
-  <h2>שימושים נפוצים</h2>
-  <p>שליטה מרחוק במכונית חכמה ישירות מהטלפון, בלי שלט נפרד; אפשר גם לשלוח נתונים בכיוון ההפוך (מהארדואינו לטלפון), למשל תצוגת מרחק שנמדד בחיישן אולטרסוני.</p>
+  <h2>רעיון לתרגול</h2>
+  <p>לבנות "מתג מחיאת כף" — כל מחיאה מחליפה מצב של LED (דלוק/כבוי), ממש כמו מתגי מחיאת כף מסחריים. אתגר: לספור רק שתי מחיאות כפיים רצופות ולא כל רעש בודד.</p>
 </main>
 
 <footer>© 2026 קורס רובוטיקה וארדואינו<span class="version-tag">גרסה V77</span></footer>

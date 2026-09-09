@@ -97,6 +97,11 @@
     display: block;
     margin-bottom: 6px;
   }
+  .card .icon-placeholder {
+    width: 100%; height: 80px; margin-bottom: 6px;
+    display: flex; align-items: center; justify-content: center;
+    background: #f1f5f9; border-radius: 8px; font-size: 2rem;
+  }
   .card h3 { font-size: .95rem; margin-bottom: 6px; }
   .card p { color: var(--muted); font-size: 0.85rem; line-height: 1.5; }
 
@@ -170,6 +175,9 @@
         <a href="sensor-vibration.html">חיישן רטט</a>
         <a href="sensor-potentiometer.html">פוטנציומטר</a>
         <a href="sensor-joystick.html">ג׳ויסטיק</a>
+        <a href="sensor-temp-humidity.html">חיישן טמפרטורה ולחות</a>
+        <a href="sensor-sound.html">חיישן קול</a>
+        <a href="sensor-rtc.html">שעון זמן אמת</a>
       </div>
     </div>
     <div class="nav-menu">
@@ -250,11 +258,26 @@
     <h3>ג'ויסטיק אנלוגי</h3>
     <p>שני צירים + לחצן לשליטה ידנית</p>
   </a>
+  <a href="sensor-temp-humidity.html" class="card">
+    <div class="icon-placeholder">🌡️</div>
+    <h3>חיישן טמפרטורה ולחות</h3>
+    <p>מדידת חום ולחות אוויר (DHT11)</p>
+  </a>
+  <a href="sensor-sound.html" class="card">
+    <div class="icon-placeholder">🎙️</div>
+    <h3>חיישן קול</h3>
+    <p>זיהוי עוצמת קול ורעש בסביבה</p>
+  </a>
+  <a href="sensor-rtc.html" class="card">
+    <div class="icon-placeholder">🕐</div>
+    <h3>שעון זמן אמת</h3>
+    <p>שעון ותאריך מדויקים גם ללא חיבור לרשת (DS3231)</p>
+  </a>
 </div>
 
 <footer>
   © 2026 קורס רובוטיקה וארדואינו — עמוד חיישנים
-<span class="version-tag">גרסה V76</span></footer>
+<span class="version-tag">גרסה V77</span></footer>
 
 
 

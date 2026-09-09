@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bluetooth | קורס רובוטיקה וארדואינו</title>
+<title>שעון זמן אמת | קורס רובוטיקה וארדואינו</title>
 <style>
   :root { --bg: #ffffff; --bg-light: #ffffff; --accent: #0891b2; --accent2: #7c3aed; --text: #172033; --muted: #52647d; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -74,7 +74,7 @@
   <nav class="site-nav" aria-label="ניווט ראשי">
     <a href="index.html">בית</a>
     <div class="nav-menu">
-      <a class="nav-label" href="sensors.html">חיישנים</a>
+      <a class="nav-label active" href="sensors.html">חיישנים</a>
       <div class="nav-dropdown">
         <a href="sensors.html">כל החיישנים</a>
         <a href="sensor-ir.html">חיישן אינפרא־אדום IR</a>
@@ -86,7 +86,7 @@
         <a href="sensor-joystick.html">ג׳ויסטיק</a>
         <a href="sensor-temp-humidity.html">חיישן טמפרטורה ולחות</a>
         <a href="sensor-sound.html">חיישן קול</a>
-        <a href="sensor-rtc.html">שעון זמן אמת</a>
+        <a href="sensor-rtc.html" class="active">שעון זמן אמת</a>
       </div>
     </div>
     <div class="nav-menu">
@@ -115,10 +115,10 @@
       </div>
     </div>
     <div class="nav-menu">
-      <a class="nav-label active" href="communication.html">תקשורת</a>
+      <a class="nav-label" href="communication.html">תקשורת</a>
       <div class="nav-dropdown">
         <a href="communication.html">כל נושאי התקשורת</a>
-        <a href="comm-bluetooth.html" class="active">Bluetooth</a>
+        <a href="comm-bluetooth.html">Bluetooth</a>
         <a href="comm-ir.html">שלט אינפרא־אדום IR</a>
         <a href="comm-rf433.html">תקשורת RF433</a>
       </div>
@@ -131,52 +131,58 @@
   </nav>
 </header>
 
-<div class="crumb"><a href="communication.html">תקשורת</a> ← Bluetooth</div>
+<div class="crumb"><a href="sensors.html">חיישנים</a> ← שעון זמן אמת</div>
 
 <main>
-  <span class="badge">🔵 תקשורת אלחוטית</span>
-  <h1>Bluetooth</h1>
-  <p>מודול בלוטוס' (כמו HC-05 / HC-06) הופך את הארדואינו למכשיר שמדבר ישירות עם הטלפון החכם. הדרך הכי נוחה לעשות זאת בקורס היא עם אפליקציית <b>Dabble</b> - אפליקציה חינמית שמאפשרת לשלוט בארדואינו דרך ג'ויסטיק וירטואלי, כפתורים או שלט משחק, בלי לכתוב קוד בצד הטלפון בכלל.</p>
+  <span class="badge">🕐 מודול זמן</span>
+  <h1>שעון זמן אמת (RTC DS3231)</h1>
+  <p>ה-DS3231 הוא שבב RTC (Real Time Clock) שמחזיק תאריך ושעה מדויקים גם כשהארדואינו כבוי או מנותק, בזכות סוללת גיבוי קטנה (CR2032) שעל גבי המודול. הוא מדבר עם הארדואינו בפרוטוקול I2C, ומתאים במיוחד לפרויקטים שצריכים לדעת "מה השעה עכשיו" בלי חיבור לאינטרנט — כמו שעון מילים, לוגר נתונים עם חותמת זמן, או תזמון אירועים.</p>
 
-  <h2>איך זה עובד</h2>
+  <h2>מפרט</h2>
   <div class="specs">
     <ul>
-      <li><b>מודול בלוטוס' על הארדואינו:</b> מחובר לפיני TX/RX (תקשורת סיריאלית)</li>
-      <li><b>אפליקציית Dabble בטלפון:</b> מתחברת למודול ושולחת פקודות (כמו כיוון ג'ויסטיק) דרך בלוטוס'</li>
-      <li><b>ספריית Dabble בארדואינו:</b> קוראת את הפקודות שמגיעות ומתרגמת אותן לפעולה (למשל הפעלת מנועים)</li>
+      <li><b>מתח הפעלה:</b> 3.3V עד 5V</li>
+      <li><b>תקשורת:</b> I2C (פינים SDA ו-SCL)</li>
+      <li><b>דיוק:</b> כ-±2 דקות בשנה בלבד — הרבה יותר מדויק מרוב שבבי ה-RTC הזולים יותר</li>
+      <li><b>סוללת גיבוי:</b> CR2032, שומרת על השעה גם כשאין חשמל לארדואינו</li>
+      <li><b>בונוס:</b> כולל גם חיישן טמפרטורה פנימי</li>
+      <li><b>שימושים נפוצים:</b> שעון מילים, לוגר נתונים עם חותמת זמן, מערכות תזמון וטיימרים</li>
     </ul>
   </div>
 
   <h2>חיבור</h2>
-  <p>VCC ל-5V, GND ל-GND, TX של המודול ל-RX של הארדואינו, RX של המודול ל-TX של הארדואינו (יש להצליב בין TX ל-RX).</p>
+  <p>VCC ל-5V, GND ל-GND, SDA ל-A4 (בארדואינו Uno; בלוחות אחרים יש פינים ייעודיים ל-SDA/SCL), SCL ל-A5.</p>
 
-  <h2>קוד לדוגמה - שליטה ברכב עם ג'ויסטיק מהאפליקציה</h2>
-  <pre>#define CUSTOM_SETTINGS
-#define INCLUDE_GAMEPAD_MODULE
-#include &lt;Dabble.h&gt;
+  <h2>קוד לדוגמה</h2>
+  <pre>#include &lt;Wire.h&gt;
+#include &lt;RTClib.h&gt;
+
+RTC_DS3231 rtc;
 
 void setup() {
-  Dabble.begin(9600);
+  Serial.begin(9600);
+  rtc.begin();
+
+  // מריצים פעם אחת כדי לכוון את השעון לפי זמן הקומפילציה,
+  // ואז מוחקים/מעירים את השורה הזו כדי שלא יתאפס בכל הפעלה
+  // rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
 }
 
 void loop() {
-  Dabble.processInput();
+  DateTime now = rtc.now();
 
-  if (GamePad.isUpPressed()) {
-    forward();
-  } else if (GamePad.isDownPressed()) {
-    backward();
-  } else if (GamePad.isLeftPressed()) {
-    turnLeft();
-  } else if (GamePad.isRightPressed()) {
-    turnRight();
-  } else {
-    stopMotors();
-  }
+  Serial.print(now.hour());
+  Serial.print(":");
+  Serial.print(now.minute());
+  Serial.print(":");
+  Serial.println(now.second());
+
+  delay(1000);
 }</pre>
+  <p style="color:var(--muted);font-size:.85rem">* לפני השימוש יש להתקין את הספרייה "RTClib" (של Adafruit) דרך Library Manager ב-Arduino IDE.</p>
 
-  <h2>שימושים נפוצים</h2>
-  <p>שליטה מרחוק במכונית חכמה ישירות מהטלפון, בלי שלט נפרד; אפשר גם לשלוח נתונים בכיוון ההפוך (מהארדואינו לטלפון), למשל תצוגת מרחק שנמדד בחיישן אולטרסוני.</p>
+  <h2>רעיון לתרגול</h2>
+  <p>לבנות שעון דיגיטלי פשוט שמדפיס את השעה ל-Serial Monitor כל שנייה, ואז לשדרג: להדליק LED אדום בשעות מסוימות (למשל "שעת שינה"), או לבנות תזכורת שמתריעה בשעה קבועה מדי יום.</p>
 </main>
 
 <footer>© 2026 קורס רובוטיקה וארדואינו<span class="version-tag">גרסה V77</span></footer>

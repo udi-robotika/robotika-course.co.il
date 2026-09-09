@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bluetooth | קורס רובוטיקה וארדואינו</title>
+<title>חיישן טמפרטורה ולחות | קורס רובוטיקה וארדואינו</title>
 <style>
   :root { --bg: #ffffff; --bg-light: #ffffff; --accent: #0891b2; --accent2: #7c3aed; --text: #172033; --muted: #52647d; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -74,7 +74,7 @@
   <nav class="site-nav" aria-label="ניווט ראשי">
     <a href="index.html">בית</a>
     <div class="nav-menu">
-      <a class="nav-label" href="sensors.html">חיישנים</a>
+      <a class="nav-label active" href="sensors.html">חיישנים</a>
       <div class="nav-dropdown">
         <a href="sensors.html">כל החיישנים</a>
         <a href="sensor-ir.html">חיישן אינפרא־אדום IR</a>
@@ -84,7 +84,7 @@
         <a href="sensor-vibration.html">חיישן רטט</a>
         <a href="sensor-potentiometer.html">פוטנציומטר</a>
         <a href="sensor-joystick.html">ג׳ויסטיק</a>
-        <a href="sensor-temp-humidity.html">חיישן טמפרטורה ולחות</a>
+        <a href="sensor-temp-humidity.html" class="active">חיישן טמפרטורה ולחות</a>
         <a href="sensor-sound.html">חיישן קול</a>
         <a href="sensor-rtc.html">שעון זמן אמת</a>
       </div>
@@ -115,10 +115,10 @@
       </div>
     </div>
     <div class="nav-menu">
-      <a class="nav-label active" href="communication.html">תקשורת</a>
+      <a class="nav-label" href="communication.html">תקשורת</a>
       <div class="nav-dropdown">
         <a href="communication.html">כל נושאי התקשורת</a>
-        <a href="comm-bluetooth.html" class="active">Bluetooth</a>
+        <a href="comm-bluetooth.html">Bluetooth</a>
         <a href="comm-ir.html">שלט אינפרא־אדום IR</a>
         <a href="comm-rf433.html">תקשורת RF433</a>
       </div>
@@ -131,52 +131,57 @@
   </nav>
 </header>
 
-<div class="crumb"><a href="communication.html">תקשורת</a> ← Bluetooth</div>
+<div class="crumb"><a href="sensors.html">חיישנים</a> ← חיישן טמפרטורה ולחות</div>
 
 <main>
-  <span class="badge">🔵 תקשורת אלחוטית</span>
-  <h1>Bluetooth</h1>
-  <p>מודול בלוטוס' (כמו HC-05 / HC-06) הופך את הארדואינו למכשיר שמדבר ישירות עם הטלפון החכם. הדרך הכי נוחה לעשות זאת בקורס היא עם אפליקציית <b>Dabble</b> - אפליקציה חינמית שמאפשרת לשלוט בארדואינו דרך ג'ויסטיק וירטואלי, כפתורים או שלט משחק, בלי לכתוב קוד בצד הטלפון בכלל.</p>
+  <span class="badge">🌡️ חיישן סביבתי</span>
+  <h1>חיישן טמפרטורה ולחות (DHT11)</h1>
+  <p>DHT11 הוא חיישן דיגיטלי משולב שמודד גם טמפרטורה וגם לחות יחסית באוויר, ומעביר את שתי המדידות בפין דיגיטלי בודד לפי פרוטוקול תקשורת ייעודי. לרוב עובדים איתו דרך ספרייה מוכנה (DHT sensor library) שמטפלת בקריאת הפרוטוקול בשבילכם.</p>
 
-  <h2>איך זה עובד</h2>
+  <h2>מפרט</h2>
   <div class="specs">
     <ul>
-      <li><b>מודול בלוטוס' על הארדואינו:</b> מחובר לפיני TX/RX (תקשורת סיריאלית)</li>
-      <li><b>אפליקציית Dabble בטלפון:</b> מתחברת למודול ושולחת פקודות (כמו כיוון ג'ויסטיק) דרך בלוטוס'</li>
-      <li><b>ספריית Dabble בארדואינו:</b> קוראת את הפקודות שמגיעות ומתרגמת אותן לפעולה (למשל הפעלת מנועים)</li>
+      <li><b>מתח הפעלה:</b> 3V עד 5.5V</li>
+      <li><b>טווח טמפרטורה:</b> 0°C עד 50°C, דיוק של כ-±2°C</li>
+      <li><b>טווח לחות:</b> 20% עד 90% לחות יחסית, דיוק של כ-±5%</li>
+      <li><b>פלט:</b> פין דיגיטלי בודד (פרוטוקול ייחודי, לא I2C ולא PWM רגיל)</li>
+      <li><b>קצב דגימה:</b> עד פעם בשנייה בערך — לא מתאים למדידות מהירות</li>
+      <li><b>שימושים נפוצים:</b> תחנת מזג אוויר ביתית, בקרת אוורור/השקיה, לוגר נתוני סביבה</li>
     </ul>
   </div>
 
   <h2>חיבור</h2>
-  <p>VCC ל-5V, GND ל-GND, TX של המודול ל-RX של הארדואינו, RX של המודול ל-TX של הארדואינו (יש להצליב בין TX ל-RX).</p>
+  <p>VCC ל-5V (או 3.3V), GND ל-GND, פין DATA לפין דיגיטלי כלשהו (למשל D2). ברוב המודולים המוכנים כבר יש נגד pull-up מובנה על גבי הלוח, כך שאין צורך להוסיף אחד בעצמכם.</p>
 
-  <h2>קוד לדוגמה - שליטה ברכב עם ג'ויסטיק מהאפליקציה</h2>
-  <pre>#define CUSTOM_SETTINGS
-#define INCLUDE_GAMEPAD_MODULE
-#include &lt;Dabble.h&gt;
+  <h2>קוד לדוגמה</h2>
+  <pre>#include &lt;DHT.h&gt;
+
+#define DHTPIN 2
+#define DHTTYPE DHT11
+
+DHT dht(DHTPIN, DHTTYPE);
 
 void setup() {
-  Dabble.begin(9600);
+  Serial.begin(9600);
+  dht.begin();
 }
 
 void loop() {
-  Dabble.processInput();
+  float humidity = dht.readHumidity();
+  float temperature = dht.readTemperature();
 
-  if (GamePad.isUpPressed()) {
-    forward();
-  } else if (GamePad.isDownPressed()) {
-    backward();
-  } else if (GamePad.isLeftPressed()) {
-    turnLeft();
-  } else if (GamePad.isRightPressed()) {
-    turnRight();
-  } else {
-    stopMotors();
-  }
+  Serial.print("טמפרטורה: ");
+  Serial.print(temperature);
+  Serial.print(" C, לחות: ");
+  Serial.print(humidity);
+  Serial.println(" %");
+
+  delay(2000);
 }</pre>
+  <p style="color:var(--muted);font-size:.85rem">* לפני השימוש יש להתקין את הספרייה "DHT sensor library" (של Adafruit) דרך Library Manager ב-Arduino IDE.</p>
 
-  <h2>שימושים נפוצים</h2>
-  <p>שליטה מרחוק במכונית חכמה ישירות מהטלפון, בלי שלט נפרד; אפשר גם לשלוח נתונים בכיוון ההפוך (מהארדואינו לטלפון), למשל תצוגת מרחק שנמדד בחיישן אולטרסוני.</p>
+  <h2>רעיון לתרגול</h2>
+  <p>לבנות "תחנת מזג אוויר" קטנה: כשהטמפרטורה עוברת סף מסוים, מדליקים LED אדום; כשהלחות גבוהה מדי, מדליקים LED כחול. אפשר גם להוסיף מאוורר קטן (מנוע DC) שנדלק אוטומטית כשחם מדי.</p>
 </main>
 
 <footer>© 2026 קורס רובוטיקה וארדואינו<span class="version-tag">גרסה V77</span></footer>

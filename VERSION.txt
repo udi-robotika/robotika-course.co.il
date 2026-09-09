@@ -1,6 +1,10 @@
 ROBOTIKA-COURSE.co.il
-Current version: V76 (sensors.html only)
-Based on: V75
+Current version: V77
+Based on: V76
+Added 3 new sensors, per Udi's comparison against another reference site: sensor-temp-humidity.html (DHT11 — temperature+humidity), sensor-sound.html (sound/clap sensor module), sensor-rtc.html (DS3231 real-time clock). Each is a full detail page (specs, wiring, example code, exercise idea) matching the site's existing template
+New cards added to sensors.html grid for all 3, with emoji icon placeholders (no product photos yet — Udi to send real photos to replace the placeholders, same workflow as the light/potentiometer/joystick image swaps earlier)
+Nav dropdown under "חיישנים" updated site-wide (34 shared pages) to include all 3 new sensor links
+Footer version bumped to V77 across all touched/shared pages
 Fix: images/sensors/joystick.jpg was actually corrupted — only 114 bytes of stray HTML redirect text, not a real image (pre-existing bug, unrelated to any of this session's changes, likely present since before V42). Replaced with Udi's real photo of the KY-023 module. Scanned all other site images for the same corruption pattern — none found, this was the only one
 Fix: potentiometer card image replaced — was a Grove-style breakout module photo, now shows the actual bare 3-pin rotary potentiometer used in the course. Image saved to images/sensors/potentiometer.jpg (overwritten)
 Fix: light sensor card image replaced — was a plain 3-pin LDR photo, now shows the actual 4-pin module (VCC, GND, DO, AO) with both analog and digital output, matching what's really used in the course. Card description updated accordingly. Image saved to images/sensors/light.jpg (overwritten)
