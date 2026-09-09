@@ -1,6 +1,7 @@
 ROBOTIKA-COURSE.co.il
-Current version: V80 (sensors.html only)
-Based on: V79
+Current version: V81 (sensors.html only)
+Based on: V80
+Added 8 more components to the "רכיבים נוספים — לא בשימוש בקורס" section: flame/fire sensor, PIR motion sensor, water level sensor, MPU-6050 gyro+accelerometer, gas sensor (MQ family), soil moisture sensor, VL53L0X ToF laser distance sensor, and a collection of extra microphone/sound modules. All images saved under images/sensors/extra/
 Added: new "רכיבים נוספים — לא בשימוש בקורס" section at the bottom of sensors.html, visually separated (dashed border, muted/non-clickable cards) from the main course sensor grid. First item: a high-power industrial laser diode module (images/sensors/extra/laser-module.jpg), per Udi's photo. More items can be added to this same section later
 Fix: laser sensor card image replaced with Udi's photo of the actual KY-008 style laser diode module (3-pin, S/+/- labeled). Image saved to images/sensors/laser.jpg (overwritten)
 Fix: images/sensors/ir.png had huge amounts of white padding around the actual sensor (content only filled ~40% of the canvas height), making it look tiny in the 80px-tall card thumbnail. Cropped tightly to content (416x416 → 292x189) so it now fills the card properly
