@@ -1,6 +1,7 @@
 ROBOTIKA-COURSE.co.il
-Current version: V79 (sensors.html only)
-Based on: V78
+Current version: V80 (sensors.html only)
+Based on: V79
+Added: new "רכיבים נוספים — לא בשימוש בקורס" section at the bottom of sensors.html, visually separated (dashed border, muted/non-clickable cards) from the main course sensor grid. First item: a high-power industrial laser diode module (images/sensors/extra/laser-module.jpg), per Udi's photo. More items can be added to this same section later
 Fix: laser sensor card image replaced with Udi's photo of the actual KY-008 style laser diode module (3-pin, S/+/- labeled). Image saved to images/sensors/laser.jpg (overwritten)
 Fix: images/sensors/ir.png had huge amounts of white padding around the actual sensor (content only filled ~40% of the canvas height), making it look tiny in the 80px-tall card thumbnail. Cropped tightly to content (416x416 → 292x189) so it now fills the card properly
 Added 3 new sensors, per Udi's comparison against another reference site: sensor-temp-humidity.html (DHT11 — temperature+humidity), sensor-sound.html (sound/clap sensor module), sensor-rtc.html (DS3231 real-time clock). Each is a full detail page (specs, wiring, example code, exercise idea) matching the site's existing template
