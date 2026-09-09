@@ -1,4 +1,13 @@
 ROBOTIKA-COURSE.co.il
+Current version: V44
+Based on: V43
+Footer: version bumped to V44 across all pages
+Restructure: /lessons/lesson-1/ moved to /lessons/course-43/lesson-1/ ("סולמית 43" — Dizengoff Center location, course #43)
+New: /lessons/course-43/ is now the course-43 lessons hub (moved from /lessons/); /lessons/index.html is now a redirect to /lessons/course-43/ for backward compatibility with the site nav
+New isolated section: /course-july-2026/ — separate top-level hub for the second location (Yehud), not linked from any nav and marked noindex, so its students and the Dizengoff course-43 students never see each other's lessons
+No existing page content, images, or the live-code Blob API/storage was modified
+---
+ROBOTIKA-COURSE.co.il
 Current version: V43
 Based on: V42
 Footer: version bumped to V43 across all 36 pages
