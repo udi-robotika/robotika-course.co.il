@@ -1,4 +1,10 @@
 ROBOTIKA-COURSE.co.il
+Current version: V49
+Based on: V48
+Footer: version bumped to V49 across all pages
+Removed: /course-july-2026/ redirect page deleted entirely per Udi's request (old URL no longer resolves at all — only /makelab/july-2026/ works now)
+---
+ROBOTIKA-COURSE.co.il
 Current version: V48
 Based on: V47
 Footer: version bumped to V48 across all pages
