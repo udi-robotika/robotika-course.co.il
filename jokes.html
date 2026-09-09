@@ -3,32 +3,50 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ג'ויסטיק אנלוגי | קורס רובוטיקה וארדואינו</title>
+<title>הומור — קורס רובוטיקה וארדואינו</title>
 <style>
-  :root { --bg: #ffffff; --bg-light: #ffffff; --accent: #0891b2; --accent2: #7c3aed; --text: #172033; --muted: #52647d; }
+  :root {
+    --bg: #ffffff;
+    --bg-light: #ffffff;
+    --accent: #0891b2;
+    --accent2: #7c3aed;
+    --text: #172033;
+    --muted: #52647d;
+  }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family:'Segoe UI','Heebo',Arial,sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
-  header { direction: ltr; display: flex; justify-content: space-between; align-items: center; padding: 6px 48px 2px; }
-  header .logo { direction: rtl; font-weight: 700; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); }
-  nav a { color: var(--muted); text-decoration: none; margin-inline-start: 28px; font-size: .95rem; }
-  nav a:hover, nav a.active { color: var(--accent); }
-  .crumb { max-width: 800px; margin: 0 auto; padding: 0 24px; color: var(--muted); font-size: .85rem; }
-  .crumb a { color: var(--muted); }
-  main { max-width: 800px; margin: 0 auto; padding: 8px 24px 50px; }
-  .badge { display: inline-block; background: rgba(34,211,238,.1); color: var(--accent); padding: 5px 14px; border-radius: 999px; font-size: .8rem; margin-bottom: 8px; border: 1px solid rgba(34,211,238,.3); }
-  h1 { font-size: 2.2rem; margin-bottom: 10px; background: linear-gradient(90deg,var(--accent),var(--accent2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  h2 { font-size: 1.3rem; margin: 24px 0 10px; color: var(--accent); }
-  p { color: var(--text); line-height: 1.8; margin-bottom: 12px; }
-  .specs { background: var(--bg-light); border: 1px solid #dbe3ee; border-radius: 12px; padding: 20px 24px; margin: 16px 0; }
-  .specs ul { list-style: none; }
-  .specs li { padding: 6px 0; border-bottom: 1px solid #e5eaf1; color: var(--muted); }
-  .specs li:last-child { border-bottom: none; }
-  .specs li b { color: var(--text); }
-  pre { background: #0b1120; border: 1px solid #dbe3ee; border-radius: 12px; padding: 18px 20px; overflow-x: auto; direction: ltr; text-align: left; font-family: 'Consolas', monospace; font-size: .85rem; color: #a5f3fc; line-height: 1.6; }
-  footer { text-align: center; padding: 30px; color: var(--muted); font-size: .85rem; border-top: 1px solid #e5eaf1; }
+  body {
+    font-family: 'Segoe UI', 'Heebo', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+  header {
+    direction: ltr;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 48px 2px;
+  }
+  header .logo {
+    direction: rtl;
+    font-weight: 700;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--text);
+  }
+  header .logo span.icon { font-size: 1.6rem; }
+
+  footer {
+    text-align: center;
+    padding: 30px;
+    color: var(--muted);
+    font-size: 0.85rem;
+    border-top: 1px solid #e5eaf1;
+  }
   .version-tag { display: block; margin-top: 6px; font-size: 0.78rem; opacity: 0.85; }
-
-
 
   /* תפריט נפתח משותף לכל האתר */
   .site-nav { display: flex; align-items: center; gap: 4px; position: relative; z-index: 100; direction: rtl; }
@@ -50,16 +68,50 @@
     .nav-dropdown { right: 0; min-width: 205px; }
   }
 
+  /* עמוד הומור */
+  main.jokes-wrap { max-width: 900px; margin: 18px auto 40px; padding: 0 24px; }
+  .jokes-title { text-align: center; margin-bottom: 26px; }
+  .jokes-title .badge {
+    display: inline-block; background: rgba(34,211,238,0.1); color: var(--accent);
+    padding: 6px 18px; border-radius: 999px; font-size: 0.78rem; margin-bottom: 10px;
+    border: 1px solid rgba(34,211,238,0.3);
+  }
+  .jokes-title h1 {
+    font-size: 2.2rem; line-height: 1.25;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    margin-bottom: 8px;
+  }
+  .jokes-title p { color: var(--muted); font-size: 1.05rem; }
+
+  .joke-image-card {
+    background: var(--bg-light); border: 1px solid #dbe3ee; border-radius: 16px;
+    overflow: hidden; margin-bottom: 22px;
+  }
+  .joke-image-card img { display: block; width: 100%; height: auto; }
+
+  .joke-cards { display: grid; gap: 14px; }
+  .joke-card {
+    background: var(--bg-light); border: 1px solid #dbe3ee; border-radius: 14px;
+    padding: 20px 22px;
+  }
+  .joke-card p { font-size: 1.02rem; line-height: 1.6; }
+  .joke-card .q { font-weight: 700; margin-bottom: 6px; }
+  .joke-card .a { color: var(--muted); }
+
+  @media (max-width: 600px) {
+    .jokes-title h1 { font-size: 1.8rem; }
+  }
 </style>
 </head>
 <body>
 
 <header>
-  <a href="index.html" class="logo"><span>🤖</span> קורס רובוטיקה וארדואינו · תכנות פיזי ועצמים חכמים</a>
+  <a href="index.html" class="logo"><span class="icon">🤖</span> קורס רובוטיקה וארדואינו · תכנות פיזי ועצמים חכמים</a>
   <nav class="site-nav" aria-label="ניווט ראשי">
     <a href="index.html">בית</a>
     <div class="nav-menu">
-      <a class="nav-label active" href="sensors.html">חיישנים</a>
+      <a class="nav-label" href="sensors.html">חיישנים</a>
       <div class="nav-dropdown">
         <a href="sensors.html">כל החיישנים</a>
         <a href="sensor-ir.html">חיישן אינפרא־אדום IR</a>
@@ -68,7 +120,7 @@
         <a href="sensor-laser.html">חיישן לייזר</a>
         <a href="sensor-vibration.html">חיישן רטט</a>
         <a href="sensor-potentiometer.html">פוטנציומטר</a>
-        <a href="sensor-joystick.html" class="active">ג׳ויסטיק</a>
+        <a href="sensor-joystick.html">ג׳ויסטיק</a>
       </div>
     </div>
     <div class="nav-menu">
@@ -108,58 +160,45 @@
     <a href="recommended-components.html" class="nav-cta">רכיבים לקנייה</a>
     <a href="live-code.html" class="nav-cta">קוד משותף</a>
     <a href="lessons/">שיעורים</a>
-    <a href="jokes.html">הומור</a>
+    <a href="jokes.html" class="active">הומור</a>
     <a href="esp32.html">ESP32</a>
   </nav>
 </header>
 
-<div class="crumb"><a href="sensors.html">חיישנים</a> ← ג'ויסטיק אנלוגי</div>
-
-<main>
-  <span class="badge">🕹️ קלט משתמש</span>
-  <h1>ג'ויסטיק אנלוגי</h1>
-  <p>מודול ג'ויסטיק כולל למעשה שני פוטנציומטרים - אחד לכל ציר (X ו-Y) - ולחצן דיגיטלי שמופעל בלחיצה על הידית עצמה. זהו רכיב קלט נהדר לשליטה ברובוט, במשחק, או בכל פרויקט שדורש כיוון ועוצמה.</p>
-
-  <h2>מפרט</h2>
-  <div class="specs">
-    <ul>
-      <li><b>פינים:</b> VRx, VRy (אנלוגי), SW (דיגיטלי, לחצן), VCC, GND</li>
-      <li><b>פלט צירים:</b> ערך אנלוגי 0-1023, מרכז בסביבות 512</li>
-      <li><b>שימושים נפוצים:</b> שליטה ברובוט, בקר משחק, תפריט ניווט</li>
-    </ul>
+<main class="jokes-wrap">
+  <div class="jokes-title">
+    <span class="badge">קורס רובוטיקה · פינת הומור</span>
+    <h1>הומור וארדואינו</h1>
+    <p>קצת צחוקים בין הלחמות, כי גם רובוטיקה צריכה הפסקה</p>
   </div>
 
-  <h2>חיבור</h2>
-  <p>VCC ל-5V, GND ל-GND, VRx ו-VRy לשתי כניסות אנלוגיות (למשל A0, A1), SW לפין דיגיטלי (למשל פין 2).</p>
+  <div class="joke-image-card">
+    <img src="images/jokes/arduino-joke-01.png" alt="בדיחת ארדואינו: ארדואינו טוען — מה שלא הורג, מחשמל">
+  </div>
 
-  <h2>קוד לדוגמה</h2>
-  <pre>const int xPin = A0;
-const int yPin = A1;
-const int swPin = 2;
-
-void setup() {
-  Serial.begin(9600);
-  pinMode(swPin, INPUT_PULLUP);
-}
-
-void loop() {
-  int x = analogRead(xPin);
-  int y = analogRead(yPin);
-  bool pressed = digitalRead(swPin) == LOW;
-
-  Serial.print("X: "); Serial.print(x);
-  Serial.print(" Y: "); Serial.print(y);
-  Serial.print(" Button: "); Serial.println(pressed);
-  delay(200);
-}</pre>
-
-  <h2>רעיון לתרגול</h2>
-  <p>לתרגם את ערכי ה-X וה-Y לכיוון תנועה (קדימה/אחורה/ימינה/שמאלה) ולשלוט בכך ברובוט על שני מנועים.</p>
+  <div class="joke-cards">
+    <article class="joke-card">
+      <p class="q">למה הנגד הלך לטיפול?</p>
+      <p class="a">כי היה לו יותר מדי התנגדויות.</p>
+    </article>
+    <article class="joke-card">
+      <p class="q">מה אמר הקבל לנגד?</p>
+      <p class="a">אני טוען אותך ברצינות.</p>
+    </article>
+    <article class="joke-card">
+      <p class="q">למה הארדואינו לא רצה לצאת מהבית?</p>
+      <p class="a">כי הוא הרגיש הכי בטוח בתוך הלולאה שלו.</p>
+    </article>
+    <article class="joke-card">
+      <p class="q">איך קוראים לחיישן אור שמספר בדיחות?</p>
+      <p class="a">קומיקאור.</p>
+    </article>
+  </div>
 </main>
 
-<footer>© 2026 קורס רובוטיקה וארדואינו<span class="version-tag">גרסה V51</span></footer>
-
-
+<footer>
+  © 2026 קורס רובוטיקה וארדואינו — הומור
+<span class="version-tag">גרסה V51</span></footer>
 
 </body>
 </html>
