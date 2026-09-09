@@ -1,4 +1,10 @@
 ROBOTIKA-COURSE.co.il
+Current version: V46
+Based on: V45
+Footer: version bumped to V46 across all pages
+Branding: /course-july-2026/ updated to "MAKELAB יהוד" (title, badge, h1, footer) — was generic "קורס יולי 2026"
+---
+ROBOTIKA-COURSE.co.il
 Current version: V45
 Based on: V44
 Footer: version bumped to V45 across all pages
