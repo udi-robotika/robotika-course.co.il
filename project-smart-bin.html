@@ -44,7 +44,8 @@
   .nav-dropdown a:hover, .nav-dropdown a.active { color: var(--accent); background: #f1f5f9; }
   .nav-menu:hover .nav-dropdown, .nav-menu:focus-within .nav-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
   @media (max-width: 780px) {
-    header { flex-direction: column; align-items: center; text-align: center; gap: 10px; padding: 16px 16px 12px; }
+    body { overflow-x: hidden; }
+    header { flex-direction: column; align-items: center; text-align: center; gap: 10px; padding: 16px 16px 12px; direction: rtl; }
     header .logo { justify-content: center; font-size: 1.02rem; }
     .site-nav { display: flex !important; flex-wrap: wrap; justify-content: center; width: 100%; gap: 6px; }
     .site-nav > a, .site-nav .nav-label {
@@ -180,7 +181,7 @@ void openGarbage() {
   <p>ניתן להחליף את מקלט ה-IR במקלט RF433 (עם ספריית rc-switch), כדי לפתוח את המכסה משלט רדיו במקום שלט אינפרה אדום - שימושי כשצריך טווח פתיחה גדול יותר או בלי קו ראייה ישיר.</p>
 </main>
 
-<footer>© 2026 קורס רובוטיקה וארדואינו<span class="version-tag">גרסה V64</span></footer>
+<footer>© 2026 קורס רובוטיקה וארדואינו<span class="version-tag">גרסה V66</span></footer>
 
 
 
