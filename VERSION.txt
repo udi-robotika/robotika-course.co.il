@@ -1,6 +1,7 @@
 ROBOTIKA-COURSE.co.il
-Current version: V75 (sensors.html only)
-Based on: V74
+Current version: V76 (sensors.html only)
+Based on: V75
+Fix: images/sensors/joystick.jpg was actually corrupted — only 114 bytes of stray HTML redirect text, not a real image (pre-existing bug, unrelated to any of this session's changes, likely present since before V42). Replaced with Udi's real photo of the KY-023 module. Scanned all other site images for the same corruption pattern — none found, this was the only one
 Fix: potentiometer card image replaced — was a Grove-style breakout module photo, now shows the actual bare 3-pin rotary potentiometer used in the course. Image saved to images/sensors/potentiometer.jpg (overwritten)
 Fix: light sensor card image replaced — was a plain 3-pin LDR photo, now shows the actual 4-pin module (VCC, GND, DO, AO) with both analog and digital output, matching what's really used in the course. Card description updated accordingly. Image saved to images/sensors/light.jpg (overwritten)
 Fix: sensors.html card grid changed from auto-fit (~3 columns) to a fixed 5-column layout on desktop, with smaller images (120px → 80px) and tighter card padding. Added responsive fallbacks: 3 columns between 781-1000px, 2 columns under 780px (images 70px)
