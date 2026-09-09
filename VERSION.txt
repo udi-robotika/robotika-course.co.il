@@ -1,4 +1,10 @@
 ROBOTIKA-COURSE.co.il
+Current version: V45
+Based on: V44
+Footer: version bumped to V45 across all pages
+Fix: /lessons/course-43/ heading changed from "סולמית 43" to "קורס #43 · ימי שלישי" (per Udi's correction — title, browser tab title, and footer copyright line all updated)
+---
+ROBOTIKA-COURSE.co.il
 Current version: V44
 Based on: V43
 Footer: version bumped to V44 across all pages
