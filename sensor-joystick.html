@@ -44,9 +44,17 @@
   .nav-dropdown a:hover, .nav-dropdown a.active { color: var(--accent); background: #f1f5f9; }
   .nav-menu:hover .nav-dropdown, .nav-menu:focus-within .nav-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
   @media (max-width: 780px) {
-    header { flex-wrap: wrap; gap: 6px; padding-inline: 16px; }
-    .site-nav { display: flex !important; flex-wrap: wrap; justify-content: center; width: 100%; gap: 4px; }
-    .site-nav > a, .site-nav .nav-label { padding: 6px 10px; font-size: .82rem; }
+    header { flex-direction: column; align-items: center; text-align: center; gap: 10px; padding: 16px 16px 12px; }
+    header .logo { justify-content: center; font-size: 1.02rem; }
+    .site-nav { display: flex !important; flex-wrap: wrap; justify-content: center; width: 100%; gap: 6px; }
+    .site-nav > a, .site-nav .nav-label {
+      padding: 7px 13px; font-size: .82rem;
+      background: #f6f8fb; border: 1px solid #e5eaf1; border-radius: 999px;
+    }
+    .site-nav > a:hover, .site-nav > a.active, .site-nav .nav-label:hover, .site-nav .nav-label.active {
+      background: #eaf6f8; border-color: rgba(8,145,178,.35);
+    }
+    .site-nav > a.nav-cta { padding: 7px 15px; }
     .nav-dropdown { right: 0; min-width: 205px; }
   }
 
@@ -157,7 +165,7 @@ void loop() {
   <p>לתרגם את ערכי ה-X וה-Y לכיוון תנועה (קדימה/אחורה/ימינה/שמאלה) ולשלוט בכך ברובוט על שני מנועים.</p>
 </main>
 
-<footer>© 2026 קורס רובוטיקה וארדואינו<span class="version-tag">גרסה V63</span></footer>
+<footer>© 2026 קורס רובוטיקה וארדואינו<span class="version-tag">גרסה V64</span></footer>
 
 
 

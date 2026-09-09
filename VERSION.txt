@@ -1,6 +1,7 @@
 ROBOTIKA-COURSE.co.il
-Current version: V63
-Based on: V62 (arduino-jokes.html) / V55 (rest of the shared-nav pages)
+Current version: V64
+Based on: V63
+Fix (site-wide, mobile only, redesign): Udi reported the mobile nav still looked bad/uncentered after V63's flex-wrap fix. Redesigned mobile header: header now stacks as a centered column (logo centered above nav), and every nav item (plain links, dropdown labels, CTA pills) gets a consistent rounded "chip" style (light background, border, generous padding) so the wrapped row reads as an intentional centered button cluster instead of mismatched plain text links. Applied across all 34 shared-nav pages and components-gallery.css. Dropdown submenu behavior itself left untouched (pre-existing hover-based mechanism, out of scope for this fix)
 Fix (site-wide, mobile only): the mobile navigation menu (@media max-width:780px) used a fixed 3-column CSS grid, which clipped/truncated longer nav items (e.g. "רכיבים לקנייה", "קוד משותף", "ESP32") on real phone screens — confirmed by Udi's screenshot. Changed to a flex-wrap layout so every nav item sizes to its own text and wraps naturally onto as many rows as needed, with no clipping. Applied identically across all 34 shared-nav pages and to components-gallery.css (used by the 5 components pages). live-code.html untouched (it has its own separate minimal header, no shared nav)
 Footer: version bumped to V63 across all affected pages
 Fix: merged the separate large H1 ("הומור וארדואינו") into the badge/pill above it — badge now shows the title text directly (larger, bold), the standalone H1 line removed, cleaned up now-unused CSS. One less line of vertical space at the top of the page
