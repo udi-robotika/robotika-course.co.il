@@ -1,6 +1,7 @@
 ROBOTIKA-COURSE.co.il
-Current version: V78 (sensors.html only)
-Based on: V77
+Current version: V79 (sensors.html only)
+Based on: V78
+Fix: laser sensor card image replaced with Udi's photo of the actual KY-008 style laser diode module (3-pin, S/+/- labeled). Image saved to images/sensors/laser.jpg (overwritten)
 Fix: images/sensors/ir.png had huge amounts of white padding around the actual sensor (content only filled ~40% of the canvas height), making it look tiny in the 80px-tall card thumbnail. Cropped tightly to content (416x416 → 292x189) so it now fills the card properly
 Added 3 new sensors, per Udi's comparison against another reference site: sensor-temp-humidity.html (DHT11 — temperature+humidity), sensor-sound.html (sound/clap sensor module), sensor-rtc.html (DS3231 real-time clock). Each is a full detail page (specs, wiring, example code, exercise idea) matching the site's existing template
 New cards added to sensors.html grid for all 3, with emoji icon placeholders (no product photos yet — Udi to send real photos to replace the placeholders, same workflow as the light/potentiometer/joystick image swaps earlier)
