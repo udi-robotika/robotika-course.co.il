@@ -1,4 +1,9 @@
 ROBOTIKA-COURSE.co.il
+Current version: V60 (arduino-jokes.html only — other pages remain V55)
+Based on: V59
+Fix: subtitle text under "הומור וארדואינו" shortened ("כי גם" → "—") and given max-width:32ch (centered) so it reliably wraps to 2 lines instead of 3, keeping the "בין הלחמות" pun intact
+---
+ROBOTIKA-COURSE.co.il
 Current version: V59 (arduino-jokes.html only — other pages remain V55)
 Based on: V58
 Fix: replaced images/jokes/arduino-joke-01.png with Udi's newer preferred render (same 1254x1254 resolution, with credit) — display still capped to 50% width via CSS
