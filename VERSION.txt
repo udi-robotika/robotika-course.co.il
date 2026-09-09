@@ -1,4 +1,9 @@
 ROBOTIKA-COURSE.co.il
+Current version: V54 (jokes.html only — other pages remain V51)
+Based on: V53
+Fix: images/jokes/arduino-joke-01.png enlarged by 50% per Udi's request (613x613 → 919x919). Re-rendered directly from the original full-resolution upload (not upscaled from the shrunk 613px version) to keep quality sharp
+---
+ROBOTIKA-COURSE.co.il
 Current version: V53 (jokes.html only — other pages remain V51)
 Based on: V52
 Fix: images/jokes/arduino-joke-01.png shrunk by another 30% (877x877 → 613x613, ~960KB → ~532KB), per Udi's follow-up request
