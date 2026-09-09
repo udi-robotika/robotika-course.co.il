@@ -1,6 +1,7 @@
 ROBOTIKA-COURSE.co.il
-Current version: V69 (lessons/course-43/ pages only — other pages remain V68)
-Based on: V68
+Current version: V70 (arduino-jokes.html only — other pages remain V69/V68)
+Based on: V69
+Added: second joke image (images/jokes/arduino-joke-02.png, 1254x1254, full resolution) — Arduino's 18th birthday pun ("מה קונים לארדואינו ליום הולדת 18? חי״ו-שנים!"), placed right after the Nietzsche quote source block
 Fix: found that /lessons/course-43/index.html and /lessons/course-43/lesson-1/index.html never received any of the mobile nav fixes from V63-V67, because those pages live in a subfolder and were built/edited separately from the main *.html glob used for the site-wide sed fixes. Applied the same final fix (flex-wrap nav, centered stacked header, direction:rtl, display:none dropdowns) to both files directly
 Cleanup: removed the two diagnostic test pages (mobile-nav-test.html, minimal-test.html) now that Udi confirmed the mobile nav fix works correctly on the real pages
 Real root cause found and fixed (site-wide, mobile only): the dropdown submenus (.nav-dropdown, e.g. under "חיישנים", "בסיס") stayed in the DOM with opacity:0/visibility:hidden when closed, each min-width:220px and position:absolute. On mobile, once the top nav wraps into multiple rows, these still-invisible-but-space-occupying dropdown boxes silently inflated the page's total scrollable width beyond the viewport (confirmed by Udi's minimal-test.html working perfectly — proving it wasn't a device/browser/proxy issue, only present on pages with this dropdown structure). Fixed by switching closed dropdowns to display:none on mobile (fully removed from layout/overflow calculations) and only display:flex (stacked, static position) when a menu is hovered/focused. Applied to all 34 shared-nav pages and components-gallery.css
