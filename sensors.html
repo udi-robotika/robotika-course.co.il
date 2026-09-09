@@ -137,7 +137,13 @@
       background: #eaf6f8; border-color: rgba(8,145,178,.35);
     }
     .site-nav > a.nav-cta { padding: 7px 15px; }
-    .nav-dropdown { right: 0; min-width: 205px; }
+    .nav-menu { position: static; }
+    .nav-dropdown {
+      display: none; position: static; min-width: 0; width: 100%;
+      box-shadow: none; border: 0; background: #fbfdfe; border-radius: 10px;
+      opacity: 1; visibility: visible; transform: none; margin-top: 4px;
+    }
+    .nav-menu:hover .nav-dropdown, .nav-menu:focus-within .nav-dropdown { display: flex; flex-direction: column; }
   }
 
 </style>
@@ -243,7 +249,7 @@
 
 <footer>
   © 2026 קורס רובוטיקה וארדואינו — עמוד חיישנים
-<span class="version-tag">גרסה V66</span></footer>
+<span class="version-tag">גרסה V67</span></footer>
 
 
 

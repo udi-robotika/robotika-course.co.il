@@ -1,4 +1,10 @@
 ROBOTIKA-COURSE.co.il
+Current version: V67
+Based on: V66
+Real root cause found and fixed (site-wide, mobile only): the dropdown submenus (.nav-dropdown, e.g. under "חיישנים", "בסיס") stayed in the DOM with opacity:0/visibility:hidden when closed, each min-width:220px and position:absolute. On mobile, once the top nav wraps into multiple rows, these still-invisible-but-space-occupying dropdown boxes silently inflated the page's total scrollable width beyond the viewport (confirmed by Udi's minimal-test.html working perfectly — proving it wasn't a device/browser/proxy issue, only present on pages with this dropdown structure). Fixed by switching closed dropdowns to display:none on mobile (fully removed from layout/overflow calculations) and only display:flex (stacked, static position) when a menu is hovered/focused. Applied to all 34 shared-nav pages and components-gallery.css
+Diagnostic pages added this round: mobile-nav-test.html, minimal-test.html (both noindex, unlisted — safe to delete once Udi confirms the real pages are fixed)
+---
+ROBOTIKA-COURSE.co.il
 Current version: V66 (unchanged — this adds a new diagnostic page only)
 New: mobile-nav-test.html — a brand-new, never-before-seen URL (copy of sensors.html's header/nav) created specifically to rule out any caching (browser, incognito, or Chrome Data Saver proxy) as the cause of the mobile nav layout complaint Udi keeps seeing. noindex, not linked from nav. Delete once the mobile nav question is resolved either way
 Fix (site-wide, mobile only, root cause): found the actual cause of the mobile nav clipping Udi kept seeing after V63/V64 — the header element has direction:ltr (needed for the desktop logo-left/nav-right layout), which on a dir="rtl" page mismatches when the header switches to a stacked column on mobile, pushing wrapped nav rows past the right edge of the viewport instead of centering them. Fixed by forcing direction:rtl on the header specifically inside the mobile media query. Also added body{overflow-x:hidden} on mobile as a defensive safety net against any further stray horizontal overflow. Applied to all 34 shared-nav pages and components-gallery.css
