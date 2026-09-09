@@ -87,8 +87,13 @@
   .joke-image-card {
     background: var(--bg-light); border: 1px solid #dbe3ee; border-radius: 16px;
     overflow: hidden; margin-bottom: 22px;
+    max-width: 50%;
+    margin-inline: auto;
   }
   .joke-image-card img { display: block; width: 100%; height: auto; }
+  @media (max-width: 700px) {
+    .joke-image-card { max-width: 100%; }
+  }
 
   .joke-cards { display: grid; gap: 14px; }
   .joke-card {
@@ -198,7 +203,7 @@
 
 <footer>
   © 2026 קורס רובוטיקה וארדואינו — הומור
-<span class="version-tag">גרסה V57</span></footer>
+<span class="version-tag">גרסה V58</span></footer>
 
 </body>
 </html>
