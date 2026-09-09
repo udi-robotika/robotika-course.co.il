@@ -1,6 +1,7 @@
 ROBOTIKA-COURSE.co.il
-Current version: V84 (sensors.html only)
-Based on: V83
+Current version: V85 (sensors.html only)
+Based on: V84
+Fix: shrunk everything by 30% and switched back to 5 columns — image height 190px→133px (desktop), 150px→105px (tablet), 120px→84px (mobile); gap 18px→13px; card padding 14/12→10/8; h3 .82rem→.57rem; p .72rem→.5rem
 Fix: matched the reference style Udi showed — switched from 5 to 4 columns and images enlarged significantly (115px → 190px desktop, 150px tablet, 120px mobile) so images now clearly dominate the card visually over the small text, same proportions as the reference screenshot
 Fix: card images enlarged (80px → 115px desktop, 70px → 95px mobile), text shrunk (h3 .95rem→.82rem, p .85rem→.72rem) across all cards including the extra-components section, per Udi's request
 Fix: light sensor card description shortened to fit 2 lines max — removed pin details ("4 פינים VCC, GND, DO, AO"), kept just "מודול LDR עם פלט אנלוגי ודיגיטלי"
