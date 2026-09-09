@@ -1,4 +1,10 @@
 ROBOTIKA-COURSE.co.il
+Current version: V48
+Based on: V47
+Footer: version bumped to V48 across all pages
+Restructure: /course-july-2026/ moved to /makelab/july-2026/ (Udi's requested URL); old /course-july-2026/ now redirects there, still noindex/unlisted
+---
+ROBOTIKA-COURSE.co.il
 Current version: V47
 Based on: V46
 Footer: version bumped to V47 across all pages

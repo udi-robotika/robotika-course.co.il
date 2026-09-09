@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>MAKELAB יהוד — קורס יולי 2026</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-light: #ffffff;
+    --accent: #0891b2;
+    --accent2: #7c3aed;
+    --text: #172033;
+    --muted: #52647d;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', 'Heebo', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+  header {
+    direction: ltr;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 22px 24px 6px;
+  }
+  header .logo {
+    direction: rtl;
+    font-weight: 700;
+    font-size: 1.15rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text);
+  }
+  header .logo span.icon { font-size: 1.5rem; }
+
+  main.lessons-wrap { max-width: 880px; margin: 18px auto 40px; padding: 0 24px; }
+  .lessons-title { text-align: center; margin-bottom: 26px; }
+  .lessons-title .badge {
+    display: inline-block; background: rgba(34,211,238,0.1); color: var(--accent);
+    padding: 6px 18px; border-radius: 999px; font-size: 0.78rem; margin-bottom: 10px;
+    border: 1px solid rgba(34,211,238,0.3);
+  }
+  .lessons-title h1 {
+    font-size: 2.2rem; line-height: 1.25;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    margin-bottom: 8px;
+  }
+  .lessons-title p { color: var(--muted); font-size: 1.05rem; }
+
+  .lessons-list { display: grid; gap: 14px; }
+  a.lesson-row, .lesson-row {
+    display: flex; align-items: center; gap: 18px;
+    background: var(--bg-light); border: 1px solid #dbe3ee; border-radius: 14px;
+    padding: 20px 22px; text-decoration: none; color: var(--text);
+  }
+  .lesson-row .num {
+    flex-shrink: 0; width: 46px; height: 46px; border-radius: 12px;
+    background: #c7d1e0; color: #fff;
+    display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.15rem;
+  }
+  a.lesson-row .num { background: linear-gradient(135deg, var(--accent), var(--accent2)); }
+  .lesson-row h3 { font-size: 1.1rem; margin-bottom: 3px; }
+  .lesson-row p { color: var(--muted); font-size: 0.9rem; }
+  .lesson-row .tag {
+    margin-inline-start: auto; flex-shrink: 0; font-size: 0.78rem; font-weight: 700;
+    border-radius: 999px; padding: 4px 12px; background: #eef1f6; color: var(--muted);
+    white-space: nowrap;
+  }
+  a.lesson-row .tag { background: rgba(34,211,238,0.1); color: var(--accent); }
+  a.lesson-row { transition: transform .15s, border-color .15s; }
+  a.lesson-row:hover { transform: translateY(-3px); border-color: var(--accent); }
+  .lesson-row.upcoming { opacity: .6; }
+
+  footer {
+    text-align: center;
+    padding: 30px;
+    color: var(--muted);
+    font-size: 0.85rem;
+    border-top: 1px solid #e5eaf1;
+    margin-top: 20px;
+  }
+  .version-tag { display: block; margin-top: 6px; font-size: 0.78rem; opacity: 0.85; }
+
+  @media (max-width: 600px) {
+    .lesson-row { flex-wrap: wrap; }
+    .lesson-row .tag { margin-inline-start: 0; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="logo"><span class="icon">🤖</span> קורס רובוטיקה וארדואינו</span>
+</header>
+
+<main class="lessons-wrap">
+  <div class="lessons-title">
+    <span class="badge">MAKELAB יהוד · קורס יולי 2026</span>
+    <h1>MAKELAB יהוד</h1>
+    <p>סיכומי שיעורים ומשימות לשיעורי הבית</p>
+  </div>
+
+  <div class="lessons-list">
+    <a class="lesson-row" href="/makelab/july-2026/lesson-6/">
+      <div class="num">6</div>
+      <div>
+        <h3>שיעור 6 — ESP32, מנוע סרוו ופח חכם</h3>
+        <p>התקנת תמיכה ב-ESP32 ב-Arduino IDE, איך סרוו עובד, ובניית מנגנון פח חכם עם זרוע וסרוו.</p>
+      </div>
+      <span class="tag">כולל שיעורי בית</span>
+    </a>
+  </div>
+
+  <p style="text-align:center;color:var(--muted);font-size:.9rem;margin-top:18px">מפגשים קודמים ונוספים יתווספו כאן בהמשך.</p>
+</main>
+
+<footer>
+  © 2026 קורס רובוטיקה וארדואינו — MAKELAB יהוד
+<span class="version-tag">גרסה V48</span></footer>
+
+</body>
+</html>
