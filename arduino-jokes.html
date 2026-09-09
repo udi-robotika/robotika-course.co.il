@@ -3,32 +3,50 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>משדר ומקלט IR דיגיטלי | קורס רובוטיקה וארדואינו</title>
+<title>הומור — קורס רובוטיקה וארדואינו</title>
 <style>
-  :root { --bg: #ffffff; --bg-light: #ffffff; --accent: #0891b2; --accent2: #7c3aed; --text: #172033; --muted: #52647d; }
+  :root {
+    --bg: #ffffff;
+    --bg-light: #ffffff;
+    --accent: #0891b2;
+    --accent2: #7c3aed;
+    --text: #172033;
+    --muted: #52647d;
+  }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family:'Segoe UI','Heebo',Arial,sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
-  header { direction: ltr; display: flex; justify-content: space-between; align-items: center; padding: 6px 48px 2px; }
-  header .logo { direction: rtl; font-weight: 700; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); }
-  nav a { color: var(--muted); text-decoration: none; margin-inline-start: 28px; font-size: .95rem; }
-  nav a:hover, nav a.active { color: var(--accent); }
-  .crumb { max-width: 800px; margin: 0 auto; padding: 0 24px; color: var(--muted); font-size: .85rem; }
-  .crumb a { color: var(--muted); }
-  main { max-width: 800px; margin: 0 auto; padding: 8px 24px 50px; }
-  .badge { display: inline-block; background: rgba(34,211,238,.1); color: var(--accent); padding: 5px 14px; border-radius: 999px; font-size: .8rem; margin-bottom: 8px; border: 1px solid rgba(34,211,238,.3); }
-  h1 { font-size: 2.2rem; margin-bottom: 10px; background: linear-gradient(90deg,var(--accent),var(--accent2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  h2 { font-size: 1.3rem; margin: 24px 0 10px; color: var(--accent); }
-  p { color: var(--text); line-height: 1.8; margin-bottom: 12px; }
-  .specs { background: var(--bg-light); border: 1px solid #dbe3ee; border-radius: 12px; padding: 20px 24px; margin: 16px 0; }
-  .specs ul { list-style: none; }
-  .specs li { padding: 6px 0; border-bottom: 1px solid #e5eaf1; color: var(--muted); }
-  .specs li:last-child { border-bottom: none; }
-  .specs li b { color: var(--text); }
-  pre { background: #0b1120; border: 1px solid #dbe3ee; border-radius: 12px; padding: 18px 20px; overflow-x: auto; direction: ltr; text-align: left; font-family: 'Consolas', monospace; font-size: .85rem; color: #a5f3fc; line-height: 1.6; }
-  footer { text-align: center; padding: 30px; color: var(--muted); font-size: .85rem; border-top: 1px solid #e5eaf1; }
+  body {
+    font-family: 'Segoe UI', 'Heebo', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+  header {
+    direction: ltr;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 48px 2px;
+  }
+  header .logo {
+    direction: rtl;
+    font-weight: 700;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--text);
+  }
+  header .logo span.icon { font-size: 1.6rem; }
+
+  footer {
+    text-align: center;
+    padding: 30px;
+    color: var(--muted);
+    font-size: 0.85rem;
+    border-top: 1px solid #e5eaf1;
+  }
   .version-tag { display: block; margin-top: 6px; font-size: 0.78rem; opacity: 0.85; }
-
-
 
   /* תפריט נפתח משותף לכל האתר */
   .site-nav { display: flex; align-items: center; gap: 4px; position: relative; z-index: 100; direction: rtl; }
@@ -50,12 +68,46 @@
     .nav-dropdown { right: 0; min-width: 205px; }
   }
 
+  /* עמוד הומור */
+  main.jokes-wrap { max-width: 900px; margin: 18px auto 40px; padding: 0 24px; }
+  .jokes-title { text-align: center; margin-bottom: 26px; }
+  .jokes-title .badge {
+    display: inline-block; background: rgba(34,211,238,0.1); color: var(--accent);
+    padding: 6px 18px; border-radius: 999px; font-size: 0.78rem; margin-bottom: 10px;
+    border: 1px solid rgba(34,211,238,0.3);
+  }
+  .jokes-title h1 {
+    font-size: 2.2rem; line-height: 1.25;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    margin-bottom: 8px;
+  }
+  .jokes-title p { color: var(--muted); font-size: 1.05rem; }
+
+  .joke-image-card {
+    background: var(--bg-light); border: 1px solid #dbe3ee; border-radius: 16px;
+    overflow: hidden; margin-bottom: 22px;
+  }
+  .joke-image-card img { display: block; width: 100%; height: auto; }
+
+  .joke-cards { display: grid; gap: 14px; }
+  .joke-card {
+    background: var(--bg-light); border: 1px solid #dbe3ee; border-radius: 14px;
+    padding: 20px 22px;
+  }
+  .joke-card p { font-size: 1.02rem; line-height: 1.6; }
+  .joke-card .q { font-weight: 700; margin-bottom: 6px; }
+  .joke-card .a { color: var(--muted); }
+
+  @media (max-width: 600px) {
+    .jokes-title h1 { font-size: 1.8rem; }
+  }
 </style>
 </head>
 <body>
 
 <header>
-  <a href="index.html" class="logo"><span>🤖</span> קורס רובוטיקה וארדואינו · תכנות פיזי ועצמים חכמים</a>
+  <a href="index.html" class="logo"><span class="icon">🤖</span> קורס רובוטיקה וארדואינו · תכנות פיזי ועצמים חכמים</a>
   <nav class="site-nav" aria-label="ניווט ראשי">
     <a href="index.html">בית</a>
     <div class="nav-menu">
@@ -97,66 +149,56 @@
       </div>
     </div>
     <div class="nav-menu">
-      <a class="nav-label active" href="communication.html">תקשורת</a>
+      <a class="nav-label" href="communication.html">תקשורת</a>
       <div class="nav-dropdown">
         <a href="communication.html">כל נושאי התקשורת</a>
         <a href="comm-bluetooth.html">Bluetooth</a>
-        <a href="comm-ir.html" class="active">שלט אינפרא־אדום IR</a>
+        <a href="comm-ir.html">שלט אינפרא־אדום IR</a>
         <a href="comm-rf433.html">תקשורת RF433</a>
       </div>
     </div>
     <a href="recommended-components.html" class="nav-cta">רכיבים לקנייה</a>
     <a href="live-code.html" class="nav-cta">קוד משותף</a>
     <a href="lessons/">שיעורים</a>
-    <a href="arduino-jokes.html">הומור</a>
+    <a href="arduino-jokes.html" class="active">הומור</a>
     <a href="esp32.html">ESP32</a>
   </nav>
 </header>
 
-<div class="crumb"><a href="communication.html">תקשורת</a> ← משדר ומקלט IR דיגיטלי</div>
-
-<main>
-  <span class="badge">📶 תקשורת אלחוטית</span>
-  <h1>משדר ומקלט IR דיגיטלי</h1>
-  <p>זוג מודולים המשמשים לתקשורת אלחוטית בטווח קצר באמצעות אור אינפרא אדום - בדיוק כמו שלט הטלוויזיה בבית. המקלט (מודול HX-M121) מזהה ומפענח אותות אינפרה אדום שנשלחים מהתקנים כמו שלטים רחוקים, והמשדר (מודול HX-53) פולט אותות אינפרה אדום לשליטה בהתקנים תואמי IR.</p>
-
-  <h2>שני חלקים</h2>
-  <div class="specs">
-    <ul>
-      <li><b>מקלט IR (HX-M121):</b> מזהה ומפענח אותות IR הנפלטים משלט רחוק או ממשדר אחר</li>
-      <li><b>משדר IR (HX-53):</b> פולט אותות IR לשליטה בהתקנים תואמים</li>
-      <li><b>עובדים במודולים:</b> קל לחבר אותם לארדואינו בלי צורך בפענוח ידני של האור עצמו</li>
-    </ul>
+<main class="jokes-wrap">
+  <div class="jokes-title">
+    <span class="badge">קורס רובוטיקה · פינת הומור</span>
+    <h1>הומור וארדואינו</h1>
+    <p>קצת צחוקים בין הלחמות, כי גם רובוטיקה צריכה הפסקה</p>
   </div>
 
-  <h2>חיבור</h2>
-  <p>המקלט מחובר לרוב ל-VCC (5V), GND, ולפין דיגיטלי (OUT) שמקבל את האות המפוענח. המשדר מחובר ל-VCC, GND ולפין דיגיטלי שמפעיל אותו.</p>
+  <div class="joke-image-card">
+    <img src="images/jokes/arduino-joke-01.png" alt="בדיחת ארדואינו: ארדואינו טוען — מה שלא הורג, מחשמל">
+  </div>
 
-  <h2>קוד לדוגמה - קריאת שלט IR</h2>
-  <pre>#include &lt;IRremote.h&gt;
-
-#define IR_RECEIVE_PIN 2
-
-void setup() {
-  Serial.begin(9600);
-  IrReceiver.begin(IR_RECEIVE_PIN);
-}
-
-void loop() {
-  if (IrReceiver.decode()) {
-    Serial.print("קוד שהתקבל: ");
-    Serial.println(IrReceiver.decodedIRData.command, HEX);
-    IrReceiver.resume();
-  }
-}</pre>
-
-  <h2>שימושים נפוצים</h2>
-  <p>מערכות שלט רחוק (כמו פתיחת פח חכם או שעון מילולי), זיהוי מכשולים, מערכות אבטחה, ותקשורת בין שני ארדואינים במרחק קצר וללא הפרעות.</p>
+  <div class="joke-cards">
+    <article class="joke-card">
+      <p class="q">למה הנגד הלך לטיפול?</p>
+      <p class="a">כי היה לו יותר מדי התנגדויות.</p>
+    </article>
+    <article class="joke-card">
+      <p class="q">מה אמר הקבל לנגד?</p>
+      <p class="a">אני טוען אותך ברצינות.</p>
+    </article>
+    <article class="joke-card">
+      <p class="q">למה הארדואינו לא רצה לצאת מהבית?</p>
+      <p class="a">כי הוא הרגיש הכי בטוח בתוך הלולאה שלו.</p>
+    </article>
+    <article class="joke-card">
+      <p class="q">איך קוראים לחיישן אור שמספר בדיחות?</p>
+      <p class="a">קומיקאור.</p>
+    </article>
+  </div>
 </main>
 
-<footer>© 2026 קורס רובוטיקה וארדואינו<span class="version-tag">גרסה V55</span></footer>
-
-
+<footer>
+  © 2026 קורס רובוטיקה וארדואינו — הומור
+<span class="version-tag">גרסה V55</span></footer>
 
 </body>
 </html>
