@@ -1,4 +1,9 @@
 ROBOTIKA-COURSE.co.il
+Current version: V62 (arduino-jokes.html only — other pages remain V55)
+Based on: V61
+Fix: merged the separate large H1 ("הומור וארדואינו") into the badge/pill above it — badge now shows the title text directly (larger, bold), the standalone H1 line removed, cleaned up now-unused CSS. One less line of vertical space at the top of the page
+---
+ROBOTIKA-COURSE.co.il
 Current version: V61 (arduino-jokes.html only — other pages remain V55)
 Based on: V60
 Fix: compacted the header area of arduino-jokes.html — reduced top margin, badge/title/subtitle spacing and sizes, so the whole block takes noticeably less vertical height before the joke image
