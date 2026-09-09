@@ -1,6 +1,7 @@
 ROBOTIKA-COURSE.co.il
-Current version: V74 (sensors.html only)
-Based on: V73
+Current version: V75 (sensors.html only)
+Based on: V74
+Fix: potentiometer card image replaced — was a Grove-style breakout module photo, now shows the actual bare 3-pin rotary potentiometer used in the course. Image saved to images/sensors/potentiometer.jpg (overwritten)
 Fix: light sensor card image replaced — was a plain 3-pin LDR photo, now shows the actual 4-pin module (VCC, GND, DO, AO) with both analog and digital output, matching what's really used in the course. Card description updated accordingly. Image saved to images/sensors/light.jpg (overwritten)
 Fix: sensors.html card grid changed from auto-fit (~3 columns) to a fixed 5-column layout on desktop, with smaller images (120px → 80px) and tighter card padding. Added responsive fallbacks: 3 columns between 781-1000px, 2 columns under 780px (images 70px)
 Restructure: the two joke images now sit side by side in a 2-column gallery (stacks to 1 column under 600px). Each image is a clickable link with a "מה מאחורי הבדיחה →" hint, jumping via same-page anchor to its own detail section below (#detail-1 = Nietzsche quote source, #detail-2 = new explanation of the "חי" gematria/חיישנים pun for the birthday joke)
