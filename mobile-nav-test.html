@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TEST MOBILE NAV — עמוד בדיקה חדש</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-light: #ffffff;
+    --accent: #0891b2;
+    --accent2: #7c3aed;
+    --text: #172033;
+    --muted: #52647d;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', 'Heebo', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+  header {
+    direction: ltr;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 48px 2px;
+  }
+  header .logo {
+    direction: rtl;
+    font-weight: 700;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--text);
+  }
+  header .logo span.icon { font-size: 1.6rem; }
+  nav a {
+    color: var(--muted);
+    text-decoration: none;
+    margin-inline-start: 28px;
+    font-size: 0.95rem;
+    transition: color .2s;
+  }
+  nav a:hover, nav a.active { color: var(--accent); }
+
+  .page-header {
+    text-align: center;
+    padding: 4px 24px 6px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .page-header h1 {
+    font-size: 1.8rem;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 5px;
+  }
+  .page-header p {
+    color: var(--muted);
+    font-size: 1.05rem;
+    line-height: 1.4;
+  }
+
+  .grid {
+    max-width: 900px;
+    margin: 8px auto 40px;
+    padding: 0 24px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+  }
+  .card {
+    display: block;
+    background: var(--bg-light);
+    border: 1px solid #dbe3ee;
+    border-radius: 12px;
+    padding: 16px 16px;
+    text-align: center;
+    text-decoration: none;
+    color: var(--text);
+    transition: transform .15s, border-color .15s;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent);
+  }
+  .card img {
+    width: 100%;
+    height: 120px;
+    object-fit: contain;
+    display: block;
+    margin-bottom: 8px;
+  }
+  .card h3 { font-size: 1.1rem; margin-bottom: 8px; }
+  .card p { color: var(--muted); font-size: 0.85rem; line-height: 1.5; }
+
+  footer {
+    text-align: center;
+    padding: 30px;
+    color: var(--muted);
+    font-size: 0.85rem;
+    border-top: 1px solid #e5eaf1;
+  }
+  .version-tag { display: block; margin-top: 6px; font-size: 0.78rem; opacity: 0.85; }
+
+
+
+  /* תפריט נפתח משותף לכל האתר */
+  .site-nav { display: flex; align-items: center; gap: 4px; position: relative; z-index: 100; direction: rtl; }
+  .site-nav > a, .site-nav .nav-label { color: var(--muted); text-decoration: none; margin: 0; padding: 9px 11px; font-size: .95rem; white-space: nowrap; border-radius: 8px; }
+  .site-nav > a:hover, .site-nav > a.active, .site-nav .nav-label:hover, .site-nav .nav-label.active { color: var(--accent); background: #f1f5f9; }
+  .site-nav > a.nav-cta { border: 1px solid var(--accent2); color: var(--accent2); font-weight: 700; background: rgba(124,58,237,.08); padding: 8px 15px; border-radius: 999px; }
+  .site-nav > a.nav-cta:hover, .site-nav > a.nav-cta.active { color: var(--accent2); background: rgba(124,58,237,.16); }
+  .nav-menu { position: relative; }
+  .nav-menu .nav-label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+  .nav-menu .nav-label::after { content: none; }
+  .nav-dropdown { position: absolute; top: calc(100% + 2px); right: 0; min-width: 220px; padding: 8px; background: #fff; border: 1px solid #dbe3ee; border-radius: 12px; box-shadow: 0 16px 38px rgba(15,23,42,.16); opacity: 0; visibility: hidden; transform: translateY(-5px); transition: opacity .16s ease, transform .16s ease, visibility .16s; }
+  .nav-dropdown a { display: block; margin: 0; padding: 9px 11px; color: var(--text); text-decoration: none; border-radius: 8px; font-size: .9rem; white-space: nowrap; }
+  .nav-dropdown a:hover, .nav-dropdown a.active { color: var(--accent); background: #f1f5f9; }
+  .nav-menu:hover .nav-dropdown, .nav-menu:focus-within .nav-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+  @media (max-width: 780px) {
+    body { overflow-x: hidden; }
+    header { flex-direction: column; align-items: center; text-align: center; gap: 10px; padding: 16px 16px 12px; direction: rtl; }
+    header .logo { justify-content: center; font-size: 1.02rem; }
+    .site-nav { display: flex !important; flex-wrap: wrap; justify-content: center; width: 100%; gap: 6px; }
+    .site-nav > a, .site-nav .nav-label {
+      padding: 7px 13px; font-size: .82rem;
+      background: #f6f8fb; border: 1px solid #e5eaf1; border-radius: 999px;
+    }
+    .site-nav > a:hover, .site-nav > a.active, .site-nav .nav-label:hover, .site-nav .nav-label.active {
+      background: #eaf6f8; border-color: rgba(8,145,178,.35);
+    }
+    .site-nav > a.nav-cta { padding: 7px 15px; }
+    .nav-dropdown { right: 0; min-width: 205px; }
+  }
+
+</style>
+</head>
+<body>
+
+<div style="background:#facc15;color:#111;text-align:center;padding:10px;font-weight:800;font-size:.95rem">
+  🧪 עמוד בדיקה חדש — mobile-nav-test.html — אם אתה רואה את זה, זו כתובת שלא נטענה אצלך מעולם, בלי שום קשר למטמון
+</div>
+
+<header>
+  <a href="index.html" class="logo"><span class="icon">🤖</span> קורס רובוטיקה וארדואינו · תכנות פיזי ועצמים חכמים</a>
+  <nav class="site-nav" aria-label="ניווט ראשי">
+    <a href="index.html">בית</a>
+    <div class="nav-menu">
+      <a class="nav-label active" href="sensors.html">חיישנים</a>
+      <div class="nav-dropdown">
+        <a href="sensors.html" class="active">כל החיישנים</a>
+        <a href="sensor-ir.html">חיישן אינפרא־אדום IR</a>
+        <a href="sensor-ultrasonic.html">חיישן אולטרסוניק</a>
+        <a href="sensor-light.html">חיישן אור</a>
+        <a href="sensor-laser.html">חיישן לייזר</a>
+        <a href="sensor-vibration.html">חיישן רטט</a>
+        <a href="sensor-potentiometer.html">פוטנציומטר</a>
+        <a href="sensor-joystick.html">ג׳ויסטיק</a>
+      </div>
+    </div>
+    <div class="nav-menu">
+      <a class="nav-label" href="basics.html">בסיס</a>
+      <div class="nav-dropdown">
+        <a href="basics.html">כל נושאי הבסיס</a>
+        <a href="basics-controller.html">בקר Arduino</a>
+        <a href="basics-ide.html">סביבת Arduino IDE</a>
+        <a href="basics-breadboard.html">לוח ניסויים</a>
+        <a href="basics-wires.html">חוטי חיבור</a>
+        <a href="basics-leds.html">נורות LED</a>
+        <a href="basics-shield.html">מגן חיישנים</a>
+      </div>
+    </div>
+    <div class="nav-menu">
+      <a class="nav-label" href="projects.html">פרויקטים</a>
+      <div class="nav-dropdown">
+        <a href="projects.html">כל הפרויקטים</a>
+        <a href="project-line-follower.html">עוקב קו — חיישן אחד</a>
+        <a href="project-line-follower-two-sensors.html">עוקב קו — שני חיישנים</a>
+        <a href="project-smart-car.html">מכונית חכמה Bluetooth</a>
+        <a href="project-music-clock.html">נגן מוזיקה ושעון</a>
+        <a href="project-smart-bin.html">פח חכם</a>
+        <a href="project-word-clock.html">שעון מילים</a>
+        <a href="project-laser-duel.html">קרב לייזר אוטונומי</a>
+      </div>
+    </div>
+    <div class="nav-menu">
+      <a class="nav-label" href="communication.html">תקשורת</a>
+      <div class="nav-dropdown">
+        <a href="communication.html">כל נושאי התקשורת</a>
+        <a href="comm-bluetooth.html">Bluetooth</a>
+        <a href="comm-ir.html">שלט אינפרא־אדום IR</a>
+        <a href="comm-rf433.html">תקשורת RF433</a>
+      </div>
+    </div>
+    <a href="recommended-components.html" class="nav-cta">רכיבים לקנייה</a>
+    <a href="live-code.html" class="nav-cta">קוד משותף</a>
+    <a href="lessons/">שיעורים</a>
+    <a href="arduino-jokes.html">הומור</a>
+    <a href="esp32.html">ESP32</a>
+  </nav>
+</header>
+
+<div class="grid">
+  <a href="sensor-ultrasonic.html" class="card">
+    <img src="images/sensors/ultrasonic.png" alt="חיישן אולטרסוני HC-SR04">
+    <h3>חיישן אולטרסוני</h3>
+    <p>מדידת מרחק באמצעות גלי קול (HC-SR04)</p>
+  </a>
+  <a href="sensor-light.html" class="card">
+    <img src="images/sensors/light.jpg" alt="חיישן אור LDR">
+    <h3>חיישן אור</h3>
+    <p>נגד תלוי אור (LDR) לזיהוי עוצמת תאורה</p>
+  </a>
+  <a href="sensor-potentiometer.html" class="card">
+    <img src="images/sensors/potentiometer.jpg" alt="פוטנציומטר אנלוגי">
+    <h3>פוטנציומטר</h3>
+    <p>נגד משתנה לקריאת ערך אנלוגי בסיבוב</p>
+  </a>
+  <a href="sensor-laser.html" class="card">
+    <img src="images/sensors/laser.jpg" alt="לייזר ומקלט לארדואינו">
+    <h3>לייזר + מקלט</h3>
+    <p>קרן לייזר וגלאי לזיהוי חסימה</p>
+  </a>
+  <a href="sensor-ir.html" class="card">
+    <img src="images/sensors/ir.png" alt="חיישן החזר אינפרה אדום">
+    <h3>חיישן החזר IR</h3>
+    <p>זיהוי משטח/קו (TCRT5000) לרובוט עוקב קו</p>
+  </a>
+  <a href="sensor-vibration.html" class="card">
+    <img src="images/sensors/vibration.jpg" alt="חיישן ויברציה SW-420">
+    <h3>חיישן ויברציה</h3>
+    <p>זיהוי רעידות ומכות (SW-420)</p>
+  </a>
+  <a href="sensor-joystick.html" class="card">
+    <img src="images/sensors/joystick.jpg" alt="ג'ויסטיק אנלוגי KY-023">
+    <h3>ג'ויסטיק אנלוגי</h3>
+    <p>שני צירים + לחצן לשליטה ידנית</p>
+  </a>
+</div>
+
+<footer>
+  © 2026 קורס רובוטיקה וארדואינו — עמוד בדיקה
+<span class="version-tag">גרסה V66</span></footer>
+
+
+
+</body>
+</html>
