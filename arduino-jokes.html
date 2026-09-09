@@ -93,6 +93,10 @@
     margin-inline: auto;
   }
   .joke-image-card img { display: block; width: 100%; height: auto; }
+  .joke-collab { text-align: center; color: var(--muted); font-size: .95rem; font-style: italic; margin: 4px auto 18px; max-width: 46ch; }
+  .joke-source { background: #f8fafc; border: 1px solid #dbe3ee; border-radius: 14px; padding: 16px 20px; margin-bottom: 22px; font-size: .92rem; color: var(--muted); line-height: 1.6; }
+  .joke-source b { color: var(--text); }
+  .joke-source .de { display: block; direction: ltr; text-align: left; margin-top: 4px; font-style: italic; }
   @media (max-width: 700px) {
     .joke-image-card { max-width: 100%; }
   }
@@ -179,6 +183,13 @@
     <img src="images/jokes/arduino-joke-01.png" alt="בדיחת ארדואינו: ארדואינו טוען — מה שלא הורג, מחשמל">
   </div>
 
+  <p class="joke-collab">שיתוף פעולה נדיר בין הפילוסוף הגרמני פרידריך ניצ'ה לבין המייקר והוגה הדעות אודי ואלך יצר את הבדיחה הבאה.</p>
+
+  <div class="joke-source">
+    <b>הציטוט המקורי:</b> הפילוסוף הגרמני פרידריך ניטשה אמר במקור, בגוף ראשון: "מה שלא הורג אותי, מחשל אותי".
+    <span class="de">בגרמנית: Was mich nicht umbringt, macht mich stärker.</span>
+  </div>
+
   <div class="joke-cards">
     <article class="joke-card">
       <p class="q">למה הנגד הלך לטיפול?</p>
@@ -201,7 +212,7 @@
 
 <footer>
   © 2026 קורס רובוטיקה וארדואינו — הומור
-<span class="version-tag">גרסה V64</span></footer>
+<span class="version-tag">גרסה V65</span></footer>
 
 </body>
 </html>
