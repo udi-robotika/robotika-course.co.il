@@ -1,4 +1,9 @@
 ROBOTIKA-COURSE.co.il
+Current version: V88 (lessons/course-43/index.html only)
+New page: /lessons/course-43/lesson-2/ — שיעור 2 interactive slide lesson (sonar distance sensor, digit display, if/else, smart warning LED). Self-contained dark-theme slideshow, own nav — does not use the shared site header/footer like lesson-1
+Course-43 hub (/lessons/course-43/): activated the lesson-2 row, replacing the "upcoming" placeholder
+---
+ROBOTIKA-COURSE.co.il
 Current version: V85 (sensors.html only)
 Based on: V84
 Fix: shrunk everything by 30% and switched back to 5 columns — image height 190px→133px (desktop), 150px→105px (tablet), 120px→84px (mobile); gap 18px→13px; card padding 14/12→10/8; h3 .82rem→.57rem; p .72rem→.5rem

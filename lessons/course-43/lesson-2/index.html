@@ -1,0 +1,636 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Robotika · שיעור 2 — סונאר ותצוגת ספרות</title>
+<style>
+  :root{
+    --bg:#0b1220; --bg2:#0f1a2e; --card:#132038; --ink:#e8eefb; --muted:#9fb2d4;
+    --accent:#22d3ee; --accent2:#a78bfa; --good:#34d399; --warn:#fbbf24; --danger:#f87171;
+    --line:#25324d; --code:#0a1020;
+    --fs: clamp(16px, 1.4vw, 22px);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{
+    background:radial-gradient(1200px 800px at 80% -10%, #16233f 0%, var(--bg) 55%);
+    color:var(--ink); font:var(--fs)/1.5 "Segoe UI", "Assistant","Rubik", system-ui, Arial, sans-serif;
+    overflow:hidden;
+  }
+  body.lang-he .en{display:none}
+  body.lang-en .he{display:none}
+  code,pre,.mono{font-family:"JetBrains Mono","Fira Code","Consolas",ui-monospace,monospace}
+
+  /* ---- stage / slides ---- */
+  .stage{position:fixed; inset:0; display:flex; align-items:center; justify-content:center; padding:3.2rem 3rem 4.2rem;}
+  .slide{display:none; width:min(1180px,96vw); max-height:100%; overflow:auto; animation:fade .35s ease}
+  .slide.active{display:block}
+  @keyframes fade{from{opacity:0; transform:translateY(8px)}to{opacity:1;transform:none}}
+  .slide::-webkit-scrollbar{width:8px}
+  .slide::-webkit-scrollbar-thumb{background:#2a3a5c;border-radius:8px}
+
+  h1{font-size:2.4em; line-height:1.15; margin:.1em 0 .3em}
+  h2{font-size:1.7em; margin:0 0 .6em; display:flex; align-items:center; gap:.5rem}
+  h2 .num{font-size:.55em; color:#08131f; background:var(--accent); border-radius:.5rem; padding:.15em .55em; font-weight:700}
+  h3{font-size:1.15em; margin:1em 0 .4em; color:var(--accent)}
+  p{margin:.5em 0}
+  ul{margin:.4em 0; padding-inline-start:1.3em}
+  li{margin:.35em 0}
+  .lead{color:var(--muted); font-size:1.1em}
+  .accent{color:var(--accent)} .a2{color:var(--accent2)} .warnc{color:var(--warn)} .good{color:var(--good)} .danger{color:var(--danger)}
+  .pill{display:inline-block; background:var(--card); border:1px solid var(--line); border-radius:999px; padding:.15em .7em; font-size:.8em; color:var(--muted)}
+  .grid{display:grid; gap:1rem}
+  .g2{grid-template-columns:1fr 1fr}
+  .g3{grid-template-columns:1fr 1fr 1fr}
+  @media (max-width:800px){.g2,.g3{grid-template-columns:1fr}}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:1rem; padding:1rem 1.15rem}
+  .card.tint{background:linear-gradient(180deg,#14233f,#101a30)}
+  .kbd{background:#0a1224;border:1px solid var(--line);border-bottom-width:3px;border-radius:.4em;padding:.05em .5em;font-size:.85em}
+
+  .level{border-inline-start:4px solid var(--accent); padding-inline-start:.8rem}
+  .lv1{border-color:var(--accent)} .lv2{border-color:var(--accent2)} .lv3{border-color:var(--warn)}
+
+  /* ---- code blocks ---- */
+  .codewrap{position:relative; margin:.6em 0}
+  pre{background:var(--code); border:1px solid var(--line); border-radius:.8rem; padding:2.6rem 1.1rem 1rem; overflow:auto; font-size:.82em; line-height:1.55; direction:ltr; text-align:left}
+  svg text{direction:ltr; unicode-bidi:embed}
+  pre .cm{color:#6b84b0} pre .kw{color:#f0a35e} pre .fn{color:#7dd3fc} pre .num{color:#a5f3b0} pre .str{color:#eab6ff}
+  .copybtn{position:absolute; inset-inline-end:.6rem; top:.6rem; background:#1b2a49; color:var(--ink); border:1px solid var(--line); border-radius:.5rem; padding:.25em .7em; font-size:.75em; cursor:pointer}
+  .copybtn:hover{background:#243a63} .copybtn:active{transform:translateY(1px)}
+  .copybtn.ok{background:var(--good); color:#062}
+
+  /* ---- controls ---- */
+  input[type=range]{width:100%; accent-color:var(--accent)}
+  button.demo{background:var(--accent); color:#062330; border:0; border-radius:.6rem; padding:.5em 1em; font-weight:700; cursor:pointer; font-family:inherit}
+  button.demo:hover{filter:brightness(1.08)} button.demo:active{transform:translateY(1px)}
+  button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+  .readout{font-family:ui-monospace,monospace; font-size:1.05em}
+  .big{font-size:1.6em; font-weight:700}
+
+  /* ---- nav ---- */
+  .topbar{position:fixed; inset-inline:0; top:0; height:2.7rem; display:flex; align-items:center; justify-content:space-between; padding:0 1rem; background:linear-gradient(180deg,rgba(11,18,32,.95),rgba(11,18,32,0)); z-index:20}
+  .brand{font-weight:700; letter-spacing:.02em}
+  .brand .dot{color:var(--accent)}
+  .navbtns{position:fixed; inset-inline:0; bottom:0; height:3.4rem; display:flex; align-items:center; justify-content:center; gap:1rem; z-index:20; background:linear-gradient(0deg,rgba(11,18,32,.95),rgba(11,18,32,0))}
+  .navbtns button{background:var(--card); color:var(--ink); border:1px solid var(--line); border-radius:.6rem; padding:.4em .9em; cursor:pointer; font-family:inherit; font-size:.9em}
+  .navbtns button:hover{border-color:var(--accent)}
+  .counter{color:var(--muted); min-width:5.5rem; text-align:center; font-variant-numeric:tabular-nums}
+  .dots{position:fixed; inset-inline-end:.7rem; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:.4rem; z-index:20}
+  .dots i{width:.55rem; height:.55rem; border-radius:50%; background:#2b3a5a; cursor:pointer; display:block}
+  .dots i.on{background:var(--accent)}
+  .langtoggle{background:#1b2a49;color:var(--ink);border:1px solid var(--line);border-radius:.5rem;padding:.25em .8em;cursor:pointer;font-family:inherit;font-size:.85em}
+  .progress{position:fixed; top:0; inset-inline-start:0; height:3px; background:var(--accent); width:0; z-index:30; transition:width .3s}
+
+  svg{max-width:100%}
+  .tag{font-size:.72em; color:var(--muted)}
+  .flowbox{fill:var(--card); stroke:var(--line); stroke-width:2}
+  .flowbox.on{stroke:var(--accent); stroke-width:3}
+  .flowtext{fill:var(--ink); font-size:15px}
+  .note{background:#101a30;border:1px dashed var(--line);border-radius:.7rem;padding:.6em .9em;color:var(--muted);font-size:.9em}
+</style>
+</head>
+<body class="lang-he">
+<div class="progress" id="progress"></div>
+<div class="topbar">
+  <div class="brand">Robotika <span class="dot">●</span> <span class="he">שיעור 2</span><span class="en">Lesson 2</span></div>
+  <button class="langtoggle" id="langBtn">EN / עב</button>
+</div>
+
+<div class="stage" id="stage">
+
+  <!-- 1 TITLE -->
+  <section class="slide active">
+    <div class="pill"><span class="he">קורס ארדואינו · מפגש 2</span><span class="en">Arduino course · Session 2</span></div>
+    <h1><span class="he">חיישן מרחק (סונאר) <br>ותצוגת ספרות</span><span class="en">Distance sensor (sonar) <br>and a digit display</span></h1>
+    <p class="lead">
+      <span class="he">היום נלמד איך המחשב "רואה" מרחק בעזרת קול, נציג את המספר על תצוגה, ונוסיף נורית אזהרה חכמה.</span>
+      <span class="en">Today: how the computer "sees" distance using sound, shows the number on a display, and adds a smart warning light.</span>
+    </p>
+    <div class="grid g3" style="margin-top:1.2rem">
+      <div class="card lv1 level"><b>1.</b> <span class="he">סונאר → מסך המחשב</span><span class="en">Sonar → computer screen</span></div>
+      <div class="card lv2 level"><b>2.</b> <span class="he">הוספת תצוגת ספרות</span><span class="en">Add the digit display</span></div>
+      <div class="card lv3 level"><b>3.</b> <span class="he">נורית שמהבהבת מהר יותר בקרבה</span><span class="en">LED that blinks faster up close</span></div>
+    </div>
+    <p class="tag" style="margin-top:1.4rem">
+      <span class="he">ניווט: חצים ← → במקלדת, או הכפתורים למטה · לחצו EN לבדיקת מונחים באנגלית</span>
+      <span class="en">Navigate: ← → arrow keys, or the buttons below · press עב for Hebrew</span>
+    </p>
+  </section>
+
+  <!-- 2 AGENDA -->
+  <section class="slide">
+    <h2><span class="num">2</span><span class="he">מה נעשה היום</span><span class="en">What we'll do today</span></h2>
+    <div class="grid g2">
+      <div class="card">
+        <h3><span class="he">רעיונות</span><span class="en">Ideas</span></h3>
+        <ul>
+          <li><span class="he">זרימת תוכנית: <b>אם / אחרת</b> (if / else)</span><span class="en">Program flow: <b>if / else</b></span></li>
+          <li><span class="he">איך סונאר מודד מרחק בעזרת קול</span><span class="en">How sonar measures distance with sound</span></li>
+          <li><span class="he">איך החיישן בנוי — ולמה יש "חוט שעון"</span><span class="en">How the parts work — and why there's a "clock wire"</span></li>
+          <li><span class="he">לחבר קלט + פלט + קוד יחד</span><span class="en">Wire input + output + code together</span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="he">הבנייה — בשלושה שלבים</span><span class="en">The build — in three levels</span></h3>
+        <ul>
+          <li class="level lv1"><span class="he"><b>שלב 1:</b> סונאר שכותב מרחק למוניטור</span><span class="en"><b>Level 1:</b> sonar prints distance to the monitor</span></li>
+          <li class="level lv2"><span class="he"><b>שלב 2:</b> מוסיפים פלט — תצוגת הספרות</span><span class="en"><b>Level 2:</b> add an output — the digit display</span></li>
+          <li class="level lv3"><span class="he"><b>שלב 3:</b> נורית שדופקת מהר יותר ככל שמתקרבים (מנקודת התחלה)</span><span class="en"><b>Level 3:</b> an LED that pulses faster as it gets closer (from a start point)</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 RECAP -->
+  <section class="slide">
+    <h2><span class="num">3</span><span class="he">תזכורת קצרה משיעור 1</span><span class="en">Quick recap of Lesson 1</span></h2>
+    <div class="grid g3">
+      <div class="card"><h3>digitalWrite / digitalRead</h3><p><span class="he">שולטים בפין ומדליקים/מכבים — נורית שהבהבה.</span><span class="en">Drive a pin on/off — the blinking LED.</span></p></div>
+      <div class="card"><h3>analogRead</h3><p><span class="he">קוראים ערך משתנה — חיישן האור.</span><span class="en">Read a changing value — the light sensor.</span></p></div>
+      <div class="card"><h3>setup() / loop()</h3><p><span class="he">setup רץ פעם אחת, loop חוזר שוב ושוב.</span><span class="en">setup runs once, loop repeats forever.</span></p></div>
+    </div>
+    <div class="note" style="margin-top:1rem">
+      <span class="he">היום מוסיפים חיישן שמדבר ב<b>זמן</b> (לא במתח), ופלט חדש שמדבר ב<b>תקשורת טורית</b>.</span>
+      <span class="en">Today we add a sensor that speaks in <b>time</b> (not voltage), and a new output that speaks over <b>serial communication</b>.</span>
+    </div>
+  </section>
+
+  <!-- 4 IF/ELSE -->
+  <section class="slide">
+    <h2><span class="num">4</span><span class="he">זרימת תוכנית: אם / אחרת</span><span class="en">Program flow: if / else</span></h2>
+    <div class="grid g2">
+      <div class="card">
+        <p><span class="he">התוכנית מקבלת <b>החלטה</b>: אם התנאי נכון — עושים דבר אחד; אחרת — דבר אחר.</span>
+           <span class="en">The program makes a <b>decision</b>: if the condition is true — do one thing; else — do another.</span></p>
+        <div class="codewrap"><pre><code class="mono"><span class="kw">if</span> (distance &gt; 30) {
+  <span class="cm">// far — all clear</span>
+  ledOff();
+} <span class="kw">else</span> {
+  <span class="cm">// close — warn!</span>
+  blink();
+}</code></pre></div>
+        <p><span class="he">גררו את המרחק ותראו איזה ענף "נדלק":</span><span class="en">Drag the distance and watch which branch lights up:</span></p>
+        <input type="range" id="ifDist" min="0" max="60" value="45">
+        <div class="readout" style="margin-top:.4rem"><span class="he">מרחק</span><span class="en">Distance</span>: <b id="ifDistV">45</b> cm</div>
+      </div>
+      <div class="card tint">
+        <svg viewBox="0 0 420 300" id="flowSvg" aria-hidden="true">
+          <rect x="150" y="10" width="120" height="42" rx="8" class="flowbox on"/>
+          <text x="210" y="36" text-anchor="middle" class="flowtext" dir="ltr">read distance</text>
+          <line x1="210" y1="52" x2="210" y2="80" stroke="#4a5f8a" stroke-width="2"/>
+          <polygon id="diamond" points="210,80 300,130 210,180 120,130" class="flowbox"/>
+          <text x="210" y="126" text-anchor="middle" class="flowtext" dir="ltr">distance &gt; 30 ?</text>
+          <text x="210" y="146" text-anchor="middle" class="flowtext" dir="ltr" style="font-size:12px" fill="#9fb2d4">true / false</text>
+          <!-- true branch -->
+          <line x1="120" y1="130" x2="60" y2="130" stroke="#4a5f8a" stroke-width="2"/>
+          <text x="90" y="120" text-anchor="middle" class="tag" fill="#9fb2d4">true</text>
+          <rect id="boxFar" x="10" y="235" width="120" height="46" rx="8" class="flowbox"/>
+          <text x="70" y="263" text-anchor="middle" class="flowtext">LED off</text>
+          <line x1="60" y1="130" x2="60" y2="235" stroke="#4a5f8a" stroke-width="2"/>
+          <!-- false branch -->
+          <line x1="300" y1="130" x2="360" y2="130" stroke="#4a5f8a" stroke-width="2"/>
+          <text x="330" y="120" text-anchor="middle" class="tag" fill="#9fb2d4">false</text>
+          <rect id="boxNear" x="300" y="235" width="120" height="46" rx="8" class="flowbox"/>
+          <text x="360" y="263" text-anchor="middle" class="flowtext">blink</text>
+          <line x1="360" y1="130" x2="360" y2="235" stroke="#4a5f8a" stroke-width="2"/>
+          <circle id="ledDot" cx="360" cy="215" r="9" fill="#26324d"/>
+        </svg>
+        <div class="readout" style="text-align:center" id="ifState"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 HOW SONAR WORKS -->
+  <section class="slide">
+    <h2><span class="num">5</span><span class="he">איך סונאר מודד מרחק</span><span class="en">How sonar measures distance</span></h2>
+    <div class="grid g2">
+      <div class="card">
+        <p><span class="he">החיישן <b>צועק</b> צליל על-קולי (אנחנו לא שומעים אותו), הצליל פוגע בעצם ו<b>חוזר כהד</b>. החיישן מודד כמה <b>זמן</b> לקח לצליל לצאת ולחזור.</span>
+           <span class="en">The sensor <b>shouts</b> an ultrasonic sound (we can't hear it), it hits an object and <b>echoes back</b>. The sensor measures the <b>time</b> for the sound to go and return.</span></p>
+        <div class="note">
+          <span class="he"><b>מהירות הקול</b> ≈ 343 מטר לשנייה = 0.0343 ס״מ בכל מיקרו-שנייה (µs).</span>
+          <span class="en"><b>Speed of sound</b> ≈ 343 m/s = 0.0343 cm per microsecond (µs).</span>
+        </div>
+        <h3><span class="he">הנוסחה</span><span class="en">The formula</span></h3>
+        <div class="codewrap"><pre><code class="mono">distance = (time &times; 0.0343) / <span class="num">2</span></code></pre></div>
+        <p class="tag"><span class="he">למה חלקי 2? כי הזמן שמדדנו הוא ל<b>שם ובחזרה</b> — הלוך ושוב.</span>
+           <span class="en">Why divide by 2? Because the time measured is for the trip <b>there AND back</b>.</span></p>
+      </div>
+      <div class="card tint">
+        <svg viewBox="0 0 420 210" id="sonarSvg" aria-hidden="true">
+          <rect x="20" y="80" width="46" height="50" rx="6" fill="#1b2a49" stroke="#33507f"/>
+          <circle cx="52" cy="95" r="8" fill="#0f1a30" stroke="#4a5f8a"/>
+          <circle cx="52" cy="115" r="8" fill="#0f1a30" stroke="#4a5f8a"/>
+          <text x="43" y="150" class="tag" fill="#9fb2d4">HC-SR04</text>
+          <rect id="target" x="330" y="55" width="26" height="100" rx="4" fill="#2a3a5c" stroke="var(--accent2)"/>
+          <circle id="ping" cx="66" cy="105" r="7" fill="#22d3ee" opacity="0"/>
+          <line id="ruler" x1="66" y1="180" x2="330" y2="180" stroke="#33507f" stroke-width="1"/>
+          <text id="rulerLbl" x="198" y="196" text-anchor="middle" class="tag" fill="#9fb2d4"></text>
+        </svg>
+        <label class="tag"><span class="he">מרחק העצם</span><span class="en">Object distance</span></label>
+        <input type="range" id="sonarDist" min="5" max="100" value="40">
+        <div style="display:flex; gap:.6rem; align-items:center; margin-top:.5rem">
+          <button class="demo" id="pingBtn"><span class="he">שלח פולס קול</span><span class="en">Send sound pulse</span></button>
+          <div class="readout"><span class="he">זמן</span><span class="en">time</span>: <b id="sonarT">—</b> µs · <b id="sonarCm">—</b> cm</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 THE SENSOR COMPONENT -->
+  <section class="slide">
+    <h2><span class="num">6</span><span class="he">החיישן מקרוב — Trig ו-Echo</span><span class="en">The sensor up close — Trig &amp; Echo</span></h2>
+    <div class="grid g2">
+      <div class="card">
+        <p><span class="he">לחיישן הסונאר יש 4 פינים. שניים לחשמל, ושניים ל"שיחה" עם הארדואינו:</span>
+           <span class="en">The sonar has 4 pins. Two for power, two to "talk" with the Arduino:</span></p>
+        <ul>
+          <li><b>VCC</b> → 5V &nbsp;·&nbsp; <b>GND</b> → GND <span class="tag">(<span class="he">חשמל</span><span class="en">power</span>)</span></li>
+          <li><b class="accent">Trig</b> → <span class="he">אנחנו שולחים פולס קצר של <b>10µs</b> = "עכשיו תמדוד!"</span><span class="en">we send a short <b>10µs</b> pulse = "measure now!"</span></li>
+          <li><b class="a2">Echo</b> → <span class="he">החיישן מחזיר פין שנשאר <b>גבוה בדיוק כמשך הזמן</b> של ההד. אנחנו מודדים אותו עם <span class="mono">pulseIn()</span>.</span><span class="en">the sensor holds this pin <b>HIGH for exactly the echo time</b>. We measure it with <span class="mono">pulseIn()</span>.</span></li>
+        </ul>
+        <div class="note">
+          <span class="he">שימו לב: Trig הוא פולס <b>חד-פעמי</b> להתחלה — הוא <u>לא</u> חוט שעון. את חוט השעון נפגוש בתצוגה (השקף הבא).</span>
+          <span class="en">Note: Trig is a <b>one-shot</b> start pulse — it is <u>not</u> a clock wire. We'll meet the clock wire in the display (next slide).</span>
+        </div>
+      </div>
+      <div class="card">
+        <h3><span class="he">רצף המדידה</span><span class="en">The measurement sequence</span></h3>
+        <div class="codewrap"><pre><code class="mono"><span class="cm">// 1) fire the trigger</span>
+digitalWrite(trig, HIGH);
+delayMicroseconds(<span class="num">10</span>);
+digitalWrite(trig, LOW);
+
+<span class="cm">// 2) time the echo (round trip, µs)</span>
+<span class="kw">long</span> t = pulseIn(echo, HIGH);
+
+<span class="cm">// 3) time -&gt; distance</span>
+<span class="kw">float</span> cm = t * <span class="num">0.0343</span> / <span class="num">2</span>;</code></pre></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 CLOCK WIRE -->
+  <section class="slide">
+    <h2><span class="num">7</span><span class="he">התצוגה — ולמה יש "חוט שעון"?</span><span class="en">The display — and why a "clock wire"?</span></h2>
+    <div class="grid g2">
+      <div class="card">
+        <p><span class="he">תצוגת הספרות מקבלת מידע בשני חוטים:</span><span class="en">The digit display receives data on two wires:</span></p>
+        <ul>
+          <li><b class="accent">DIO</b> — <span class="he"><b>נתונים</b>: הביטים עצמם (0 או 1)</span><span class="en"><b>data</b>: the bits themselves (0 or 1)</span></li>
+          <li><b class="warnc">CLK</b> — <span class="he"><b>שעון</b>: פעימה שאומרת "עכשיו! קרא ביט"</span><span class="en"><b>clock</b>: a beat that says "now! read a bit"</span></li>
+        </ul>
+        <p><span class="he">בלי שעון משותף, הצד המקבל לא יודע <b>מתי</b> כל ביט תקף. השעון הוא ה<b>מטרונום</b> ששני הצדדים סופרים לפיו — זו "תקשורת טורית".</span>
+           <span class="en">Without a shared clock, the receiver wouldn't know <b>when</b> each bit is valid. The clock is the <b>metronome</b> both sides count to — this is "serial communication".</span></p>
+        <div class="note">
+          <span class="he">בכל <b>עלייה</b> של השעון, התצוגה "צובטת" את הערך שנמצא כרגע על חוט הנתונים.</span>
+          <span class="en">On every <b>rising edge</b> of the clock, the display "latches" whatever value is on the data wire.</span>
+        </div>
+      </div>
+      <div class="card tint">
+        <svg viewBox="0 0 420 220" id="clkSvg" aria-hidden="true"></svg>
+        <div style="display:flex; gap:.6rem; align-items:center">
+          <button class="demo" id="clkPlay"><span class="he">הפעל שעון</span><span class="en">Run the clock</span></button>
+          <div class="readout"><span class="he">נקלט</span><span class="en">captured</span>: <b id="clkBits" class="mono">________</b> = <b id="clkDec">—</b></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 WIRING -->
+  <section class="slide">
+    <h2><span class="num">8</span><span class="he">חיווט הכל יחד</span><span class="en">Wiring it all together</span></h2>
+    <div class="grid g2">
+      <div class="card tint">
+        <svg viewBox="0 0 460 320" aria-hidden="true">
+          <rect x="170" y="30" width="120" height="260" rx="12" fill="#12325a" stroke="#2b6cb0"/>
+          <text x="230" y="60" text-anchor="middle" fill="#bfe3ff" style="font-size:14px">Arduino Uno</text>
+          <!-- pin labels -->
+          <text x="176" y="95"  fill="#e8eefb" style="font-size:12px" dir="ltr">5V</text>
+          <text x="176" y="120" fill="#e8eefb" style="font-size:12px" dir="ltr">GND</text>
+          <text x="176" y="150" fill="#e8eefb" style="font-size:12px" dir="ltr">D9  Trig</text>
+          <text x="176" y="175" fill="#e8eefb" style="font-size:12px" dir="ltr">D10 Echo</text>
+          <text x="176" y="205" fill="#e8eefb" style="font-size:12px" dir="ltr">D4  CLK</text>
+          <text x="176" y="230" fill="#e8eefb" style="font-size:12px" dir="ltr">D5  DIO</text>
+          <text x="176" y="258" fill="#e8eefb" style="font-size:12px" dir="ltr">D6  LED</text>
+          <!-- sonar -->
+          <rect x="20" y="70" width="110" height="70" rx="8" fill="#1b2a49" stroke="var(--accent)"/>
+          <text x="75" y="108" text-anchor="middle" fill="#bff" style="font-size:12px">HC-SR04</text>
+          <line x1="170" y1="90"  x2="130" y2="90"  stroke="#f87171" stroke-width="2"/>
+          <line x1="170" y1="146" x2="130" y2="122" stroke="#22d3ee" stroke-width="2"/>
+          <line x1="170" y1="171" x2="130" y2="132" stroke="#a78bfa" stroke-width="2"/>
+          <!-- display -->
+          <rect x="330" y="70" width="110" height="60" rx="8" fill="#1b2a49" stroke="var(--warn)"/>
+          <text x="385" y="105" text-anchor="middle" fill="#ffd" style="font-size:12px">TM1637</text>
+          <line x1="290" y1="200" x2="330" y2="100" stroke="#fbbf24" stroke-width="2"/>
+          <line x1="290" y1="226" x2="330" y2="115" stroke="#34d399" stroke-width="2"/>
+          <!-- led -->
+          <circle cx="385" cy="230" r="16" fill="#3a2a10" stroke="var(--warn)"/>
+          <text x="385" y="262" text-anchor="middle" fill="#ffd" style="font-size:11px">LED +220Ω</text>
+          <line x1="290" y1="254" x2="369" y2="230" stroke="#fbbf24" stroke-width="2"/>
+        </svg>
+      </div>
+      <div class="card">
+        <h3><span class="he">טבלת חיבורים</span><span class="en">Connection table</span></h3>
+        <table style="width:100%; border-collapse:collapse; font-size:.9em" dir="ltr">
+          <tr style="color:var(--muted)"><th style="text-align:left">Component</th><th style="text-align:left">Pin</th><th style="text-align:left">Arduino</th></tr>
+          <tr><td>HC-SR04</td><td>Trig</td><td>D9</td></tr>
+          <tr><td>HC-SR04</td><td>Echo</td><td>D10</td></tr>
+          <tr><td>TM1637</td><td>CLK</td><td>D4</td></tr>
+          <tr><td>TM1637</td><td>DIO</td><td>D5</td></tr>
+          <tr><td>LED (+)</td><td>via 220Ω</td><td>D6</td></tr>
+          <tr><td>All</td><td>VCC / GND</td><td>5V / GND</td></tr>
+        </table>
+        <div class="note" style="margin-top:.8rem">
+          <span class="he">הרגל הארוכה של הנורית = פלוס (+). תמיד נגד 220Ω בסדרה כדי לא לשרוף אותה.</span>
+          <span class="en">The LED's long leg = plus (+). Always a 220Ω resistor in series so it doesn't burn out.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 LEVEL 1 CODE -->
+  <section class="slide">
+    <h2><span class="num">9</span><span class="he level lv1">שלב 1 — סונאר למסך</span><span class="en level lv1">Level 1 — sonar to the screen</span></h2>
+    <p class="lead"><span class="he">המטרה: מספר מרחק מתעדכן בחלון המוניטור הטורי.</span><span class="en">Goal: a live distance number in the Serial Monitor.</span></p>
+    <div class="codewrap"><pre><code class="mono"><span class="kw">const int</span> trigPin = <span class="num">9</span>;
+<span class="kw">const int</span> echoPin = <span class="num">10</span>;
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  Serial.begin(<span class="num">9600</span>);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+}
+
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  digitalWrite(trigPin, LOW);  delayMicroseconds(<span class="num">2</span>);
+  digitalWrite(trigPin, HIGH); delayMicroseconds(<span class="num">10</span>);
+  digitalWrite(trigPin, LOW);
+
+  <span class="kw">long</span> duration = pulseIn(echoPin, HIGH);
+  <span class="kw">float</span> distanceCm = duration * <span class="num">0.0343</span> / <span class="num">2</span>;
+
+  Serial.print(<span class="str">"Distance: "</span>);
+  Serial.print(distanceCm);
+  Serial.println(<span class="str">" cm"</span>);
+  delay(<span class="num">200</span>);
+}</code></pre></div>
+  </section>
+
+  <!-- 10 LEVEL 2 CODE -->
+  <section class="slide">
+    <h2><span class="num">10</span><span class="he level lv2">שלב 2 — מוסיפים תצוגה</span><span class="en level lv2">Level 2 — add the display</span></h2>
+    <p class="lead"><span class="he">מעבירים את הקריאה ל<b>פונקציה</b> משלנו, ומדפיסים על התצוגה. צריך את הספרייה <span class="mono">TM1637Display</span>.</span>
+       <span class="en">Move the reading into our own <b>function</b>, and print on the display. Needs the <span class="mono">TM1637Display</span> library.</span></p>
+    <div class="codewrap"><pre><code class="mono"><span class="kw">#include</span> <span class="str">&lt;TM1637Display.h&gt;</span>
+<span class="kw">const int</span> trigPin=<span class="num">9</span>, echoPin=<span class="num">10</span>, CLK=<span class="num">4</span>, DIO=<span class="num">5</span>;
+TM1637Display display(CLK, DIO);
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  Serial.begin(<span class="num">9600</span>);
+  pinMode(trigPin, OUTPUT); pinMode(echoPin, INPUT);
+  display.setBrightness(<span class="num">5</span>);
+}
+
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">int</span> distanceCm = <span class="fn">getDistanceCm</span>();     <span class="cm">// our function</span>
+  Serial.println(distanceCm);
+  display.showNumberDec(distanceCm);      <span class="cm">// show on display</span>
+  delay(<span class="num">200</span>);
+}
+
+<span class="kw">int</span> <span class="fn">getDistanceCm</span>() {
+  digitalWrite(trigPin, LOW);  delayMicroseconds(<span class="num">2</span>);
+  digitalWrite(trigPin, HIGH); delayMicroseconds(<span class="num">10</span>);
+  digitalWrite(trigPin, LOW);
+  <span class="kw">long</span> duration = pulseIn(echoPin, HIGH);
+  <span class="kw">return</span> duration * <span class="num">0.0343</span> / <span class="num">2</span>;
+}</code></pre></div>
+  </section>
+
+  <!-- 11 LEVEL 3 CODE + FLOW -->
+  <section class="slide">
+    <h2><span class="num">11</span><span class="he level lv3">שלב 3 — נורית אזהרה חכמה</span><span class="en level lv3">Level 3 — a smart warning LED</span></h2>
+    <div class="grid g2">
+      <div class="card">
+        <p><span class="he">כאן נכנס ה-<b>if / else</b> וגם <span class="mono">map()</span>: הופכים "מרחק" ל"קצב הבהוב".</span>
+           <span class="en">Here the <b>if / else</b> and <span class="mono">map()</span> come in: turn "distance" into "blink speed".</span></p>
+        <div class="codewrap"><pre><code class="mono"><span class="kw">const int</span> START_CM = <span class="num">30</span>;
+
+<span class="kw">if</span> (distanceCm &gt; START_CM) {
+  digitalWrite(ledPin, LOW);   <span class="cm">// far: off</span>
+  delay(<span class="num">200</span>);
+} <span class="kw">else</span> {
+  <span class="kw">int</span> d = map(distanceCm, <span class="num">0</span>, START_CM, <span class="num">40</span>, <span class="num">500</span>);
+  digitalWrite(ledPin, HIGH); delay(d);
+  digitalWrite(ledPin, LOW);  delay(d);
+}</code></pre></div>
+        <p class="tag"><span class="he">map: מרחק 0 → 40ms (מהיר) · מרחק 30 → 500ms (איטי)</span>
+           <span class="en">map: distance 0 → 40ms (fast) · distance 30 → 500ms (slow)</span></p>
+      </div>
+      <div class="card tint" style="display:flex;flex-direction:column;align-items:center;justify-content:center">
+        <label class="tag"><span class="he">נסו: מרחק</span><span class="en">Try it: distance</span></label>
+        <input type="range" id="l3Dist" min="0" max="60" value="20">
+        <div class="readout" style="margin:.6rem 0"><b id="l3DistV">20</b> cm → <span class="he">קצב</span><span class="en">rate</span> <b id="l3Rate">—</b> ms</div>
+        <div id="l3Led" style="width:80px;height:80px;border-radius:50%;background:#2a2410;border:2px solid var(--warn);transition:background .05s"></div>
+        <div class="readout" id="l3State" style="margin-top:.6rem"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 SUMMARY -->
+  <section class="slide">
+    <h2><span class="num">12</span><span class="he">סיכום ואתגר</span><span class="en">Summary &amp; challenge</span></h2>
+    <div class="grid g2">
+      <div class="card">
+        <h3><span class="he">מה למדנו</span><span class="en">What we learned</span></h3>
+        <ul>
+          <li><span class="he">סונאר מודד <b>זמן</b> והופך אותו למרחק (חלקי 2!)</span><span class="en">Sonar measures <b>time</b> and turns it into distance (divide by 2!)</span></li>
+          <li><span class="he">Trig = פולס התחלה · Echo = משך ההד</span><span class="en">Trig = start pulse · Echo = echo duration</span></li>
+          <li><span class="he">חוט שעון (CLK) מסנכרן תקשורת טורית</span><span class="en">A clock wire (CLK) syncs serial communication</span></li>
+          <li><span class="he">if / else + map() = התנהגות חכמה</span><span class="en">if / else + map() = smart behavior</span></li>
+        </ul>
+      </div>
+      <div class="card tint">
+        <h3><span class="he">אתגר 🏁</span><span class="en">Challenge 🏁</span></h3>
+        <ul>
+          <li><span class="he">הוסיפו <b>זמזם</b> (buzzer) שמצפצף יחד עם הנורית</span><span class="en">Add a <b>buzzer</b> that beeps along with the LED</span></li>
+          <li><span class="he">הציגו על התצוגה <span class="mono">"Stop"</span> כשמתקרבים מאוד</span><span class="en">Show <span class="mono">"Stop"</span> on the display when very close</span></li>
+          <li><span class="he">מתקדמים: החליפו את ה-<span class="mono">delay</span> ב-<span class="mono">millis()</span> כדי שהכול ירוץ חלק</span><span class="en">Advanced: replace <span class="mono">delay</span> with <span class="mono">millis()</span> so everything runs smoothly</span></li>
+        </ul>
+        <p style="margin-top:1rem"><span class="he">תודה — נתראה בשיעור הבא! 👋</span><span class="en">Thanks — see you next lesson! 👋</span></p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="dots" id="dots"></div>
+<div class="navbtns">
+  <button id="prev">‹ <span class="he">הקודם</span><span class="en">Prev</span></button>
+  <span class="counter" id="counter">1 / 12</span>
+  <button id="next"><span class="he">הבא</span><span class="en">Next</span> ›</button>
+</div>
+
+<script>
+(function(){
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var idx = 0;
+  var dots = document.getElementById('dots');
+  slides.forEach(function(_,i){
+    var d=document.createElement('i'); if(i===0)d.className='on';
+    d.onclick=function(){go(i)}; dots.appendChild(d);
+  });
+  function render(){
+    slides.forEach(function(s,i){ s.classList.toggle('active', i===idx); });
+    Array.prototype.forEach.call(dots.children,function(c,i){ c.className = i===idx?'on':''; });
+    document.getElementById('counter').textContent = (idx+1)+' / '+slides.length;
+    document.getElementById('progress').style.width = ((idx)/(slides.length-1)*100)+'%';
+    if(slides[idx].querySelector('#clkSvg')) drawClock();
+  }
+  function go(i){ idx = Math.max(0, Math.min(slides.length-1, i)); render(); }
+  window._go=go;
+  document.getElementById('next').onclick=function(){go(idx+1)};
+  document.getElementById('prev').onclick=function(){go(idx-1)};
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' ') go(idx+1);
+    if(e.key==='ArrowLeft'||e.key==='PageUp') go(idx-1);
+  });
+
+  // ---- language toggle ----
+  var lang='he';
+  document.getElementById('langBtn').onclick=function(){
+    lang = (lang==='he')?'en':'he';
+    document.body.className = 'lang-'+lang;
+    document.documentElement.lang = lang;
+    document.documentElement.dir = (lang==='he')?'rtl':'ltr';
+    updateWidgets();
+  };
+  function t(he,en){ return lang==='he'?he:en; }
+
+  // ---- copy buttons ----
+  document.querySelectorAll('.codewrap').forEach(function(w){
+    var pre=w.querySelector('pre'); if(!pre) return;
+    var b=document.createElement('button'); b.className='copybtn';
+    b.textContent='📋 copy';
+    b.onclick=function(){
+      var code=pre.innerText;
+      var done=function(){ b.textContent='✓'; b.classList.add('ok'); setTimeout(function(){b.textContent='📋 copy';b.classList.remove('ok')},1200); };
+      if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(code).then(done,fallback); }
+      else fallback();
+      function fallback(){ var ta=document.createElement('textarea'); ta.value=code; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy')}catch(e){} document.body.removeChild(ta); done(); }
+    };
+    w.appendChild(b);
+  });
+
+  // ---- Widget: if/else flow (slide 4) ----
+  var ifDist=document.getElementById('ifDist');
+  function updIf(){
+    var v=+ifDist.value;
+    document.getElementById('ifDistV').textContent=v;
+    var far=v>30;
+    document.getElementById('boxFar').classList.toggle('on',far);
+    document.getElementById('boxNear').classList.toggle('on',!far);
+    document.getElementById('diamond').classList.add('on');
+    document.getElementById('ledDot').setAttribute('fill', far?'#26324d':'#f87171');
+    document.getElementById('ifState').textContent = far? t('רחוק → LED כבוי','far → LED off') : t('קרוב → מהבהב!','close → blinking!');
+  }
+  if(ifDist){ ifDist.oninput=updIf; updIf(); }
+
+  // ---- Widget: sonar ping (slide 5) ----
+  var sDist=document.getElementById('sonarDist'), ping=document.getElementById('ping'), target=document.getElementById('target'), ruler=document.getElementById('ruler'), rulerLbl=document.getElementById('rulerLbl');
+  var SX=66, minX=90, maxX=380;
+  function targetX(){ var v=+sDist.value; return minX + (maxX-minX)*(v-5)/95; }
+  function placeTarget(){ var tx=targetX(); target.setAttribute('x', tx); ruler.setAttribute('x2', tx); rulerLbl.setAttribute('x',(SX+tx)/2); rulerLbl.textContent=sDist.value+' cm'; }
+  function updSonarText(){ if(rulerLbl) rulerLbl.textContent=sDist.value+' cm'; }
+  var animating=false;
+  function fire(){
+    if(!sDist||animating) return; animating=true;
+    var tx=targetX(); var t0=null, dur=1400;
+    document.getElementById('sonarT').textContent='…'; document.getElementById('sonarCm').textContent='…';
+    ping.setAttribute('opacity','1');
+    function step(ts){
+      if(!t0)t0=ts; var p=(ts-t0)/dur;
+      if(p>=1){ ping.setAttribute('opacity','0'); finish(); animating=false; return; }
+      var x = p<0.5 ? SX+(tx-SX)*(p/0.5) : tx-(tx-SX)*((p-0.5)/0.5);
+      ping.setAttribute('cx',x); requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  function finish(){
+    var cm=+sDist.value; var us=Math.round(2*cm/0.0343);
+    document.getElementById('sonarT').textContent=us; document.getElementById('sonarCm').textContent=cm;
+  }
+  if(sDist){ sDist.oninput=function(){ placeTarget(); document.getElementById('sonarT').textContent='—'; document.getElementById('sonarCm').textContent='—'; }; placeTarget(); document.getElementById('pingBtn').onclick=fire; }
+
+  // ---- Widget: clock/serial (slide 7) ----
+  var bits=[1,0,1,1,0,0,1,0]; // = 178
+  var clkTimer=null;
+  function drawClock(){
+    var svg=document.getElementById('clkSvg'); if(!svg) return;
+    var x0=40, cw=42, yC_h=40, yC_l=80, yD_h=130, yD_l=170, W=cw*bits.length;
+    var s='';
+    // labels
+    s+='<text x="'+(x0-8)+'" y="45" text-anchor="end" fill="#fbbf24" style="font-size:12px">CLK</text>';
+    s+='<text x="'+(x0-8)+'" y="155" text-anchor="end" fill="#22d3ee" style="font-size:12px">DIO</text>';
+    // clock wave
+    var cp='M '+x0+' '+yC_l;
+    for(var i=0;i<bits.length;i++){ var x=x0+i*cw; cp+=' L '+(x+cw/2)+' '+yC_l+' L '+(x+cw/2)+' '+yC_h+' L '+(x+cw)+' '+yC_h+' L '+(x+cw)+' '+yC_l; }
+    s+='<path d="'+cp+'" fill="none" stroke="#fbbf24" stroke-width="2"/>';
+    // data wave
+    var dp='M '+x0+' '+(bits[0]?yD_h:yD_l);
+    for(var j=0;j<bits.length;j++){ var xx=x0+j*cw; var y=bits[j]?yD_h:yD_l; dp+=' L '+xx+' '+y+' L '+(xx+cw)+' '+y; }
+    s+='<path d="'+dp+'" fill="none" stroke="#22d3ee" stroke-width="2"/>';
+    // sampling markers (rising edges at mid-cell)
+    for(var k=0;k<bits.length;k++){ var sx=x0+k*cw+cw/2; s+='<line x1="'+sx+'" y1="'+yC_h+'" x2="'+sx+'" y2="'+yD_l+'" stroke="#3a4a6a" stroke-dasharray="3 3"/>'; s+='<text x="'+sx+'" y="200" text-anchor="middle" fill="#6b84b0" style="font-size:12px">'+bits[k]+'</text>'; }
+    // moving cursor
+    s+='<line id="clkCursor" x1="'+x0+'" y1="20" x2="'+x0+'" y2="185" stroke="#34d399" stroke-width="2" opacity="0"/>';
+    svg.innerHTML=s;
+  }
+  function runClock(){
+    var svg=document.getElementById('clkSvg'); if(!svg) return;
+    if(clkTimer){ clearInterval(clkTimer); clkTimer=null; }
+    drawClock();
+    var x0=40, cw=42; var cursor=document.getElementById('clkCursor');
+    cursor.setAttribute('opacity','1');
+    var captured=''; document.getElementById('clkBits').textContent='________'; document.getElementById('clkDec').textContent='—';
+    var i=0;
+    clkTimer=setInterval(function(){
+      if(i>=bits.length){ clearInterval(clkTimer); clkTimer=null; cursor.setAttribute('opacity','0'); return; }
+      var sx=x0+i*cw+cw/2; cursor.setAttribute('x1',sx); cursor.setAttribute('x2',sx);
+      captured+=bits[i];
+      document.getElementById('clkBits').textContent = captured + '________'.slice(captured.length);
+      document.getElementById('clkDec').textContent = parseInt(captured,2);
+      i++;
+    }, 550);
+  }
+  var clkPlay=document.getElementById('clkPlay'); if(clkPlay) clkPlay.onclick=runClock;
+
+  // ---- Widget: level 3 live LED (slide 11) ----
+  var l3=document.getElementById('l3Dist'), l3Timer=null, l3On=false;
+  function l3Update(){
+    if(!l3) return;
+    var v=+l3.value; document.getElementById('l3DistV').textContent=v;
+    var led=document.getElementById('l3Led');
+    if(l3Timer){ clearInterval(l3Timer); l3Timer=null; }
+    if(v>30){
+      document.getElementById('l3Rate').textContent='—';
+      document.getElementById('l3State').textContent=t('רחוק → כבוי','far → off');
+      led.style.background='#2a2410';
+    } else {
+      var d = Math.round(40 + (500-40)*(v-0)/(30-0)); // map 0..30 -> 40..500
+      document.getElementById('l3Rate').textContent=d;
+      document.getElementById('l3State').textContent=t('אזור אזהרה','warning zone');
+      l3Timer=setInterval(function(){ l3On=!l3On; led.style.background=l3On?'#fbbf24':'#2a2410'; }, d);
+    }
+  }
+  if(l3){ l3.oninput=l3Update; l3Update(); }
+
+  function updateWidgets(){ if(ifDist)updIf(); updSonarText(); if(l3)l3Update(); }
+
+  render();
+})();
+</script>
+</body>
+</html>
