@@ -181,3 +181,8 @@ Main nav: renamed "לוח קודים" to "קוד משותף" across all 34 pages
 Main nav: removed the small dropdown arrow (⌄) after חיישנים/בסיס/פרויקטים/תקשורת, dropdown-on-hover behavior unchanged
 Main nav: styled "רכיבים לקנייה" and "קוד משותף" as a highlighted gradient pill button, across all 34 pages
 Main nav: restyled those two pills from solid gradient to an outlined purple pill, matching the package-nav featured look
+
+---
+ROBOTIKA-COURSE.co.il
+Current version: V89 (lessons/index.html only)
+Fix: removed the word "MAKELAB" from the course card title on the lessons hub, per Udi's request — now reads "יהוד · קורס יולי 2026" instead of "MAKELAB יהוד · קורס יולי 2026"
