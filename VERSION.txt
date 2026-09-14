@@ -192,3 +192,8 @@ ROBOTIKA-COURSE.co.il
 Current version: V90 (lessons/index.html only)
 Fix: course-43 card title on the lessons hub now reads "קורס #43 · ימי שלישי · 09/26" (added date tag), per Udi's request
 Fix: MAKELAB card title on the lessons hub changed to "יהוד יולי 26 · מלק ארדואינו 7/26", per Udi's request
+
+---
+ROBOTIKA-COURSE.co.il
+Current version: V91 (lessons/course-43/index.html only)
+Fix: course-43 hub page's own h1 title now reads "קורס #43 · ימי שלישי · 09/26" (added date tag, matching the lessons hub card), per Udi's request
