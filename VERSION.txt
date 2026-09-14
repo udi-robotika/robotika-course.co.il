@@ -186,3 +186,9 @@ Main nav: restyled those two pills from solid gradient to an outlined purple pil
 ROBOTIKA-COURSE.co.il
 Current version: V89 (lessons/index.html only)
 Fix: removed the word "MAKELAB" from the course card title on the lessons hub, per Udi's request — now reads "יהוד · קורס יולי 2026" instead of "MAKELAB יהוד · קורס יולי 2026"
+
+---
+ROBOTIKA-COURSE.co.il
+Current version: V90 (lessons/index.html only)
+Fix: course-43 card title on the lessons hub now reads "קורס #43 · ימי שלישי · 09/26" (added date tag), per Udi's request
+Fix: MAKELAB card title on the lessons hub changed to "יהוד יולי 26 · מלק ארדואינו 7/26", per Udi's request
