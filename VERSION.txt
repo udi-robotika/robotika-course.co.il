@@ -1,4 +1,13 @@
 ROBOTIKA-COURSE.co.il
+Current version: V92 (lessons/course-43/lesson-2/index.html only)
+Based on: V91
+Updated שיעור 2 to match the version actually taught in class — the bonus changed from a radar screen to an obstacle-avoidance car, so the deck grew from 12 to 14 slides. Change is additive only; the existing slides are untouched:
+Added slide "שימושים אפשריים" (Possible uses), after the "how sonar measures distance" slide — real-world use cases (parking / collision-avoidance, obstacle-avoiding robot, water-level sensing, automatic door) plus an embedded collision-avoidance car video (youtube.com/watch?v=LO-tLG4t5Dg)
+Added bonus slide "מכונית שעוצרת לפני מכשול" (a car that stops for obstacles) — 4 DC motors via an L298N H-bridge + front HC-SR04; waits 2s, drives forward, stops at ~5 cm. Same if/else + sonar as the lesson, with motors instead of the warning LED; includes the car video
+Added slide "חיווט ה-L298N" (L298N wiring reference) — labeled board photo + Arduino pin-mapping table (ENA→D5, IN1→D2, IN2→D3, IN3→D4, IN4→D7, ENB→D6), with the "remove the ENA/ENB jumpers for PWM speed" and "shared ground" warnings
+Summary slide renumbered 12→14; the course-43 hub already links lesson-2, so no hub change
+---
+ROBOTIKA-COURSE.co.il
 Current version: V88 (lessons/course-43/index.html only)
 New page: /lessons/course-43/lesson-2/ — שיעור 2 interactive slide lesson (sonar distance sensor, digit display, if/else, smart warning LED). Self-contained dark-theme slideshow, own nav — does not use the shared site header/footer like lesson-1
 Course-43 hub (/lessons/course-43/): activated the lesson-2 row, replacing the "upcoming" placeholder
