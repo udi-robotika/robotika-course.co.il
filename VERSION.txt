@@ -1,4 +1,12 @@
 ROBOTIKA-COURSE.co.il
+Current version: V93 (new lessons/course-43/lesson-3/index.html + course-43 hub row)
+Based on: V92
+New page: /lessons/course-43/lesson-3/ — שיעור 3 interactive slide deck (remote control: IR remote, RF433 radio, and Bluetooth from a phone). Self-contained dark-theme slideshow with EN/עב toggle, keyboard+button nav, and interactive widgets (H-bridge motor, obstacle-avoidance car, virtual IR remote, IR-vs-RF line-of-sight). Same template as the lesson-2 deck — 14 slides.
+Content arc: recap → finish the lesson-2 self-driving car (adds reverse + turn so it avoids, not just stops) → IR remote (full build) → RF433 (full build, one IN pin moves to free the D2 interrupt) → Bluetooth finale demo (Dabble app).
+Course-43 hub (/lessons/course-43/): added the lesson-3 row after lesson-2; hub footer version tag bumped V91 -> V93.
+Note: the lesson's Arduino .ino sketches live in Jonathan's course-materials folder, not in this site repo.
+---
+ROBOTIKA-COURSE.co.il
 Current version: V92 (lessons/course-43/lesson-2/index.html only)
 Based on: V91
 Updated שיעור 2 to match the version actually taught in class — the bonus changed from a radar screen to an obstacle-avoidance car, so the deck grew from 12 to 14 slides. Change is additive only; the existing slides are untouched:

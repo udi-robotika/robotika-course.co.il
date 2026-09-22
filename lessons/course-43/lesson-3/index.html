@@ -1,0 +1,763 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Robotika · שיעור 3 — שלט רחוק: IR, RF ו-Bluetooth</title>
+<style>
+  :root{
+    --bg:#0b1220; --bg2:#0f1a2e; --card:#132038; --ink:#e8eefb; --muted:#9fb2d4;
+    --accent:#22d3ee; --accent2:#a78bfa; --good:#34d399; --warn:#fbbf24; --danger:#f87171;
+    --line:#25324d; --code:#0a1020;
+    --fs: clamp(16px, 1.4vw, 22px);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{
+    background:radial-gradient(1200px 800px at 80% -10%, #16233f 0%, var(--bg) 55%);
+    color:var(--ink); font:var(--fs)/1.5 "Segoe UI", "Assistant","Rubik", system-ui, Arial, sans-serif;
+    overflow:hidden;
+  }
+  body.lang-he .en{display:none}
+  body.lang-en .he{display:none}
+  code,pre,.mono{font-family:"JetBrains Mono","Fira Code","Consolas",ui-monospace,monospace}
+
+  /* ---- stage / slides ---- */
+  .stage{position:fixed; inset:0; display:flex; align-items:center; justify-content:center; padding:3.2rem 3rem 4.2rem;}
+  .slide{display:none; width:min(1180px,96vw); max-height:100%; overflow:auto; animation:fade .35s ease}
+  .slide.active{display:block}
+  @keyframes fade{from{opacity:0; transform:translateY(8px)}to{opacity:1;transform:none}}
+  .slide::-webkit-scrollbar{width:8px}
+  .slide::-webkit-scrollbar-thumb{background:#2a3a5c;border-radius:8px}
+
+  h1{font-size:2.4em; line-height:1.15; margin:.1em 0 .3em}
+  h2{font-size:1.7em; margin:0 0 .6em; display:flex; align-items:center; gap:.5rem}
+  h2 .num{font-size:.55em; color:#08131f; background:var(--accent); border-radius:.5rem; padding:.15em .55em; font-weight:700}
+  h3{font-size:1.15em; margin:1em 0 .4em; color:var(--accent)}
+  p{margin:.5em 0}
+  ul{margin:.4em 0; padding-inline-start:1.3em}
+  li{margin:.35em 0}
+  .lead{color:var(--muted); font-size:1.1em}
+  .accent{color:var(--accent)} .a2{color:var(--accent2)} .warnc{color:var(--warn)} .good{color:var(--good)} .danger{color:var(--danger)}
+  .pill{display:inline-block; background:var(--card); border:1px solid var(--line); border-radius:999px; padding:.15em .7em; font-size:.8em; color:var(--muted)}
+  .grid{display:grid; gap:1rem}
+  .g2{grid-template-columns:1fr 1fr}
+  .g3{grid-template-columns:1fr 1fr 1fr}
+  @media (max-width:800px){.g2,.g3{grid-template-columns:1fr}}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:1rem; padding:1rem 1.15rem}
+  .card.tint{background:linear-gradient(180deg,#14233f,#101a30)}
+  .kbd{background:#0a1224;border:1px solid var(--line);border-bottom-width:3px;border-radius:.4em;padding:.05em .5em;font-size:.85em}
+
+  .level{border-inline-start:4px solid var(--accent); padding-inline-start:.8rem}
+  .lv1{border-color:var(--accent)} .lv2{border-color:var(--accent2)} .lv3{border-color:var(--warn)}
+
+  /* ---- code blocks ---- */
+  .codewrap{position:relative; margin:.6em 0}
+  pre{background:var(--code); border:1px solid var(--line); border-radius:.8rem; padding:2.6rem 1.1rem 1rem; overflow:auto; font-size:.82em; line-height:1.55; direction:ltr; text-align:left}
+  svg text{direction:ltr; unicode-bidi:embed}
+  pre .cm{color:#6b84b0} pre .kw{color:#f0a35e} pre .fn{color:#7dd3fc} pre .num{color:#a5f3b0} pre .str{color:#eab6ff}
+  .copybtn{position:absolute; inset-inline-end:.6rem; top:.6rem; background:#1b2a49; color:var(--ink); border:1px solid var(--line); border-radius:.5rem; padding:.25em .7em; font-size:.75em; cursor:pointer}
+  .copybtn:hover{background:#243a63} .copybtn:active{transform:translateY(1px)}
+  .copybtn.ok{background:var(--good); color:#062}
+
+  /* ---- controls ---- */
+  input[type=range]{width:100%; accent-color:var(--accent)}
+  button.demo{background:var(--accent); color:#062330; border:0; border-radius:.6rem; padding:.5em 1em; font-weight:700; cursor:pointer; font-family:inherit}
+  button.demo:hover{filter:brightness(1.08)} button.demo:active{transform:translateY(1px)}
+  button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+  .readout{font-family:ui-monospace,monospace; font-size:1.05em}
+  .big{font-size:1.6em; font-weight:700}
+
+  /* ---- nav ---- */
+  .topbar{position:fixed; inset-inline:0; top:0; height:2.7rem; display:flex; align-items:center; justify-content:space-between; padding:0 1rem; background:linear-gradient(180deg,rgba(11,18,32,.95),rgba(11,18,32,0)); z-index:20}
+  .brand{font-weight:700; letter-spacing:.02em}
+  .brand .dot{color:var(--accent)}
+  .navbtns{position:fixed; inset-inline:0; bottom:0; height:3.4rem; display:flex; align-items:center; justify-content:center; gap:1rem; z-index:20; background:linear-gradient(0deg,rgba(11,18,32,.95),rgba(11,18,32,0))}
+  .navbtns button{background:var(--card); color:var(--ink); border:1px solid var(--line); border-radius:.6rem; padding:.4em .9em; cursor:pointer; font-family:inherit; font-size:.9em}
+  .navbtns button:hover{border-color:var(--accent)}
+  .counter{color:var(--muted); min-width:5.5rem; text-align:center; font-variant-numeric:tabular-nums}
+  .dots{position:fixed; inset-inline-end:.7rem; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:.4rem; z-index:20}
+  .dots i{width:.55rem; height:.55rem; border-radius:50%; background:#2b3a5a; cursor:pointer; display:block}
+  .dots i.on{background:var(--accent)}
+  .langtoggle{background:#1b2a49;color:var(--ink);border:1px solid var(--line);border-radius:.5rem;padding:.25em .8em;cursor:pointer;font-family:inherit;font-size:.85em}
+  .progress{position:fixed; top:0; inset-inline-start:0; height:3px; background:var(--accent); width:0; z-index:30; transition:width .3s}
+
+  svg{max-width:100%}
+  .tag{font-size:.72em; color:var(--muted)}
+  .flowbox{fill:var(--card); stroke:var(--line); stroke-width:2}
+  .flowbox.on{stroke:var(--accent); stroke-width:3}
+  .flowtext{fill:var(--ink); font-size:15px}
+  .note{background:#101a30;border:1px dashed var(--line);border-radius:.7rem;padding:.6em .9em;color:var(--muted);font-size:.9em}
+
+  /* ---- lesson-3 extras ---- */
+  table.cmp{width:100%; border-collapse:collapse; font-size:.82em; margin:.4em 0}
+  table.cmp th,table.cmp td{border:1px solid var(--line); padding:.45em .6em; text-align:center}
+  table.cmp th{background:#16233f; color:var(--ink)}
+  table.cmp td:first-child,table.cmp th:first-child{text-align:start; color:var(--muted)}
+  table.cmp tr:nth-child(even) td{background:#101a30}
+  .remote{display:grid; direction:ltr; grid-template-columns:repeat(3,3rem); grid-template-rows:repeat(3,3rem); gap:.4rem; justify-content:center; margin:.4rem auto}
+  .remote button{background:#1b2a49; color:var(--ink); border:1px solid var(--line); border-radius:.6rem; font-size:1.2em; cursor:pointer; font-family:inherit}
+  .remote button:hover{border-color:var(--accent)}
+  .remote button.lit{background:var(--accent); color:#062330; border-color:var(--accent)}
+  .rk-up{grid-area:1/2} .rk-left{grid-area:2/1} .rk-ok{grid-area:2/2} .rk-right{grid-area:2/3} .rk-down{grid-area:3/2}
+  .rk-ok{font-size:1.1em; font-weight:700; padding:0; color:var(--danger)}
+  .hbtn{background:#1b2a49;color:var(--ink);border:1px solid var(--line);border-radius:.6rem;padding:.4em 1em;cursor:pointer;font-family:inherit;font-weight:700;font-size:.9em}
+  .hbtn:hover{border-color:var(--accent)}
+  .hbtn.lit{background:var(--accent);color:#062330;border-color:var(--accent)}
+</style>
+</head>
+<body class="lang-he">
+<div class="progress" id="progress"></div>
+<div class="topbar">
+  <div class="brand">Robotika <span class="dot">●</span> <span class="he">שיעור 3</span><span class="en">Lesson 3</span></div>
+  <button class="langtoggle" id="langBtn">EN / עב</button>
+</div>
+
+<div class="stage" id="stage">
+
+  <!-- 1 TITLE -->
+  <section class="slide active">
+    <div class="pill"><span class="he">קורס ארדואינו · מפגש 3</span><span class="en">Arduino course · Session 3</span></div>
+    <h1><span class="he">שלט רחוק<br>IR · RF · Bluetooth</span><span class="en">Remote control<br>IR · RF · Bluetooth</span></h1>
+    <p class="lead">
+      <span class="he">קודם נסיים את המכונית ש"נוהגת לבד", ואז ניקח את ההגה: נלמד שלוש דרכים לשלוט במכונית מרחוק — באור, בגלי רדיו, ומהטלפון.</span>
+      <span class="en">First we finish the car that "drives itself", then we take the wheel: three ways to control the car from a distance — with light, radio waves, and your phone.</span>
+    </p>
+    <div class="grid g3" style="margin-top:1.2rem">
+      <div class="card lv1 level"><b>IR</b> — <span class="he">שלט אינפרא-אדום (אור)</span><span class="en">Infrared remote (light)</span></div>
+      <div class="card lv2 level"><b>RF</b> — <span class="he">גלי רדיו 433MHz</span><span class="en">433MHz radio</span></div>
+      <div class="card lv3 level"><b>BT</b> — <span class="he">Bluetooth מהטלפון</span><span class="en">Bluetooth from your phone</span></div>
+    </div>
+    <p class="tag" style="margin-top:1.4rem">
+      <span class="he">ניווט: חצים ← → במקלדת, או הכפתורים למטה · לחצו EN לבדיקת מונחים באנגלית</span>
+      <span class="en">Navigate: ← → arrow keys, or the buttons below · press עב for Hebrew</span>
+    </p>
+  </section>
+
+  <!-- 2 AGENDA -->
+  <section class="slide">
+    <h2><span class="num">2</span><span class="he">מה נעשה היום</span><span class="en">What we'll do today</span></h2>
+    <div class="grid g2">
+      <div class="card">
+        <h3><span class="he">הרעיון הגדול</span><span class="en">The big idea</span></h3>
+        <ul>
+          <li><span class="he">אותן פונקציות תנועה (קדימה / אחורה / פנייה / עצירה) — <b>רק הקלט משתנה</b></span><span class="en">Same motion functions (forward / back / turn / stop) — <b>only the input changes</b></span></li>
+          <li><span class="he">חיישן מחליט לבד ← <b>אתם</b> מחליטים עם שלט</span><span class="en">A sensor decides on its own → <b>you</b> decide with a remote</span></li>
+          <li><span class="he">שלוש טכנולוגיות אלחוטיות וההבדלים ביניהן</span><span class="en">Three wireless technologies and how they differ</span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="he">הבנייה — בשלבים</span><span class="en">The build — in levels</span></h3>
+        <ul>
+          <li class="level lv1"><span class="he"><b>שלב 0:</b> לסיים את המכונית שנוהגת לבד (נסיעה + התחמקות)</span><span class="en"><b>Level 0:</b> finish the self-driving car (drive + avoid)</span></li>
+          <li class="level lv1"><span class="he"><b>שלב 1:</b> שליטה בשלט <b>IR</b> — בנייה מלאה</span><span class="en"><b>Level 1:</b> control with an <b>IR</b> remote — full build</span></li>
+          <li class="level lv2"><span class="he"><b>שלב 2:</b> שליטה ב<b>רדיו RF433</b> — בנייה מלאה</span><span class="en"><b>Level 2:</b> control over <b>RF433 radio</b> — full build</span></li>
+          <li class="level lv3"><span class="he"><b>פינאלה:</b> נהיגה מהטלפון ב-<b>Bluetooth</b> (הדגמה — נסיים בשיעור הבא)</span><span class="en"><b>Finale:</b> drive from your phone over <b>Bluetooth</b> (demo — we finish next lesson)</span></li>
+        </ul>
+        <div class="note" style="margin-top:.6rem"><span class="he">יכול להיות שלא נספיק הכול היום — וזה בסדר גמור. הכול כאן בשקופיות.</span><span class="en">We may not finish it all today — that's completely fine. Everything is here in the slides.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 RECAP -->
+  <section class="slide">
+    <h2><span class="num">3</span><span class="he">תזכורת: המכונית משיעור 2</span><span class="en">Recap: the car from Lesson 2</span></h2>
+    <div class="grid g2">
+      <div class="card">
+        <p><span class="he">בנינו מכונית עם <b>4 מנועים</b>, מגשר <b>L298N</b> שנותן להם כוח, וחיישן <b>HC-SR04</b> מלפנים. הקוד השתמש ב-<b>if / else</b>: אם קרוב — לעצור, אחרת — לנסוע.</span>
+           <span class="en">We built a car with <b>4 motors</b>, an <b>L298N</b> H-bridge to power them, and an <b>HC-SR04</b> sensor up front. The code used <b>if / else</b>: if close — stop, else — drive.</span></p>
+        <ul>
+          <li><span class="he"><b>L298N</b> — פין חלש של הארדואינו לא מפעיל מנוע; המגשר לוקח כוח מסוללה ומאפשר גם <b>כיוון</b></span><span class="en"><b>L298N</b> — a weak Arduino pin can't run a motor; the H-bridge takes battery power and also sets <b>direction</b></span></li>
+          <li><span class="he">שתי פונקציות בלבד: <span class="mono">forward()</span> ו-<span class="mono">stopCar()</span></span><span class="en">Only two functions: <span class="mono">forward()</span> and <span class="mono">stopCar()</span></span></li>
+        </ul>
+        <div class="note"><span class="he"><b>אבל</b> — המכונית רק <b>עצרה</b> מול מכשול. זו עדיין לא "נהיגה עצמית".</span><span class="en"><b>But</b> — the car only <b>stopped</b> at an obstacle. That's not really "self-driving" yet.</span></div>
+      </div>
+      <div class="card tint">
+        <h3><span class="he">חיווט המכונית (כמו בשיעור 2)</span><span class="en">The car's wiring (as in Lesson 2)</span></h3>
+        <table class="cmp">
+          <tr><th><span class="he">חיבור</span><span class="en">Connection</span></th><th><span class="he">פין</span><span class="en">Pin</span></th></tr>
+          <tr><td>HC-SR04 Trig / Echo</td><td>D9 / D10</td></tr>
+          <tr><td>ENA <span class="tag">(<span class="he">מהירות שמאל</span><span class="en">left speed</span>)</span></td><td>D5</td></tr>
+          <tr><td>IN1 / IN2 <span class="tag">(<span class="he">שמאל</span><span class="en">left</span>)</span></td><td>D2 / D3</td></tr>
+          <tr><td>IN3 / IN4 <span class="tag">(<span class="he">ימין</span><span class="en">right</span>)</span></td><td>D4 / D7</td></tr>
+          <tr><td>ENB <span class="tag">(<span class="he">מהירות ימין</span><span class="en">right speed</span>)</span></td><td>D6</td></tr>
+        </table>
+        <div class="note"><span class="he">4 מנועים, <b>מגשר אחד</b>: שני המנועים בכל צד מחוברים יחד לאותו ערוץ ב-L298N. לכן בקוד יש רק <b>שני צדדים</b> — שמאל וימין.</span><span class="en">4 motors, <b>one H-bridge</b>: the two motors on each side are wired together into the same L298N channel. So in code there are only <b>two sides</b> — left and right.</span></div>
+        <p class="tag"><span class="he">⚠️ הסוללה של המנועים והארדואינו חייבים <b>גראונד משותף</b>.</span><span class="en">⚠️ The motor battery and the Arduino must share a <b>common ground</b>.</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 H-BRIDGE: why two IN pins per side -->
+  <section class="slide">
+    <h2><span class="num">4</span><span class="he">רגע — למה שני פיני IN לכל צד?</span><span class="en">Wait — why two IN pins per side?</span></h2>
+    <div class="grid g2">
+      <div class="card">
+        <p><span class="he">פין דיגיטלי יודע רק שני מצבים: <b>דלוק / כבוי</b>. הוא יכול <b>להדליק</b> מנוע — אבל לא <b>להפוך</b> אותו. כדי לנסוע אחורה צריך להחליף את ה<b>קוטביות</b> (+/–) של המנוע.</span>
+           <span class="en">A digital pin has only two states: <b>on / off</b>. It can <b>turn a motor on</b> — but it can't <b>reverse</b> it. To go backward you must swap the motor's <b>polarity</b> (+/–).</span></p>
+        <p><span class="he">בדיוק לזה נועד ה<b>מגשר H</b> (H-bridge): לכל ערוץ יש <b>זוג</b> פינים (IN1+IN2) שקובעים לאן זורם הזרם — כלומר את ה<b>כיוון</b>. פין <b>EN</b> נפרד שולט ב<b>מהירות</b> (PWM).</span>
+           <span class="en">That's exactly what an <b>H-bridge</b> is for: each channel has a <b>pair</b> of pins (IN1+IN2) that set which way the current flows — i.e. the <b>direction</b>. A separate <b>EN</b> pin sets the <b>speed</b> (PWM).</span></p>
+        <table class="cmp">
+          <tr><th>IN1</th><th>IN2</th><th><span class="he">תוצאה</span><span class="en">Result</span></th></tr>
+          <tr><td>1</td><td>0</td><td class="good"><span class="he">קדימה</span><span class="en">Forward</span></td></tr>
+          <tr><td>0</td><td>1</td><td class="good"><span class="he">אחורה</span><span class="en">Reverse</span></td></tr>
+          <tr><td>0</td><td>0</td><td><span class="he">עצירה (חופשי)</span><span class="en">Stop (coast)</span></td></tr>
+          <tr><td>1</td><td>1</td><td class="warnc"><span class="he">בלימה</span><span class="en">Brake</span></td></tr>
+        </table>
+        <div class="note"><span class="he">לכן: 4 מנועים, 2 צדדים, 2 ערוצים — אבל <b>4 פיני IN</b> (זוג לכל צד לכיוון) + 2 פיני EN (למהירות).</span><span class="en">So: 4 motors, 2 sides, 2 channels — but <b>4 IN pins</b> (a pair per side for direction) + 2 EN pins (for speed).</span></div>
+      </div>
+      <div class="card tint" style="text-align:center">
+        <p class="tag"><span class="he">שנו את IN1 / IN2 ואת המהירות — וראו את המנוע:</span><span class="en">Toggle IN1 / IN2 and the speed — and watch the motor:</span></p>
+        <svg viewBox="0 0 300 190" id="hbSvg" aria-hidden="true">
+          <circle cx="150" cy="95" r="56" fill="#0f1a30" stroke="#33507f" stroke-width="2"/>
+          <g id="hbRotor" transform="rotate(0 150 95)">
+            <rect x="146" y="45" width="8" height="100" rx="4" fill="var(--accent)"/>
+            <circle cx="150" cy="50" r="7" fill="var(--warn)"/>
+          </g>
+          <circle cx="150" cy="95" r="10" fill="#1b2a49" stroke="#4a5f8a"/>
+          <text x="150" y="178" text-anchor="middle" class="tag" fill="#9fb2d4">motor (one side)</text>
+        </svg>
+        <div style="display:flex; gap:.5rem; justify-content:center; margin:.4rem 0">
+          <button class="hbtn" id="hbIn1">IN1 = 1</button>
+          <button class="hbtn" id="hbIn2">IN2 = 0</button>
+        </div>
+        <label class="tag">ENA <span class="he">(מהירות)</span><span class="en">(speed)</span>: <b id="hbEnV">180</b></label>
+        <input type="range" id="hbEn" min="0" max="255" value="180">
+        <div class="readout big" id="hbState2" style="margin-top:.3rem"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 FINISH SELF-DRIVING: the problem + new moves -->
+  <section class="slide">
+    <h2><span class="num">5</span><span class="he">שלב 0: מכונית שמתחמקת (לא רק עוצרת)</span><span class="en">Level 0: a car that avoids (not just stops)</span></h2>
+    <div class="grid g2">
+      <div class="card">
+        <p><span class="he">מכונית שנוהגת לבד צריכה <b>לצאת מהצרה</b>: אם חסום — לסגת קצת, להסתובב, ולהמשיך. בשביל זה צריך שני כיוונים חדשים.</span>
+           <span class="en">A self-driving car must <b>get out of trouble</b>: if blocked — back up a bit, turn, and carry on. For that we need new directions.</span></p>
+        <h3><span class="he">ארבע תנועות מה-L298N</span><span class="en">Four moves from the L298N</span></h3>
+        <ul>
+          <li><span class="he"><b>קדימה:</b> שני הצדדים קדימה</span><span class="en"><b>Forward:</b> both sides forward</span></li>
+          <li><span class="he"><b>אחורה:</b> שני הצדדים אחורה (הופכים IN1/IN2)</span><span class="en"><b>Backward:</b> both sides reverse (flip IN1/IN2)</span></li>
+          <li><span class="he"><b>פנייה ימינה:</b> שמאל קדימה, ימין אחורה ← מסתובב במקום</span><span class="en"><b>Turn right:</b> left forward, right back → spins in place</span></li>
+          <li><span class="he"><b>פנייה שמאלה:</b> הפוך</span><span class="en"><b>Turn left:</b> the opposite</span></li>
+        </ul>
+        <div class="note"><span class="he">הטריק: כיוון מנוע נקבע ע"י <b>מי מה-IN גבוה</b>. הופכים אותם — והגלגל מסתובב הפוך.</span><span class="en">The trick: motor direction is set by <b>which IN pin is HIGH</b>. Flip them — the wheel spins the other way.</span></div>
+      </div>
+      <div class="card tint">
+        <h3><span class="he">אחורה = להפוך את IN1/IN2</span><span class="en">Backward = flip IN1/IN2</span></h3>
+        <div class="codewrap"><pre><code class="mono"><span class="kw">void</span> <span class="fn">forward</span>() {
+  <span class="fn">digitalWrite</span>(IN1, <span class="num">HIGH</span>); <span class="fn">digitalWrite</span>(IN2, <span class="num">LOW</span>);
+  <span class="fn">digitalWrite</span>(IN3, <span class="num">HIGH</span>); <span class="fn">digitalWrite</span>(IN4, <span class="num">LOW</span>);
+}
+<span class="kw">void</span> <span class="fn">backward</span>() {
+  <span class="fn">digitalWrite</span>(IN1, <span class="num">LOW</span>);  <span class="fn">digitalWrite</span>(IN2, <span class="num">HIGH</span>);
+  <span class="fn">digitalWrite</span>(IN3, <span class="num">LOW</span>);  <span class="fn">digitalWrite</span>(IN4, <span class="num">HIGH</span>);
+}
+<span class="kw">void</span> <span class="fn">turnRight</span>() {      <span class="cm">// left fwd, right back</span>
+  <span class="fn">digitalWrite</span>(IN1, <span class="num">HIGH</span>); <span class="fn">digitalWrite</span>(IN2, <span class="num">LOW</span>);
+  <span class="fn">digitalWrite</span>(IN3, <span class="num">LOW</span>);  <span class="fn">digitalWrite</span>(IN4, <span class="num">HIGH</span>);
+}</code></pre></div>
+        <p class="tag"><span class="he">אותה מהירות ל-<span class="mono">ENA</span>/<span class="mono">ENB</span> בכל תנועה.</span><span class="en">Same speed on <span class="mono">ENA</span>/<span class="mono">ENB</span> for every move.</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 FINISH SELF-DRIVING: the decision + interactive -->
+  <section class="slide">
+    <h2><span class="num">6</span><span class="he">שלב 0: ההחלטה של המכונית</span><span class="en">Level 0: the car's decision</span></h2>
+    <div class="grid g2">
+      <div class="card">
+        <p><span class="he">אותו <b>if / else</b> משיעור 2 — אבל בענף ה"חסום" יש עכשיו <b>רצף</b> קטן של פעולות במקום סתם עצירה.</span>
+           <span class="en">The same <b>if / else</b> from Lesson 2 — but the "blocked" branch now runs a small <b>sequence</b> instead of just stopping.</span></p>
+        <div class="codewrap"><pre><code class="mono"><span class="kw">if</span> (distanceCm &lt;= <span class="num">15</span>) {   <span class="cm">// blocked</span>
+  stopCar();   <span class="fn">delay</span>(<span class="num">200</span>);
+  backward();  <span class="fn">delay</span>(<span class="num">400</span>);
+  turnRight(); <span class="fn">delay</span>(<span class="num">400</span>);
+} <span class="kw">else</span> {
+  forward();               <span class="cm">// clear -> drive</span>
+}</code></pre></div>
+        <p><span class="he">גררו את המרחק וראו מה המכונית מחליטה:</span><span class="en">Drag the distance and watch the car decide:</span></p>
+        <input type="range" id="avDist" min="0" max="60" value="45">
+        <div class="readout" style="margin-top:.4rem"><span class="he">מרחק</span><span class="en">Distance</span>: <b id="avDistV">45</b> cm</div>
+      </div>
+      <div class="card tint" style="text-align:center">
+        <svg viewBox="0 0 300 200" id="avSvg" aria-hidden="true">
+          <rect id="avWall" x="250" y="30" width="18" height="140" rx="3" fill="#2a3a5c" stroke="var(--accent2)" opacity="0"/>
+          <g id="avCar">
+            <rect x="70" y="80" width="70" height="40" rx="8" fill="#1b2a49" stroke="#33507f"/>
+            <circle cx="88" cy="80" r="8" fill="#0f1a30" stroke="#4a5f8a"/>
+            <circle cx="122" cy="80" r="8" fill="#0f1a30" stroke="#4a5f8a"/>
+            <circle cx="88" cy="120" r="8" fill="#0f1a30" stroke="#4a5f8a"/>
+            <circle cx="122" cy="120" r="8" fill="#0f1a30" stroke="#4a5f8a"/>
+            <polygon points="140,90 158,100 140,110" fill="var(--accent)"/>
+          </g>
+        </svg>
+        <div class="readout big" id="avState" style="margin-top:.4rem"></div>
+      </div>
+    </div>
+    <div class="note" style="margin-top:.8rem"><span class="he">📄 הקוד המלא: <span class="mono">code/level0_selfdriving_car.ino</span></span><span class="en">📄 Full code: <span class="mono">code/level0_selfdriving_car.ino</span></span></div>
+  </section>
+
+  <!-- 6 BRIDGE: take the wheel + comparison -->
+  <section class="slide">
+    <h2><span class="num">7</span><span class="he">לוקחים את ההגה 🕹️</span><span class="en">Take the wheel 🕹️</span></h2>
+    <div class="grid g2">
+      <div class="card">
+        <p><span class="he">שימו לב לדבר הכי חשוב היום: פונקציות התנועה <b>נשארות בדיוק אותו דבר</b>. מה שמשתנה זה רק <b>מי מחליט</b> איזו פונקציה להפעיל.</span>
+           <span class="en">Notice the most important thing today: the motion functions <b>stay exactly the same</b>. All that changes is <b>who decides</b> which function to call.</span></p>
+        <div class="codewrap"><pre><code class="mono"><span class="cm">// self-driving: the SENSOR decides</span>
+<span class="kw">if</span> (distance &lt;= <span class="num">15</span>) turnRight();
+<span class="kw">else</span>                forward();
+
+<span class="cm">// remote: YOU decide (a button)</span>
+<span class="kw">if</span> (button == UP)    forward();
+<span class="kw">else if</span> (button == RIGHT) turnRight();</code></pre></div>
+        <p class="tag"><span class="he">אותו "גוף", מוח אחר. זה מה שהופך רובוט לגמיש.</span><span class="en">Same "body", different brain. That's what makes a robot flexible.</span></p>
+      </div>
+      <div class="card tint">
+        <h3><span class="he">שלוש דרכים לשלוח פקודה אלחוטית</span><span class="en">Three ways to send a command wirelessly</span></h3>
+        <table class="cmp">
+          <tr><th></th><th>IR</th><th>RF 433</th><th>Bluetooth</th></tr>
+          <tr><td><span class="he">מדיום</span><span class="en">Medium</span></td><td><span class="he">אור</span><span class="en">Light</span></td><td><span class="he">רדיו</span><span class="en">Radio</span></td><td><span class="he">רדיו</span><span class="en">Radio</span></td></tr>
+          <tr><td><span class="he">קו ראייה?</span><span class="en">Line of sight?</span></td><td class="danger"><span class="he">חובה</span><span class="en">Required</span></td><td class="good"><span class="he">לא</span><span class="en">No</span></td><td class="good"><span class="he">לא</span><span class="en">No</span></td></tr>
+          <tr><td><span class="he">טווח</span><span class="en">Range</span></td><td><span class="he">~5 מ'</span><span class="en">~5 m</span></td><td><span class="he">עשרות-מאות מ'</span><span class="en">10s–100s m</span></td><td><span class="he">~10 מ'</span><span class="en">~10 m</span></td></tr>
+          <tr><td><span class="he">השלט</span><span class="en">The remote</span></td><td><span class="he">מוכן</span><span class="en">Ready-made</span></td><td><span class="he">בונים בעצמנו</span><span class="en">We build it</span></td><td><span class="he">הטלפון</span><span class="en">Your phone</span></td></tr>
+          <tr><td><span class="he">כיוון</span><span class="en">Direction</span></td><td><span class="he">חד-כיווני</span><span class="en">One-way</span></td><td><span class="he">חד-כיווני</span><span class="en">One-way</span></td><td class="accent"><span class="he">דו-כיווני</span><span class="en">Two-way</span></td></tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 IR: how it works + virtual remote -->
+  <section class="slide">
+    <h2><span class="num">8</span><span class="he">שלב 1: שלט IR — איך זה עובד</span><span class="en">Level 1: IR remote — how it works</span></h2>
+    <div class="grid g2">
+      <div class="card">
+        <p><span class="he">בדיוק כמו שלט הטלוויזיה: השלט מהבהב <b>אור אינפרא-אדום</b> שאנחנו לא רואים. כל כפתור שולח <b>קוד מספרי</b> אחר. המקלט על המכונית מפענח את הקוד.</span>
+           <span class="en">Just like your TV remote: it flashes <b>infrared light</b> we can't see. Each button sends a different <b>numeric code</b>. The receiver on the car decodes it.</span></p>
+        <ul>
+          <li><span class="he">🔦 <b>קו ראייה חובה</b> — האור לא עובר דרך קיר או יד</span><span class="en">🔦 <b>Line of sight required</b> — the light won't pass a wall or hand</span></li>
+          <li><span class="he">⬅️ <b>חד-כיווני</b> — השלט מדבר, המכונית רק מקשיבה</span><span class="en">➡️ <b>One-way</b> — the remote talks, the car only listens</span></li>
+          <li><span class="he">✅ פשוט וזול — השלט כבר מוכן</span><span class="en">✅ Simple and cheap — the remote is ready-made</span></li>
+        </ul>
+        <p><span class="he">נסו את השלט הווירטואלי — לחצו על החצים והמכונית תזוז:</span><span class="en">Try the virtual remote — press the arrows and the car moves:</span></p>
+      </div>
+      <div class="card tint" style="text-align:center">
+        <svg viewBox="0 0 300 170" id="rcSvg" aria-hidden="true">
+          <g id="rcCar" transform="translate(150,85)">
+            <rect x="-26" y="-16" width="52" height="32" rx="7" fill="#1b2a49" stroke="var(--accent)"/>
+            <circle cx="-14" cy="-16" r="6" fill="#0f1a30" stroke="#4a5f8a"/>
+            <circle cx="14" cy="-16" r="6" fill="#0f1a30" stroke="#4a5f8a"/>
+            <circle cx="-14" cy="16" r="6" fill="#0f1a30" stroke="#4a5f8a"/>
+            <circle cx="14" cy="16" r="6" fill="#0f1a30" stroke="#4a5f8a"/>
+            <polygon points="26,-8 40,0 26,8" fill="var(--accent)"/>
+          </g>
+        </svg>
+        <div class="remote">
+          <button class="rk-up" data-cmd="up">▲</button>
+          <button class="rk-left" data-cmd="left">◀</button>
+          <button class="rk-ok" data-cmd="stop" title="stop">⏹</button>
+          <button class="rk-right" data-cmd="right">▶</button>
+          <button class="rk-down" data-cmd="down">▼</button>
+        </div>
+        <div class="readout" id="rcState"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 IR: hardware + read codes -->
+  <section class="slide">
+    <h2><span class="num">9</span><span class="he">שלב 1: קודם — ללמוד את קודי השלט</span><span class="en">Level 1: first — learn the remote's codes</span></h2>
+    <div class="grid g2">
+      <div class="card">
+        <p><span class="he">כל שלט שולח מספרים אחרים, אז קודם <b>קוראים</b> אותם פעם אחת ורושמים. מעלים את הסקצ' הקצר, פותחים <b>Serial Monitor</b>, ולוחצים על כל כפתור.</span>
+           <span class="en">Every remote sends different numbers, so first we <b>read</b> them once and write them down. Upload the short sketch, open the <b>Serial Monitor</b>, and press each button.</span></p>
+        <h3><span class="he">הרכיב</span><span class="en">The part</span></h3>
+        <ul>
+          <li><span class="he">מודול <b>מקלט IR</b> (VS1838 / HX-M121) + השלט הקטן</span><span class="en"><b>IR receiver</b> module (VS1838 / HX-M121) + the small remote</span></li>
+          <li><span class="he">ספרייה: <span class="mono">IRremote</span> (בתפריט Manage Libraries, לחפש)</span><span class="en">Library: <span class="mono">IRremote</span> (Manage Libraries → search)</span></li>
+        </ul>
+        <div class="note"><span class="he">חיווט המקלט: <span class="mono">OUT→D8</span>, <span class="mono">VCC→5V</span>, <span class="mono">GND→GND</span>. שלושה חוטים בלבד.</span><span class="en">Receiver wiring: <span class="mono">OUT→D8</span>, <span class="mono">VCC→5V</span>, <span class="mono">GND→GND</span>. Just three wires.</span></div>
+      </div>
+      <div class="card tint">
+        <h3><span class="he">קוראים את הקודים</span><span class="en">Read the codes</span></h3>
+        <div class="codewrap"><pre><code class="mono"><span class="kw">#include</span> &lt;IRremote.h&gt;
+<span class="kw">const int</span> IR_RECEIVE_PIN = <span class="num">8</span>;
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  <span class="fn">Serial.begin</span>(<span class="num">9600</span>);
+  <span class="fn">IrReceiver.begin</span>(IR_RECEIVE_PIN);
+}
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">if</span> (<span class="fn">IrReceiver.decode</span>()) {
+    <span class="fn">Serial.println</span>(IrReceiver.decodedIRData.command, <span class="num">HEX</span>);
+    <span class="fn">IrReceiver.resume</span>();
+  }
+}</code></pre></div>
+        <p class="tag"><span class="he">📄 <span class="mono">code/level1_ir_read_codes.ino</span> · רושמים את הקוד של ▲ ▼ ◀ ▶ ו-OK.</span><span class="en">📄 <span class="mono">code/level1_ir_read_codes.ino</span> · write down the code for ▲ ▼ ◀ ▶ and OK.</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 IR: full car code -->
+  <section class="slide">
+    <h2><span class="num">10</span><span class="he">שלב 1: המכונית נוהגת בשלט IR</span><span class="en">Level 1: the car drives by IR remote</span></h2>
+    <div class="grid g2">
+      <div class="card">
+        <p><span class="he">ממלאים את חמשת הקודים שרשמנו, וכל כפתור מפעיל אחת מפונקציות התנועה שכבר יש לנו.</span>
+           <span class="en">Fill in the five codes we wrote down, and each button calls one of the motion functions we already have.</span></p>
+        <div class="codewrap"><pre><code class="mono"><span class="kw">if</span> (<span class="fn">IrReceiver.decode</span>()) {
+  <span class="kw">uint8_t</span> cmd = IrReceiver.decodedIRData.command;
+  <span class="kw">if</span>      (cmd == BTN_UP)    forward();
+  <span class="kw">else if</span> (cmd == BTN_DOWN)  backward();
+  <span class="kw">else if</span> (cmd == BTN_LEFT)  turnLeft();
+  <span class="kw">else if</span> (cmd == BTN_RIGHT) turnRight();
+  <span class="kw">else if</span> (cmd == BTN_OK)    stopCar();
+  lastCmd = <span class="fn">millis</span>();
+  <span class="fn">IrReceiver.resume</span>();
+}
+<span class="cm">// no button for a moment -> stop, so it won't run away</span>
+<span class="kw">if</span> (<span class="fn">millis</span>() - lastCmd &gt; <span class="num">200</span>) stopCar();</code></pre></div>
+      </div>
+      <div class="card tint">
+        <h3><span class="he">חיווט השלב</span><span class="en">This level's wiring</span></h3>
+        <table class="cmp">
+          <tr><th><span class="he">חיבור</span><span class="en">Connection</span></th><th><span class="he">פין</span><span class="en">Pin</span></th></tr>
+          <tr><td><span class="he">מקלט IR</span><span class="en">IR receiver</span> OUT</td><td class="accent">D8</td></tr>
+          <tr><td>ENA / ENB</td><td>D5 / D6</td></tr>
+          <tr><td>IN1 / IN2</td><td>D2 / D3</td></tr>
+          <tr><td>IN3 / IN4</td><td>D4 / D7</td></tr>
+        </table>
+        <div class="note"><span class="he">חיווט המנועים <b>לא השתנה</b> משלב 0 — רק הוספנו את מקלט ה-IR ל-D8. הורדנו את חיישן המרחק.</span><span class="en">The motor wiring is <b>unchanged</b> from level 0 — we just added the IR receiver on D8. The distance sensor is removed.</span></div>
+        <p class="tag"><span class="he">📄 <span class="mono">code/level1_ir_car.ino</span></span><span class="en">📄 <span class="mono">code/level1_ir_car.ino</span></span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 RF: how it works + IR vs RF interactive -->
+  <section class="slide">
+    <h2><span class="num">11</span><span class="he">שלב 2: RF433 — רדיו במקום אור</span><span class="en">Level 2: RF433 — radio instead of light</span></h2>
+    <div class="grid g2">
+      <div class="card">
+        <p><span class="he">RF משתמש ב<b>גלי רדיו</b> בתדר 433MHz. בניגוד ל-IR, רדיו <b>לא צריך קו ראייה</b> — הוא עובר דרך קירות ומגיע רחוק הרבה יותר.</span>
+           <span class="en">RF uses <b>radio waves</b> at 433MHz. Unlike IR, radio <b>needs no line of sight</b> — it passes through walls and reaches much farther.</span></p>
+        <p><span class="he">לחצו "שלח" עם ובלי קיר — ותראו את ההבדל:</span><span class="en">Press "send" with and without a wall — and see the difference:</span></p>
+        <div style="display:flex; gap:.5rem; flex-wrap:wrap; align-items:center; margin:.5rem 0">
+          <button class="demo" id="sendIR"><span class="he">שלח ב-IR (אור)</span><span class="en">Send via IR (light)</span></button>
+          <button class="demo" id="sendRF" style="background:var(--accent2)"><span class="he">שלח ב-RF (רדיו)</span><span class="en">Send via RF (radio)</span></button>
+        </div>
+        <label class="tag" style="display:block"><input type="checkbox" id="wallChk"> <span class="he">שים קיר באמצע</span><span class="en">Put a wall in the middle</span></label>
+        <div class="readout" id="rfState" style="margin-top:.4rem"></div>
+      </div>
+      <div class="card tint" style="text-align:center">
+        <svg viewBox="0 0 320 180" id="pathSvg" aria-hidden="true">
+          <!-- remote -->
+          <rect x="12" y="70" width="34" height="54" rx="6" fill="#1b2a49" stroke="#33507f"/>
+          <text x="29" y="140" text-anchor="middle" class="tag" fill="#9fb2d4">remote</text>
+          <!-- wall -->
+          <rect id="pWall" x="150" y="20" width="16" height="140" rx="3" fill="#2a3a5c" stroke="var(--accent2)" opacity="0"/>
+          <!-- car -->
+          <g transform="translate(280,97)">
+            <rect x="-22" y="-14" width="44" height="28" rx="6" fill="#1b2a49" stroke="var(--accent)"/>
+            <circle cx="-11" cy="-14" r="5" fill="#0f1a30" stroke="#4a5f8a"/>
+            <circle cx="11" cy="-14" r="5" fill="#0f1a30" stroke="#4a5f8a"/>
+            <circle cx="-11" cy="14" r="5" fill="#0f1a30" stroke="#4a5f8a"/>
+            <circle cx="11" cy="14" r="5" fill="#0f1a30" stroke="#4a5f8a"/>
+          </g>
+          <text x="280" y="140" text-anchor="middle" class="tag" fill="#9fb2d4">car</text>
+          <circle id="pSignal" cx="46" cy="97" r="7" opacity="0"/>
+          <text id="pMark" x="280" y="60" text-anchor="middle" style="font-size:26px" opacity="0"></text>
+        </svg>
+      </div>
+    </div>
+    <div class="note" style="margin-top:.6rem"><span class="he">חיסרון: אין קו ראייה = אין "לכוון" — הרדיו מגיע לכל הכיוונים. וגם: שני רדיואים באותו תדר יכולים להפריע זה לזה.</span><span class="en">Downside: no line of sight = no "aiming" — radio goes everywhere. Also: two radios on the same frequency can interfere.</span></div>
+  </section>
+
+  <!-- 11 RF: build the remote too + code + pin move -->
+  <section class="slide">
+    <h2><span class="num">12</span><span class="he">שלב 2: הפעם בונים גם את השלט</span><span class="en">Level 2: this time we build the remote too</span></h2>
+    <div class="grid g2">
+      <div class="card">
+        <p><span class="he">ב-IR השלט היה מוכן. ב-RF יש לנו זוג מודולים — <b>משדר (TX)</b> ו<b>מקלט (RX)</b> — אז <b>המשדר</b> הוא ארדואינו שני עם כפתורים, וה<b>מקלט</b> על המכונית.</span>
+           <span class="en">With IR the remote came ready. With RF we get a pair of modules — a <b>transmitter (TX)</b> and a <b>receiver (RX)</b> — so the <b>remote</b> is a second Arduino with buttons, and the <b>receiver</b> is on the car.</span></p>
+        <ul>
+          <li><span class="he">ספרייה: <span class="mono">rc-switch</span> — שולחים ומקבלים מספרים פשוטים</span><span class="en">Library: <span class="mono">rc-switch</span> — send and receive simple numbers</span></li>
+          <li><span class="he">מסכימים על קוד לכל כיוון (11=קדימה, 12=אחורה...)</span><span class="en">Agree on a code per direction (11=fwd, 12=back...)</span></li>
+          <li><span class="he">אנטנה: חוט ~17 ס"מ משפר מאוד את הטווח</span><span class="en">Antenna: a ~17 cm wire greatly improves range</span></li>
+        </ul>
+        <div class="note warnc"><span class="he">⚠️ <b>שינוי חיווט אחד:</b> ה-RX חייב <b>פין פסיקה</b> (D2 או D3). זה בדיוק ה-<span class="mono">IN1</span> שלנו! אז מזיזים את <span class="mono">IN1</span> מ-D2 ל-<b>D8</b>, וה-RX יושב על D2.</span>
+          <span class="en">⚠️ <b>One wiring change:</b> the RX needs an <b>interrupt pin</b> (D2 or D3). That's exactly our <span class="mono">IN1</span>! So we move <span class="mono">IN1</span> from D2 to <b>D8</b>, and the RX sits on D2.</span></div>
+      </div>
+      <div class="card tint">
+        <h3><span class="he">המשדר (השלט)</span><span class="en">The transmitter (remote)</span></h3>
+        <div class="codewrap"><pre><code class="mono"><span class="kw">long</span> code = CODE_STOP;
+<span class="kw">if</span> (<span class="fn">digitalRead</span>(BTN_UP)==<span class="num">LOW</span>)   code=CODE_UP;
+<span class="kw">else if</span>(<span class="fn">digitalRead</span>(BTN_LEFT)==<span class="num">LOW</span>) code=CODE_LEFT;
+<span class="cm">// ...</span>
+mySwitch.<span class="fn">send</span>(code, <span class="num">24</span>);   <span class="cm">// over the air</span></code></pre></div>
+        <h3><span class="he">המקלט (המכונית)</span><span class="en">The receiver (car)</span></h3>
+        <div class="codewrap"><pre><code class="mono"><span class="kw">if</span> (mySwitch.<span class="fn">available</span>()) {
+  <span class="kw">long</span> code = mySwitch.<span class="fn">getReceivedValue</span>();
+  <span class="kw">if</span> (code==CODE_UP) forward();
+  <span class="cm">// ... map codes to moves</span>
+  mySwitch.<span class="fn">resetAvailable</span>();
+}</code></pre></div>
+        <p class="tag"><span class="he">📄 <span class="mono">level2_rf_transmitter.ino</span> · <span class="mono">level2_rf_car.ino</span></span><span class="en">📄 <span class="mono">level2_rf_transmitter.ino</span> · <span class="mono">level2_rf_car.ino</span></span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 BLUETOOTH finale -->
+  <section class="slide">
+    <h2><span class="num">13</span><span class="he">פינאלה: נהיגה מהטלפון 📱</span><span class="en">Finale: drive from your phone 📱</span></h2>
+    <div class="grid g2">
+      <div class="card">
+        <p><span class="he">הפעם <b>אין שלט נפרד בכלל</b> — הטלפון הוא השלט. מודול <b>HC-05/HC-06</b> על המכונית מדבר עם אפליקציית <b>Dabble</b> החינמית, שיש בה ג'ויסטיק על המסך.</span>
+           <span class="en">This time <b>there's no separate remote at all</b> — your phone is the remote. An <b>HC-05/HC-06</b> module on the car talks to the free <b>Dabble</b> app, which has an on-screen gamepad.</span></p>
+        <ul>
+          <li><span class="he">Bluetooth הוא <b>דו-כיווני</b> — אפשר גם לשלוח נתונים <b>חזרה</b> לטלפון (למשל מרחק)</span><span class="en">Bluetooth is <b>two-way</b> — you can also send data <b>back</b> to the phone (e.g. distance)</span></li>
+          <li><span class="he">בלי לכתוב קוד בצד הטלפון — Dabble עושה את זה</span><span class="en">No phone-side coding — Dabble handles it</span></li>
+        </ul>
+        <div class="note danger"><span class="he">⚠️ המודול על פיני <span class="mono">TX/RX</span> (D1/D0) — אלה גם פיני ההעלאה. <b>נתקו את חוטי המודול לפני Upload</b> וחברו אחרי. (או SoftwareSerial על פינים פנויים.)</span>
+          <span class="en">⚠️ The module is on <span class="mono">TX/RX</span> (D1/D0) — those are the upload pins too. <b>Unplug the module's wires before Upload</b> and reconnect after. (Or use SoftwareSerial on free pins.)</span></div>
+      </div>
+      <div class="card tint">
+        <h3><span class="he">הקוד — שוב אותן פונקציות</span><span class="en">The code — the same functions again</span></h3>
+        <div class="codewrap"><pre><code class="mono"><span class="kw">#define</span> CUSTOM_SETTINGS
+<span class="kw">#define</span> INCLUDE_GAMEPAD_MODULE
+<span class="kw">#include</span> &lt;Dabble.h&gt;
+
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  Dabble.<span class="fn">processInput</span>();       <span class="cm">// read the phone</span>
+  <span class="kw">if</span>      (GamePad.<span class="fn">isUpPressed</span>())    forward();
+  <span class="kw">else if</span> (GamePad.<span class="fn">isDownPressed</span>())  backward();
+  <span class="kw">else if</span> (GamePad.<span class="fn">isLeftPressed</span>())  turnLeft();
+  <span class="kw">else if</span> (GamePad.<span class="fn">isRightPressed</span>()) turnRight();
+  <span class="kw">else</span>                             stopCar();
+}</code></pre></div>
+        <p class="tag"><span class="he">📄 <span class="mono">code/bonus_bluetooth_car.ino</span> · נחבר ונסיע מהטלפון בשיעור הבא.</span><span class="en">📄 <span class="mono">code/bonus_bluetooth_car.ino</span> · we'll wire it and drive from phones next lesson.</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13 SUMMARY + challenges -->
+  <section class="slide">
+    <h2><span class="num">14</span><span class="he">סיכום ואתגרים</span><span class="en">Summary &amp; challenges</span></h2>
+    <div class="grid g2">
+      <div class="card">
+        <h3><span class="he">הרעיון האחד להיום</span><span class="en">The one idea for today</span></h3>
+        <p><span class="he">מכונית אחת, כמה "מוחות": חיישן, IR, RF, טלפון. פונקציות התנועה תמיד אותן — <b>מפרידים בין "מה לעשות" ל"איך הפקודה מגיעה"</b>.</span>
+           <span class="en">One car, several "brains": sensor, IR, RF, phone. The motion functions are always the same — <b>separate "what to do" from "how the command arrives"</b>.</span></p>
+        <h3><span class="he">איזו טכנולוגיה מתי?</span><span class="en">Which technology when?</span></h3>
+        <ul>
+          <li><span class="he"><b>IR</b> — קרוב, בקו ישר, זול (צעצועים, טלוויזיה)</span><span class="en"><b>IR</b> — close, straight line, cheap (toys, TV)</span></li>
+          <li><span class="he"><b>RF</b> — רחוק, דרך קירות, בלי לכוון (שער חשמלי, אזעקה)</span><span class="en"><b>RF</b> — far, through walls, no aiming (gates, alarms)</span></li>
+          <li><span class="he"><b>Bluetooth</b> — מהטלפון, דו-כיווני (מכונית חכמה)</span><span class="en"><b>Bluetooth</b> — from a phone, two-way (smart car)</span></li>
+        </ul>
+      </div>
+      <div class="card tint">
+        <h3><span class="he">אתגרים לבית / לשיעור הבא</span><span class="en">Challenges for home / next lesson</span></h3>
+        <ul>
+          <li class="level lv1"><span class="he">לסיים את חיבור ה-<b>Bluetooth</b> ולהסיע מהטלפון</span><span class="en">Finish the <b>Bluetooth</b> wiring and drive from a phone</span></li>
+          <li class="level lv2"><span class="he">להוסיף <b>מהירות</b>: כפתור שמגדיל/מקטין את <span class="mono">SPEED</span></span><span class="en">Add <b>speed</b>: a button that raises/lowers <span class="mono">SPEED</span></span></li>
+          <li class="level lv3"><span class="he"><b>שלט + חיישן יחד:</b> המכונית מקבלת פקודות, אבל <b>מסרבת להתנגש</b> בקיר גם אם תכוונו אליו</span><span class="en"><b>Remote + sensor together:</b> the car takes commands, but <b>refuses to crash</b> into a wall even if you steer at it</span></li>
+        </ul>
+        <div class="note"><span class="he">רמז לאתגר האחרון: לפני <span class="mono">forward()</span> בדקו את חיישן המרחק — בדיוק ה-if/else משיעור 2, אבל כשכבה עליון על השלט.</span><span class="en">Hint for the last one: before <span class="mono">forward()</span>, check the distance sensor — exactly Lesson 2's if/else, but layered on top of the remote.</span></div>
+        <p style="margin-top:.8rem"><span class="he">תודה — נתראה בשיעור הבא! 👋</span><span class="en">Thanks — see you next lesson! 👋</span></p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="dots" id="dots"></div>
+<div class="navbtns">
+  <button id="prev">‹ <span class="he">הקודם</span><span class="en">Prev</span></button>
+  <span class="counter" id="counter">1 / 14</span>
+  <button id="next"><span class="he">הבא</span><span class="en">Next</span> ›</button>
+</div>
+
+<script>
+(function(){
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var idx = 0;
+  var dots = document.getElementById('dots');
+  slides.forEach(function(_,i){
+    var d=document.createElement('i'); if(i===0)d.className='on';
+    d.onclick=function(){go(i)}; dots.appendChild(d);
+  });
+  function render(){
+    slides.forEach(function(s,i){ s.classList.toggle('active', i===idx); });
+    Array.prototype.forEach.call(dots.children,function(c,i){ c.className = i===idx?'on':''; });
+    document.getElementById('counter').textContent = (idx+1)+' / '+slides.length;
+    document.getElementById('progress').style.width = ((idx)/(slides.length-1)*100)+'%';
+  }
+  function go(i){ idx = Math.max(0, Math.min(slides.length-1, i)); render(); }
+  window._go=go;
+  document.getElementById('next').onclick=function(){go(idx+1)};
+  document.getElementById('prev').onclick=function(){go(idx-1)};
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' ') go(idx+1);
+    if(e.key==='ArrowLeft'||e.key==='PageUp') go(idx-1);
+  });
+
+  // ---- language toggle ----
+  var lang='he';
+  document.getElementById('langBtn').onclick=function(){
+    lang = (lang==='he')?'en':'he';
+    document.body.className = 'lang-'+lang;
+    document.documentElement.lang = lang;
+    document.documentElement.dir = (lang==='he')?'rtl':'ltr';
+    updateWidgets();
+  };
+  function t(he,en){ return lang==='he'?he:en; }
+
+  // ---- copy buttons ----
+  document.querySelectorAll('.codewrap').forEach(function(w){
+    var pre=w.querySelector('pre'); if(!pre) return;
+    var b=document.createElement('button'); b.className='copybtn';
+    b.textContent='📋 copy';
+    b.onclick=function(){
+      var code=pre.innerText;
+      var done=function(){ b.textContent='✓'; b.classList.add('ok'); setTimeout(function(){b.textContent='📋 copy';b.classList.remove('ok')},1200); };
+      if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(code).then(done,fallback); }
+      else fallback();
+      function fallback(){ var ta=document.createElement('textarea'); ta.value=code; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy')}catch(e){} document.body.removeChild(ta); done(); }
+    };
+    w.appendChild(b);
+  });
+
+  // ---- Widget: H-bridge motor (slide 4) ----
+  var hbIn1=document.getElementById('hbIn1'), hbIn2=document.getElementById('hbIn2'), hbEn=document.getElementById('hbEn');
+  var hb={in1:1,in2:0}, hbAngle=0, hbTimer=null;
+  function updHb(){
+    if(!hbIn1) return;
+    hbIn1.classList.toggle('lit', hb.in1===1); hbIn2.classList.toggle('lit', hb.in2===1);
+    hbIn1.textContent='IN1 = '+hb.in1; hbIn2.textContent='IN2 = '+hb.in2;
+    var en=+hbEn.value; document.getElementById('hbEnV').textContent=en;
+    var rotor=document.getElementById('hbRotor'), st=document.getElementById('hbState2');
+    var dir=0, label='', col='var(--muted)';
+    if(en===0){ dir=0; label=t('אין מהירות (EN=0) → עומד','no speed (EN=0) → idle'); }
+    else if(hb.in1===1 && hb.in2===0){ dir=1; label=t('קדימה ▶','forward ▶'); col='var(--good)'; }
+    else if(hb.in1===0 && hb.in2===1){ dir=-1; label=t('אחורה ◀','reverse ◀'); col='var(--good)'; }
+    else if(hb.in1===0 && hb.in2===0){ dir=0; label=t('עצירה (חופשי)','stop (coast)'); }
+    else { dir=0; label=t('בלימה (שני הפינים גבוהים)','brake (both HIGH)'); col='var(--warn)'; }
+    st.textContent=label; st.style.color=col;
+    if(hbTimer){ clearInterval(hbTimer); hbTimer=null; }
+    if(dir!==0){
+      var step=dir*(1.5+en/22);
+      hbTimer=setInterval(function(){ hbAngle=(hbAngle+step)%360; rotor.setAttribute('transform','rotate('+hbAngle+' 150 95)'); }, 30);
+    }
+  }
+  if(hbIn1){
+    hbIn1.onclick=function(){ hb.in1=hb.in1?0:1; updHb(); };
+    hbIn2.onclick=function(){ hb.in2=hb.in2?0:1; updHb(); };
+    hbEn.oninput=updHb;
+  }
+
+  // ---- Widget: avoidance decision + animation (slide 6) ----
+  var avDist=document.getElementById('avDist');
+  var avCar=document.getElementById('avCar'), avWall=document.getElementById('avWall'), avSt=document.getElementById('avState');
+  var avMode='clear', avT0=0;
+  function avLerp(a,b,p){ return a+(b-a)*p; }
+  function avCarT(dx){ if(avCar) avCar.setAttribute('transform','translate('+dx.toFixed(1)+',0)'); }
+  function avWallT(dy,ang){ if(avWall) avWall.setAttribute('transform','translate(0,'+dy.toFixed(1)+') rotate('+ang.toFixed(1)+' 259 100)'); }
+  function avFrame(ts){
+    if(!avT0) avT0=ts;
+    var e=ts-avT0;
+    if(avMode==='clear'){
+      // drive forward, wrapping while off-screen
+      avCarT(avLerp(-80,180,(e%2600)/2600)); avWallT(0,0);
+    } else {
+      // reverse -> obstacle lifts & tilts aside -> drive forward through the gap -> reset
+      var e2=e%2800;
+      if(e2<500)        { avCarT(avLerp(0,-30,e2/500)); avWallT(0,0); }                                   // reverse
+      else if(e2<1200)  { var p=(e2-500)/700; avCarT(-30); avWallT(avLerp(0,-52,p), avLerp(0,-24,p)); }   // obstacle moves up & angles
+      else if(e2<2150)  { avCarT(avLerp(-30,90,(e2-1200)/950)); avWallT(-52,-24); }                       // drive forward past it
+      else              { var p=(e2-2150)/650; avCarT(avLerp(90,0,p)); avWallT(avLerp(-52,0,p), avLerp(-24,0,p)); } // ease back
+    }
+    requestAnimationFrame(avFrame);
+  }
+  function updAv(){
+    if(!avDist) return;
+    var v=+avDist.value;
+    document.getElementById('avDistV').textContent=v;
+    var blocked = v<=15;
+    var newMode = blocked?'blocked':'clear';
+    if(newMode!==avMode){ avMode=newMode; avT0=0; }   // restart the cycle cleanly on a mode change
+    if(avWall) avWall.setAttribute('opacity', blocked?'1':'0');
+    avSt.textContent = blocked ? t('חסום ← אחורה + פנייה','blocked → back + turn') : t('פנוי ← קדימה','clear → forward');
+    avSt.style.color = blocked ? 'var(--warn)' : 'var(--good)';
+  }
+  if(avDist){ avDist.oninput=updAv; }
+  if(avCar){ requestAnimationFrame(avFrame); }
+
+  // ---- Widget: virtual remote car (slide 7) ----
+  var rcCar=document.getElementById('rcCar'), rcState=document.getElementById('rcState');
+  var rc={x:150,y:85,a:0};
+  function rcApply(){ rcCar.setAttribute('transform','translate('+rc.x+','+rc.y+') rotate('+rc.a+')'); }
+  function rcDo(cmd,btn){
+    var rad=rc.a*Math.PI/180;
+    if(cmd==='up'){   rc.x+=Math.cos(rad)*22; rc.y+=Math.sin(rad)*22; rcState.textContent=t('פקודה: קדימה','command: FORWARD'); }
+    else if(cmd==='down'){ rc.x-=Math.cos(rad)*22; rc.y-=Math.sin(rad)*22; rcState.textContent=t('פקודה: אחורה','command: BACKWARD'); }
+    else if(cmd==='left'){ rc.a-=30; rcState.textContent=t('פקודה: פנייה שמאלה','command: TURN LEFT'); }
+    else if(cmd==='right'){ rc.a+=30; rcState.textContent=t('פקודה: פנייה ימינה','command: TURN RIGHT'); }
+    else { rcState.textContent=t('פקודה: עצור','command: STOP'); }
+    // clamp inside the view
+    rc.x=Math.max(30,Math.min(270,rc.x)); rc.y=Math.max(30,Math.min(140,rc.y));
+    rcApply();
+    if(btn){ btn.classList.add('lit'); setTimeout(function(){btn.classList.remove('lit');},180); }
+  }
+  document.querySelectorAll('.remote button').forEach(function(b){
+    b.onclick=function(){ rcDo(b.getAttribute('data-cmd'), b); };
+  });
+
+  // ---- Widget: IR vs RF path (slide 10) ----
+  var pWall=document.getElementById('pWall'), pSignal=document.getElementById('pSignal'), pMark=document.getElementById('pMark'), rfState=document.getElementById('rfState'), wallChk=document.getElementById('wallChk');
+  var pAnim=false;
+  function setWall(){ if(pWall) pWall.setAttribute('opacity', wallChk.checked?'1':'0'); }
+  if(wallChk) wallChk.onchange=setWall;
+  function sendSignal(kind){
+    if(!pSignal||pAnim) return; pAnim=true;
+    var color = kind==='IR' ? '#fbbf24' : '#a78bfa';
+    var blocked = wallChk.checked && kind==='IR';    // only IR is blocked by the wall
+    pSignal.setAttribute('fill',color); pSignal.setAttribute('opacity','1');
+    pMark.setAttribute('opacity','0');
+    var startX=46, wallX=158, endX=258, t0=null, dur=900;
+    var stopX = blocked ? wallX : endX;
+    function step(ts){
+      if(!t0)t0=ts; var p=(ts-t0)/dur; if(p>1)p=1;
+      var x=startX+(stopX-startX)*p;
+      pSignal.setAttribute('cx',x);
+      if(p>=1){
+        pSignal.setAttribute('opacity','0');
+        pMark.textContent = blocked ? '✗' : '✓';
+        pMark.setAttribute('fill', blocked ? '#f87171' : '#34d399');
+        pMark.setAttribute('opacity','1');
+        rfState.textContent = blocked
+          ? t('IR נחסם ע"י הקיר — המכונית לא קיבלה כלום','IR blocked by the wall — the car got nothing')
+          : (kind==='IR'
+              ? t('IR הגיע (קו ראייה פנוי)','IR arrived (clear line of sight)')
+              : t('RF עבר דרך הקיר — הגיע!','RF passed through the wall — arrived!'));
+        rfState.style.color = blocked ? 'var(--danger)' : 'var(--good)';
+        pAnim=false; return;
+      }
+      requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  var bIR=document.getElementById('sendIR'), bRF=document.getElementById('sendRF');
+  if(bIR) bIR.onclick=function(){sendSignal('IR')};
+  if(bRF) bRF.onclick=function(){sendSignal('RF')};
+
+  function updateWidgets(){ updHb(); updAv(); }
+
+  // init
+  updHb();
+  updAv();
+  render();
+})();
+</script>
+</body>
+</html>
