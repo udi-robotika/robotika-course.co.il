@@ -1,4 +1,11 @@
 ROBOTIKA-COURSE.co.il
+Current version: V94
+Based on: V93
+Main nav: added "ערכות לקורסים" link right after "ESP32" across all 41 shared-nav pages (root pages -> course-kits.html, lessons pages -> /course-kits.html)
+New page: course-kits.html — "ערכות לקורסים" placeholder page (same header/nav/CSS as the components pages), kit content to be added
+Footer: version tag bumped to V94 on every page touched (was V77 on most root pages — footer had lagged behind the real version since V77)
+---
+ROBOTIKA-COURSE.co.il
 Current version: V93 (new lessons/course-43/lesson-3/index.html + course-43 hub row)
 Based on: V92
 New page: /lessons/course-43/lesson-3/ — שיעור 3 interactive slide deck (remote control: IR remote, RF433 radio, and Bluetooth from a phone). Self-contained dark-theme slideshow with EN/עב toggle, keyboard+button nav, and interactive widgets (H-bridge motor, obstacle-avoidance car, virtual IR remote, IR-vs-RF line-of-sight). Same template as the lesson-2 deck — 14 slides.
