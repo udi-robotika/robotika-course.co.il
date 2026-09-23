@@ -1,4 +1,10 @@
 ROBOTIKA-COURSE.co.il
+Current version: V104
+Based on: V103
+kit-teens-car-sukkot-2026.html: micro servo card got a note "מומלץ בצבע שחור ולא כחול"
+version.js -> V104
+---
+ROBOTIKA-COURSE.co.il
 Current version: V103
 Based on: V102
 kit-teens-car-sukkot-2026.html: "מנוע מיקרו סרבו" card now shows Udi's photo (images/kits/teens-car/micro-servo.jpg, Tower Pro MG90S) instead of the gear placeholder
