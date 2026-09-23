@@ -1,4 +1,11 @@
 ROBOTIKA-COURSE.co.il
+Current version: V106
+Based on: V105
+course-kits.html: the two kit cards now have distinct identities and more space between them (gap 64px) — adults: light-blue background, sky-blue border, blue title, blue "קורס מבוגרים" badge; teens: light-orange background, orange border, orange title, orange "קורס נוער" badge
+Collage covers re-rendered on matching backgrounds (adults light blue, teens light orange)
+version.js -> V106
+---
+ROBOTIKA-COURSE.co.il
 Current version: V105
 Based on: V104
 kit-teens-car-sukkot-2026.html: servo item renamed "מנוע מיקרו סרבו MG90S"
