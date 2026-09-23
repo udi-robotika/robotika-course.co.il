@@ -1,4 +1,12 @@
 ROBOTIKA-COURSE.co.il
+Current version: V97
+Based on: V96
+New page: kit-adults-10.html — "ערכת קורס מבוגרים" (10 sessions, Robotics + Arduino + ESP32): 34 kit items in 5 categories (בקרים + בסיס, חיישנים ובקרה, תצוגה וסאונד, תקשורת, מכונית חכמה + תנועה), built from Udi's equipment list רשימת_ציוד_VER34.docx, with item notes (e.g. "מומלץ באורך 1 מטר") shown as small yellow tags
+Images: 34 product images saved to images/kits/adults-10/01..34.jpg (400px JPG, ~750KB total)
+course-kits.html: placeholder replaced with the first kit card linking to kit-adults-10.html
+version.js -> V97
+---
+ROBOTIKA-COURSE.co.il
 Current version: V96
 Based on: V95
 NEW shared file /nav.css (loaded last on every shared-nav page, no-cache in vercel.json) — site-wide top-nav styling lives here now
