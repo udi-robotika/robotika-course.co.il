@@ -1,4 +1,10 @@
 ROBOTIKA-COURSE.co.il
+Current version: V105
+Based on: V104
+kit-teens-car-sukkot-2026.html: servo item renamed "מנוע מיקרו סרבו MG90S"
+version.js -> V105
+---
+ROBOTIKA-COURSE.co.il
 Current version: V104
 Based on: V103
 kit-teens-car-sukkot-2026.html: micro servo card got a note "מומלץ בצבע שחור ולא כחול"
