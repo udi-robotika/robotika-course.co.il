@@ -1,4 +1,12 @@
 ROBOTIKA-COURSE.co.il
+Current version: V95
+Based on: V94
+NEW VERSIONING RULE: one site-wide version number, stored ONLY in /version.js (window.SITE_VERSION). Every page loads /version.js, which fills all .version-tag footers. To release a new version, change only version.js (the static "גרסה Vxx" text in each footer is just a no-JS fallback).
+vercel.json added: /version.js served with Cache-Control no-cache so the footer is never stale
+All 44 pages with a footer version tag now load /version.js (including makelab/july-2026 hub + lesson-6, which were stuck at V87/V50)
+lessons/course-43/lesson-2, lesson-3 (fullscreen decks) and live-code.html have no footer and were left untouched
+---
+ROBOTIKA-COURSE.co.il
 Current version: V94
 Based on: V93
 Main nav: added "ערכות לקורסים" link right after "ESP32" across all 41 shared-nav pages (root pages -> course-kits.html, lessons pages -> /course-kits.html)
