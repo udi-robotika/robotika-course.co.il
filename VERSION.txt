@@ -1,4 +1,11 @@
 ROBOTIKA-COURSE.co.il
+Current version: V102
+Based on: V101
+Both kit pages: another ~30% reduction — content width 1200px -> 860px (still 6 per row), tighter gaps/padding everywhere, product images now fill the card (4px padding) so they look bigger relative to the card; compact page header
+Item names use non-breaking hyphens (TYPE‑C, ESP32‑S3...) so they never split across lines
+version.js -> V102
+---
+ROBOTIKA-COURSE.co.il
 Current version: V101
 Based on: V100
 Both kit pages (kit-adults-10.html, kit-teens-car-sukkot-2026.html): whole page scaled down and centered — content width capped at 1200px, card images 170px -> 128px, smaller titles/labels/notes
