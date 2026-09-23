@@ -1,4 +1,11 @@
 ROBOTIKA-COURSE.co.il
+Current version: V99
+Based on: V98
+New page: kit-teens-car-sukkot-2026.html — "ערכת קורס מכונית אוטונומית לנוער · סוכות 2026", for now an exact copy of the adults kit (same 34 items + images); Udi will send the real item list next
+course-kits.html: second kit card added (same collage cover for now)
+version.js -> V99
+---
+ROBOTIKA-COURSE.co.il
 Current version: V98
 Based on: V97
 course-kits.html: adults kit card image replaced with a collage of 12 kit components (images/kits/adults-10/cover.jpg, 4x3 rounded tiles on light purple), shown edge-to-edge in the card
