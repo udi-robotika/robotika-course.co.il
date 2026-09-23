@@ -1,4 +1,10 @@
 ROBOTIKA-COURSE.co.il
+Current version: V103
+Based on: V102
+kit-teens-car-sukkot-2026.html: micro servo card now shows Udi's photo (images/kits/teens-car/micro-servo.jpg, Tower Pro MG90S) instead of the gear-icon placeholder
+version.js -> V103
+---
+ROBOTIKA-COURSE.co.il
 Current version: V102
 Based on: V101
 Both kit pages: another ~30% reduction — content width 1200px -> 860px (still 6 per row), tighter gaps/padding everywhere, product images now fill the card (4px padding) so they look bigger relative to the card; compact page header
