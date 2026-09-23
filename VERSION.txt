@@ -1,4 +1,10 @@
 ROBOTIKA-COURSE.co.il
+Current version: V107
+Based on: V106
+Kit pages get the same color identity as their hub cards: full-width colored band under the nav with the course label (adults: blue "קורס מבוגרים", teens: orange "קורס נוער"), tinted framed title box, colored title, colored section dividers, back-link and card hover
+version.js -> V107
+---
+ROBOTIKA-COURSE.co.il
 Current version: V106
 Based on: V105
 course-kits.html: the two kit cards now have distinct identities and more space between them (gap 64px) — adults: light-blue background, sky-blue border, blue title, blue "קורס מבוגרים" badge; teens: light-orange background, orange border, orange title, orange "קורס נוער" badge
