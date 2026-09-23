@@ -1,4 +1,14 @@
 ROBOTIKA-COURSE.co.il
+Current version: V96
+Based on: V95
+NEW shared file /nav.css (loaded last on every shared-nav page, no-cache in vercel.json) — site-wide top-nav styling lives here now
+Main nav: removed the permanent purple pill highlight from "רכיבים לקנייה" and "קוד משותף" (nav-cta class dropped) — all items look the same
+Main nav: the CURRENT page item is now strongly highlighted (solid purple pill, white bold text, shadow); on sub-pages the parent menu label is highlighted (e.g. חיישנים on sensor pages)
+Header: site title/logo shrunk ~35% (1.2rem -> .78rem) and pushed to the far left (header left padding 48px -> 14px)
+Fix: the 3 lessons pages were missing the "הומור" nav link — added
+version.js -> V96
+---
+ROBOTIKA-COURSE.co.il
 Current version: V95
 Based on: V94
 NEW VERSIONING RULE: one site-wide version number, stored ONLY in /version.js (window.SITE_VERSION). Every page loads /version.js, which fills all .version-tag footers. To release a new version, change only version.js (the static "גרסה Vxx" text in each footer is just a no-JS fallback).

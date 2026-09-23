@@ -1,0 +1,41 @@
+/* תפריט עליון משותף לכל האתר — נטען אחרי העיצוב של כל עמוד */
+
+/* לוגו: קטן ב-~35% ונדחף שמאלה */
+header { padding-left: 14px !important; }
+header .logo { font-size: .78rem !important; gap: 6px !important; opacity: .85; }
+header .logo span.icon { font-size: 1.05rem !important; }
+
+/* כל פריטי התפריט נראים אותו דבר — בלי הדגשה קבועה */
+.site-nav > a, .site-nav > a.nav-cta, .site-nav .nav-label {
+  border: 1px solid transparent !important;
+  background: none !important;
+  color: var(--muted) !important;
+  font-weight: 400 !important;
+  border-radius: 999px !important;
+  padding: 8px 13px !important;
+}
+.site-nav > a:hover, .site-nav .nav-label:hover {
+  background: #f1f5f9 !important;
+  color: var(--text) !important;
+}
+
+/* העמוד שבו נמצאים — הדגשה חד משמעית */
+.site-nav > a.active, .site-nav > a.active:hover,
+.site-nav .nav-label.active, .site-nav .nav-label.active:hover {
+  background: #7c3aed !important;
+  border-color: #7c3aed !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 14px rgba(124, 58, 237, .35) !important;
+}
+
+@media (max-width: 780px) {
+  header { padding-left: 16px !important; }
+  header .logo { font-size: .72rem !important; }
+  .site-nav > a, .site-nav > a.nav-cta, .site-nav .nav-label {
+    background: #f6f8fb !important;
+    border-color: #e5eaf1 !important;
+    padding: 7px 13px !important;
+    font-size: .82rem !important;
+  }
+}
