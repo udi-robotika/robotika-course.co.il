@@ -1,4 +1,11 @@
 ROBOTIKA-COURSE.co.il
+Current version: V100
+Based on: V99
+kit-teens-car-sukkot-2026.html rebuilt per Udi's dictation — "ערכת מכונית אוטונומית יורה לייזר · קורס נוער · סוכות 2026": adults kit minus ESP32-S3, ESP32 expansion board, 400-hole breadboard, buttons+caps, temp/humidity sensor, 2.4" screen+encoder; light sensor note -> 4 units, laser module note -> 4 units; quality servo replaced by "מנוע מיקרו סרבו" (image placeholder until Udi sends a photo). 28 items.
+course-kits.html: teens card renamed + its own collage cover (images/kits/teens-car/cover.jpg)
+version.js -> V100
+---
+ROBOTIKA-COURSE.co.il
 Current version: V99
 Based on: V98
 New page: kit-teens-car-sukkot-2026.html — "ערכת קורס מכונית אוטונומית לנוער · סוכות 2026", for now an exact copy of the adults kit (same 34 items + images); Udi will send the real item list next
