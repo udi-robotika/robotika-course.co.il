@@ -1,4 +1,10 @@
 ROBOTIKA-COURSE.co.il
+Current version: V98
+Based on: V97
+course-kits.html: adults kit card image replaced with a collage of 12 kit components (images/kits/adults-10/cover.jpg, 4x3 rounded tiles on light purple), shown edge-to-edge in the card
+version.js -> V98
+---
+ROBOTIKA-COURSE.co.il
 Current version: V97
 Based on: V96
 New page: kit-adults-10.html — "ערכת קורס מבוגרים" (10 sessions, Robotics + Arduino + ESP32): 34 kit items in 5 categories (בקרים + בסיס, חיישנים ובקרה, תצוגה וסאונד, תקשורת, מכונית חכמה + תנועה), built from Udi's equipment list רשימת_ציוד_VER34.docx, with item notes (e.g. "מומלץ באורך 1 מטר") shown as small yellow tags
