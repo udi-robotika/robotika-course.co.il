@@ -1,0 +1,669 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Robotika · שיעור 3 — קבצי הקוד</title>
+<script>/* relative links need a trailing slash on the site */
+if(location.protocol!=='file:' && !/\/$/.test(location.pathname) && !/\.html$/.test(location.pathname)) location.replace(location.pathname+'/'+location.search+location.hash);</script>
+<style>
+  :root{
+    --bg:#0b1220; --card:#132038; --ink:#e8eefb; --muted:#9fb2d4;
+    --accent:#22d3ee; --accent2:#a78bfa; --good:#34d399; --warn:#fbbf24;
+    --line:#25324d; --code:#0a1020;
+    --fs: clamp(16px, 1.4vw, 22px); --codefs:.82em;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{
+    background:radial-gradient(1200px 800px at 80% -10%, #16233f 0%, var(--bg) 55%);
+    color:var(--ink); font:var(--fs)/1.5 "Segoe UI", "Assistant","Rubik", system-ui, Arial, sans-serif;
+    overflow:hidden;
+  }
+  body.lang-he .en{display:none}
+  body.lang-en .he{display:none}
+  code,pre,.mono{font-family:"JetBrains Mono","Fira Code","Consolas",ui-monospace,monospace}
+  a{color:var(--accent)}
+
+  .stage{position:fixed; inset:0; display:flex; align-items:center; justify-content:center; padding:3.2rem 3rem 4.2rem;}
+  .slide{display:none; width:min(1180px,96vw); height:100%; flex-direction:column; animation:fade .35s ease}
+  .slide.active{display:flex}
+  .slide.intro{height:auto; max-height:100%; overflow:auto}
+  @keyframes fade{from{opacity:0; transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  h1{font-size:2.2em; line-height:1.15; margin:.1em 0 .3em}
+  h2{font-size:1.45em; margin:0 0 .3em; display:flex; align-items:center; gap:.5rem}
+  h2 .num{font-size:.6em; color:#08131f; background:var(--accent); border-radius:.5rem; padding:.15em .55em; font-weight:700}
+  .lead{color:var(--muted); font-size:1.1em}
+  .pill{display:inline-block; background:var(--card); border:1px solid var(--line); border-radius:999px; padding:.15em .7em; font-size:.8em; color:var(--muted)}
+  .desc{color:var(--muted); margin:0 0 .6em}
+
+  .bar{display:flex; flex-wrap:wrap; align-items:center; gap:.6rem; margin-bottom:.6rem}
+  .fname{direction:ltr; font-size:.9em; color:var(--ink); background:var(--card); border:1px solid var(--line); border-radius:.5rem; padding:.2em .7em}
+  .btn{background:#1b2a49; color:var(--ink); border:1px solid var(--line); border-radius:.5rem; padding:.3em .9em; font-size:.85em; cursor:pointer; font-family:inherit; text-decoration:none; display:inline-block}
+  .btn:hover{border-color:var(--accent)}
+  .btn.primary{background:var(--accent); color:#062330; border-color:var(--accent); font-weight:700}
+  .btn.ok{background:var(--good); color:#062; border-color:var(--good)}
+
+  /* scrollable code box */
+  pre{flex:1; min-height:0; margin:0; background:var(--code); border:1px solid var(--line); border-radius:.8rem;
+      padding:1rem 1.1rem; overflow:auto; font-size:var(--codefs); line-height:1.55; direction:ltr; text-align:left; counter-reset:ln; outline:none}
+  pre:focus{border-color:#2f4a78}
+  pre .l{display:block; white-space:pre; padding-left:3.4em; position:relative; min-height:1.55em}
+  pre .l::before{counter-increment:ln; content:counter(ln); position:absolute; left:0; width:2.4em; text-align:right; color:#3b4d72; user-select:none}
+  pre .l:hover{background:#101a30}
+  pre .cm{color:#6b84b0} pre .kw{color:#f0a35e} pre .fn{color:#7dd3fc} pre .num{color:#a5f3b0} pre .str{color:#eab6ff}
+  pre::-webkit-scrollbar{width:10px;height:10px}
+  pre::-webkit-scrollbar-thumb{background:#2a3a5c;border-radius:8px}
+
+  .files{list-style:none; padding:0; margin:.8em 0; display:grid; gap:.5rem}
+  .files li{display:flex; flex-wrap:wrap; align-items:center; gap:.6rem; background:var(--card); border:1px solid var(--line); border-radius:.8rem; padding:.5rem .8rem}
+  .files .go{flex:1; min-width:12em; color:var(--ink); text-decoration:none; cursor:pointer}
+  .files .go:hover{color:var(--accent)}
+  .files .n{color:var(--accent); font-weight:700; margin-inline-end:.4em}
+  .note{background:#101a30;border:1px dashed var(--line);border-radius:.7rem;padding:.6em .9em;color:var(--muted);font-size:.85em}
+
+  .topbar{position:fixed; inset-inline:0; top:0; height:2.7rem; display:flex; align-items:center; justify-content:space-between; gap:.5rem; padding:0 1rem; background:linear-gradient(180deg,rgba(11,18,32,.95),rgba(11,18,32,0)); z-index:20}
+  .brand{font-weight:700; letter-spacing:.02em}
+  .brand .dot{color:var(--accent)}
+  .tools{display:flex; gap:.4rem}
+  .tools button,.tools a{background:#1b2a49;color:var(--ink);border:1px solid var(--line);border-radius:.5rem;padding:.25em .7em;cursor:pointer;font-family:inherit;font-size:.8em;text-decoration:none}
+  .navbtns{position:fixed; inset-inline:0; bottom:0; height:3.4rem; display:flex; align-items:center; justify-content:center; gap:1rem; z-index:20; background:linear-gradient(0deg,rgba(11,18,32,.95),rgba(11,18,32,0))}
+  .navbtns button{background:var(--card); color:var(--ink); border:1px solid var(--line); border-radius:.6rem; padding:.4em .9em; cursor:pointer; font-family:inherit; font-size:.9em}
+  .navbtns button:hover{border-color:var(--accent)}
+  .counter{color:var(--muted); min-width:5.5rem; text-align:center; font-variant-numeric:tabular-nums}
+  .dots{position:fixed; inset-inline-end:.7rem; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:.4rem; z-index:20}
+  .dots i{width:.55rem; height:.55rem; border-radius:50%; background:#2b3a5a; cursor:pointer; display:block}
+  .dots i.on{background:var(--accent)}
+  .progress{position:fixed; top:0; inset-inline-start:0; height:3px; background:var(--accent); width:0; z-index:30; transition:width .3s}
+  @media (max-width:800px){ .stage{padding:3.2rem .8rem 4.2rem} .dots{display:none} }
+</style>
+</head>
+<body class="lang-he">
+<div class="progress" id="progress"></div>
+<div class="topbar">
+  <div class="brand">Robotika <span class="dot">●</span> <span class="he">שיעור 3 — קבצי הקוד</span><span class="en">Lesson 3 — Code files</span></div>
+  <div class="tools">
+    <button id="fsDown" title="smaller code">A−</button>
+    <button id="fsUp" title="bigger code">A+</button>
+    <a href="../"><span class="he">↩ למצגת השיעור</span><span class="en">↩ Lesson deck</span></a>
+    <button id="langBtn">EN / עב</button>
+  </div>
+</div>
+
+<div class="stage" id="stage">
+
+  <section class="slide intro active">
+    <div class="pill"><span class="he">קורס ארדואינו · קבצי קוד</span><span class="en">Arduino course · Code files</span></div>
+    <h1><span class="he">שיעור 3 — קבצי הקוד</span><span class="en">Lesson 3 — Code files</span></h1>
+    <p class="lead"><span class="he">שלט רחוק: IR, RF ו-Bluetooth · כל קובץ בעמוד משלו, עם הקוד המלא וכפתור הורדה.</span><span class="en">Remote control: IR, RF & Bluetooth · one file per page, with the full code and a download button.</span></p>
+    <ul class="files">
+      <li><a class="go" href="#1" data-go="1"><span class="n">1</span><span class="he">שלב 0 · המכונית שנוהגת לבד</span><span class="en">Level 0 · The self-driving car</span></a>
+        <span class="fname mono">level0_selfdriving_car.ino</span>
+        <a class="btn" href="level0_selfdriving_car.ino" download>⬇ <span class="he">הורדה</span><span class="en">Download</span></a></li>
+      <li><a class="go" href="#2" data-go="2"><span class="n">2</span><span class="he">שלב 1א · קוראים את קודי שלט ה-IR</span><span class="en">Level 1a · Read the IR remote&#x27;s codes</span></a>
+        <span class="fname mono">level1_ir_read_codes.ino</span>
+        <a class="btn" href="level1_ir_read_codes.ino" download>⬇ <span class="he">הורדה</span><span class="en">Download</span></a></li>
+      <li><a class="go" href="#3" data-go="3"><span class="n">3</span><span class="he">שלב 1ב · נוהגים בשלט IR</span><span class="en">Level 1b · Drive with the IR remote</span></a>
+        <span class="fname mono">level1_ir_car.ino</span>
+        <a class="btn" href="level1_ir_car.ino" download>⬇ <span class="he">הורדה</span><span class="en">Download</span></a></li>
+      <li><a class="go" href="#4" data-go="4"><span class="n">4</span><span class="he">שלב 2א · השלט של RF433 (משדר)</span><span class="en">Level 2a · The RF433 remote (transmitter)</span></a>
+        <span class="fname mono">level2_rf_transmitter.ino</span>
+        <a class="btn" href="level2_rf_transmitter.ino" download>⬇ <span class="he">הורדה</span><span class="en">Download</span></a></li>
+      <li><a class="go" href="#5" data-go="5"><span class="n">5</span><span class="he">שלב 2ב · המכונית של RF433 (מקלט)</span><span class="en">Level 2b · The RF433 car (receiver)</span></a>
+        <span class="fname mono">level2_rf_car.ino</span>
+        <a class="btn" href="level2_rf_car.ino" download>⬇ <span class="he">הורדה</span><span class="en">Download</span></a></li>
+      <li><a class="go" href="#6" data-go="6"><span class="n">6</span><span class="he">פינאלה · נהיגה מהטלפון (Bluetooth)</span><span class="en">Finale · Drive from your phone (Bluetooth)</span></a>
+        <span class="fname mono">bonus_bluetooth_car.ino</span>
+        <a class="btn" href="bonus_bluetooth_car.ino" download>⬇ <span class="he">הורדה</span><span class="en">Download</span></a></li>
+    </ul>
+    <p><a class="btn primary" href="lesson3-code.zip" download>⬇ <span class="he">להוריד הכל (zip)</span><span class="en">Download all (zip)</span></a></p>
+    <div class="note"><span class="he">💡 ב-Arduino IDE: פותחים את קובץ ה-.ino, וה-IDE יציע ליצור לו תיקייה באותו שם — מאשרים.</span><span class="en">💡 In the Arduino IDE: open the .ino file; the IDE offers to create a folder with the same name — accept.</span></div>
+  </section>
+
+  <section class="slide">
+    <h2><span class="num">1</span><span class="he">שלב 0 · המכונית שנוהגת לבד</span><span class="en">Level 0 · The self-driving car</span></h2>
+    <p class="desc"><span class="he">פנוי → קדימה. חסום → אחורה, פנייה, וממשיכים. אותו חיווט כמו בשיעור 2.</span><span class="en">Clear → forward. Blocked → back up, turn, carry on. Same wiring as Lesson 2.</span></p>
+    <div class="bar">
+      <span class="fname mono">level0_selfdriving_car.ino</span>
+      <a class="btn primary" href="level0_selfdriving_car.ino" download>⬇ <span class="he">הורדה</span><span class="en">Download</span></a>
+      <button class="btn copy">📋 <span class="he">העתקה</span><span class="en">Copy</span></button>
+      <span class="pill">115 <span class="he">שורות</span><span class="en">lines</span></span>
+    </div>
+    <pre tabindex="0"><span class="l"><span class="cm">/*</span></span><span class="l"><span class="cm">  Robotika – Lesson 3 · LEVEL 0: Finish the self-driving car</span></span><span class="l"><span class="cm">  ----------------------------------------------------------</span></span><span class="l"><span class="cm">  Last lesson our car only STOPPED in front of an obstacle.</span></span><span class="l"><span class="cm">  A real self-driving car should get itself OUT of trouble:</span></span><span class="l"><span class="cm">      clear ahead  -&gt; drive forward</span></span><span class="l"><span class="cm">      blocked      -&gt; back up a little, turn away, then carry on</span></span><span class="l"></span><span class="l"><span class="cm">  Same 4-motor car + L298N H-bridge + front HC-SR04 as Lesson 2.</span></span><span class="l"><span class="cm">  We only add three new moves (backward, turnLeft, turnRight) and</span></span><span class="l"><span class="cm">  a smarter decision. The wiring is EXACTLY the same as Lesson 2.</span></span><span class="l"></span><span class="l"><span class="cm">  HOW THE MOTORS ARE WIRED (important):</span></span><span class="l"><span class="cm">    The car has 4 motors but only ONE L298N, which has TWO channels.</span></span><span class="l"><span class="cm">    The two LEFT motors are wired together into channel A, and the two</span></span><span class="l"><span class="cm">    RIGHT motors are wired together into channel B. So in code there are</span></span><span class="l"><span class="cm">    only two &quot;sides&quot; to control (left, right) - exactly what the functions</span></span><span class="l"><span class="cm">    below do. Two motors share one channel, so they pull more current:</span></span><span class="l"><span class="cm">    use a proper motor battery, not the Arduino&#x27;s 5V.</span></span><span class="l"><span class="cm">    (Tip: if the two motors on a side fight each other, flip the two wires</span></span><span class="l"><span class="cm">     of ONE of them so both spin the same way.)</span></span><span class="l"></span><span class="l"><span class="cm">  Wiring (unchanged from Lesson 2):</span></span><span class="l"><span class="cm">    HC-SR04:  Trig -&gt; D9   Echo -&gt; D10   VCC -&gt; 5V   GND -&gt; GND</span></span><span class="l"><span class="cm">    L298N channel A (both LEFT motors -&gt; OUT1/OUT2):  ENA -&gt; D5 (PWM)  IN1 -&gt; D2  IN2 -&gt; D3</span></span><span class="l"><span class="cm">    L298N channel B (both RIGHT motors -&gt; OUT3/OUT4): ENB -&gt; D6 (PWM)  IN3 -&gt; D4  IN4 -&gt; D7</span></span><span class="l"><span class="cm">    L298N power: motor battery + -&gt; 12V   battery - -&gt; GND</span></span><span class="l"><span class="cm">                 L298N GND &lt;-&gt; Arduino GND   (MUST share ground)</span></span><span class="l"><span class="cm">*/</span></span><span class="l"></span><span class="l"><span class="cm">// --- HC-SR04 (front) ---</span></span><span class="l"><span class="kw">const</span> <span class="kw">int</span> trigPin = <span class="num">9</span>;</span><span class="l"><span class="kw">const</span> <span class="kw">int</span> echoPin = <span class="num">10</span>;</span><span class="l"></span><span class="l"><span class="cm">// --- L298N motor driver ---</span></span><span class="l"><span class="kw">const</span> <span class="kw">int</span> ENA = <span class="num">5</span>;   <span class="cm">// left speed  (PWM)</span></span><span class="l"><span class="kw">const</span> <span class="kw">int</span> IN1 = <span class="num">2</span>;</span><span class="l"><span class="kw">const</span> <span class="kw">int</span> IN2 = <span class="num">3</span>;</span><span class="l"><span class="kw">const</span> <span class="kw">int</span> IN3 = <span class="num">4</span>;</span><span class="l"><span class="kw">const</span> <span class="kw">int</span> IN4 = <span class="num">7</span>;</span><span class="l"><span class="kw">const</span> <span class="kw">int</span> ENB = <span class="num">6</span>;   <span class="cm">// right speed (PWM)</span></span><span class="l"></span><span class="l"><span class="kw">const</span> <span class="kw">int</span> SPEED   = <span class="num">160</span>;  <span class="cm">// 0..255 – driving speed</span></span><span class="l"><span class="kw">const</span> <span class="kw">int</span> STOP_CM = <span class="num">15</span>;   <span class="cm">// &quot;something is in the way&quot; distance (cm)</span></span><span class="l"></span><span class="l"><span class="kw">void</span> <span class="fn">setup</span>() {</span><span class="l">  Serial.<span class="fn">begin</span>(<span class="num">9600</span>);</span><span class="l">  <span class="fn">pinMode</span>(trigPin, <span class="kw">OUTPUT</span>);</span><span class="l">  <span class="fn">pinMode</span>(echoPin, <span class="kw">INPUT</span>);</span><span class="l">  <span class="fn">pinMode</span>(ENA, <span class="kw">OUTPUT</span>); <span class="fn">pinMode</span>(IN1, <span class="kw">OUTPUT</span>); <span class="fn">pinMode</span>(IN2, <span class="kw">OUTPUT</span>);</span><span class="l">  <span class="fn">pinMode</span>(ENB, <span class="kw">OUTPUT</span>); <span class="fn">pinMode</span>(IN3, <span class="kw">OUTPUT</span>); <span class="fn">pinMode</span>(IN4, <span class="kw">OUTPUT</span>);</span><span class="l"></span><span class="l">  <span class="fn">stopCar</span>();</span><span class="l">  <span class="fn">delay</span>(<span class="num">2000</span>);          <span class="cm">// wait 2s before we start driving</span></span><span class="l">}</span><span class="l"></span><span class="l"><span class="kw">void</span> <span class="fn">loop</span>() {</span><span class="l">  <span class="kw">int</span> distanceCm = <span class="fn">getDistanceCm</span>();</span><span class="l">  Serial.<span class="fn">print</span>(<span class="str">&quot;Distance: &quot;</span>); Serial.<span class="fn">print</span>(distanceCm); Serial.<span class="fn">println</span>(<span class="str">&quot; cm&quot;</span>);</span><span class="l"></span><span class="l">  <span class="cm">// ---- the decision ----</span></span><span class="l">  <span class="kw">if</span> (distanceCm &lt;= STOP_CM) {</span><span class="l">    <span class="cm">// blocked: get out of trouble</span></span><span class="l">    <span class="fn">stopCar</span>();      <span class="fn">delay</span>(<span class="num">200</span>);</span><span class="l">    <span class="fn">backward</span>();     <span class="fn">delay</span>(<span class="num">400</span>);   <span class="cm">// reverse a little</span></span><span class="l">    <span class="fn">stopCar</span>();      <span class="fn">delay</span>(<span class="num">200</span>);</span><span class="l">    <span class="fn">turnRight</span>();    <span class="fn">delay</span>(<span class="num">400</span>);   <span class="cm">// spin away from the obstacle</span></span><span class="l">    <span class="fn">stopCar</span>();      <span class="fn">delay</span>(<span class="num">200</span>);</span><span class="l">    <span class="cm">// next loop() checks again and drives on if it&#x27;s now clear</span></span><span class="l">  } <span class="kw">else</span> {</span><span class="l">    <span class="fn">forward</span>();      <span class="cm">// path is clear -&gt; keep driving</span></span><span class="l">  }</span><span class="l">}</span><span class="l"></span><span class="l"><span class="cm">// ---------- the four moves ----------</span></span><span class="l"><span class="cm">// Each &quot;side&quot; here = BOTH motors on that side (they share one L298N channel).</span></span><span class="l"><span class="kw">void</span> <span class="fn">forward</span>() {</span><span class="l">  <span class="fn">digitalWrite</span>(IN1, <span class="kw">HIGH</span>); <span class="fn">digitalWrite</span>(IN2, <span class="kw">LOW</span>);   <span class="cm">// left side forward</span></span><span class="l">  <span class="fn">digitalWrite</span>(IN3, <span class="kw">HIGH</span>); <span class="fn">digitalWrite</span>(IN4, <span class="kw">LOW</span>);   <span class="cm">// right side forward</span></span><span class="l">  <span class="fn">analogWrite</span>(ENA, SPEED); <span class="fn">analogWrite</span>(ENB, SPEED);</span><span class="l">}</span><span class="l"></span><span class="l"><span class="kw">void</span> <span class="fn">backward</span>() {</span><span class="l">  <span class="fn">digitalWrite</span>(IN1, <span class="kw">LOW</span>); <span class="fn">digitalWrite</span>(IN2, <span class="kw">HIGH</span>);   <span class="cm">// left side back</span></span><span class="l">  <span class="fn">digitalWrite</span>(IN3, <span class="kw">LOW</span>); <span class="fn">digitalWrite</span>(IN4, <span class="kw">HIGH</span>);   <span class="cm">// right side back</span></span><span class="l">  <span class="fn">analogWrite</span>(ENA, SPEED); <span class="fn">analogWrite</span>(ENB, SPEED);</span><span class="l">}</span><span class="l"></span><span class="l"><span class="kw">void</span> <span class="fn">turnRight</span>() {</span><span class="l">  <span class="fn">digitalWrite</span>(IN1, <span class="kw">HIGH</span>); <span class="fn">digitalWrite</span>(IN2, <span class="kw">LOW</span>);   <span class="cm">// left side forward</span></span><span class="l">  <span class="fn">digitalWrite</span>(IN3, <span class="kw">LOW</span>);  <span class="fn">digitalWrite</span>(IN4, <span class="kw">HIGH</span>);  <span class="cm">// right side back -&gt; spins right</span></span><span class="l">  <span class="fn">analogWrite</span>(ENA, SPEED); <span class="fn">analogWrite</span>(ENB, SPEED);</span><span class="l">}</span><span class="l"></span><span class="l"><span class="kw">void</span> <span class="fn">turnLeft</span>() {</span><span class="l">  <span class="fn">digitalWrite</span>(IN1, <span class="kw">LOW</span>);  <span class="fn">digitalWrite</span>(IN2, <span class="kw">HIGH</span>);  <span class="cm">// left side back</span></span><span class="l">  <span class="fn">digitalWrite</span>(IN3, <span class="kw">HIGH</span>); <span class="fn">digitalWrite</span>(IN4, <span class="kw">LOW</span>);   <span class="cm">// right side forward -&gt; spins left</span></span><span class="l">  <span class="fn">analogWrite</span>(ENA, SPEED); <span class="fn">analogWrite</span>(ENB, SPEED);</span><span class="l">}</span><span class="l"></span><span class="l"><span class="kw">void</span> <span class="fn">stopCar</span>() {</span><span class="l">  <span class="fn">analogWrite</span>(ENA, <span class="num">0</span>); <span class="fn">analogWrite</span>(ENB, <span class="num">0</span>);</span><span class="l">  <span class="fn">digitalWrite</span>(IN1, <span class="kw">LOW</span>); <span class="fn">digitalWrite</span>(IN2, <span class="kw">LOW</span>);</span><span class="l">  <span class="fn">digitalWrite</span>(IN3, <span class="kw">LOW</span>); <span class="fn">digitalWrite</span>(IN4, <span class="kw">LOW</span>);</span><span class="l">}</span><span class="l"></span><span class="l"><span class="cm">// ---------- the sensor ----------</span></span><span class="l"><span class="kw">int</span> <span class="fn">getDistanceCm</span>() {</span><span class="l">  <span class="fn">digitalWrite</span>(trigPin, <span class="kw">LOW</span>);  <span class="fn">delayMicroseconds</span>(<span class="num">2</span>);</span><span class="l">  <span class="fn">digitalWrite</span>(trigPin, <span class="kw">HIGH</span>); <span class="fn">delayMicroseconds</span>(<span class="num">10</span>);</span><span class="l">  <span class="fn">digitalWrite</span>(trigPin, <span class="kw">LOW</span>);</span><span class="l">  <span class="kw">long</span> duration = <span class="fn">pulseIn</span>(echoPin, <span class="kw">HIGH</span>, <span class="num">25000</span>);  <span class="cm">// timeout so we never get stuck</span></span><span class="l">  <span class="kw">if</span> (duration == <span class="num">0</span>) <span class="kw">return</span> <span class="num">999</span>;                  <span class="cm">// no echo = nothing close = clear</span></span><span class="l">  <span class="kw">return</span> duration * <span class="num">0.0343</span> / <span class="num">2</span>;</span><span class="l">}</span></pre>
+    <textarea class="raw" hidden>/*
+  Robotika – Lesson 3 · LEVEL 0: Finish the self-driving car
+  ----------------------------------------------------------
+  Last lesson our car only STOPPED in front of an obstacle.
+  A real self-driving car should get itself OUT of trouble:
+      clear ahead  -&gt; drive forward
+      blocked      -&gt; back up a little, turn away, then carry on
+
+  Same 4-motor car + L298N H-bridge + front HC-SR04 as Lesson 2.
+  We only add three new moves (backward, turnLeft, turnRight) and
+  a smarter decision. The wiring is EXACTLY the same as Lesson 2.
+
+  HOW THE MOTORS ARE WIRED (important):
+    The car has 4 motors but only ONE L298N, which has TWO channels.
+    The two LEFT motors are wired together into channel A, and the two
+    RIGHT motors are wired together into channel B. So in code there are
+    only two &quot;sides&quot; to control (left, right) - exactly what the functions
+    below do. Two motors share one channel, so they pull more current:
+    use a proper motor battery, not the Arduino&#x27;s 5V.
+    (Tip: if the two motors on a side fight each other, flip the two wires
+     of ONE of them so both spin the same way.)
+
+  Wiring (unchanged from Lesson 2):
+    HC-SR04:  Trig -&gt; D9   Echo -&gt; D10   VCC -&gt; 5V   GND -&gt; GND
+    L298N channel A (both LEFT motors -&gt; OUT1/OUT2):  ENA -&gt; D5 (PWM)  IN1 -&gt; D2  IN2 -&gt; D3
+    L298N channel B (both RIGHT motors -&gt; OUT3/OUT4): ENB -&gt; D6 (PWM)  IN3 -&gt; D4  IN4 -&gt; D7
+    L298N power: motor battery + -&gt; 12V   battery - -&gt; GND
+                 L298N GND &lt;-&gt; Arduino GND   (MUST share ground)
+*/
+
+// --- HC-SR04 (front) ---
+const int trigPin = 9;
+const int echoPin = 10;
+
+// --- L298N motor driver ---
+const int ENA = 5;   // left speed  (PWM)
+const int IN1 = 2;
+const int IN2 = 3;
+const int IN3 = 4;
+const int IN4 = 7;
+const int ENB = 6;   // right speed (PWM)
+
+const int SPEED   = 160;  // 0..255 – driving speed
+const int STOP_CM = 15;   // &quot;something is in the way&quot; distance (cm)
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(ENA, OUTPUT); pinMode(IN1, OUTPUT); pinMode(IN2, OUTPUT);
+  pinMode(ENB, OUTPUT); pinMode(IN3, OUTPUT); pinMode(IN4, OUTPUT);
+
+  stopCar();
+  delay(2000);          // wait 2s before we start driving
+}
+
+void loop() {
+  int distanceCm = getDistanceCm();
+  Serial.print(&quot;Distance: &quot;); Serial.print(distanceCm); Serial.println(&quot; cm&quot;);
+
+  // ---- the decision ----
+  if (distanceCm &lt;= STOP_CM) {
+    // blocked: get out of trouble
+    stopCar();      delay(200);
+    backward();     delay(400);   // reverse a little
+    stopCar();      delay(200);
+    turnRight();    delay(400);   // spin away from the obstacle
+    stopCar();      delay(200);
+    // next loop() checks again and drives on if it&#x27;s now clear
+  } else {
+    forward();      // path is clear -&gt; keep driving
+  }
+}
+
+// ---------- the four moves ----------
+// Each &quot;side&quot; here = BOTH motors on that side (they share one L298N channel).
+void forward() {
+  digitalWrite(IN1, HIGH); digitalWrite(IN2, LOW);   // left side forward
+  digitalWrite(IN3, HIGH); digitalWrite(IN4, LOW);   // right side forward
+  analogWrite(ENA, SPEED); analogWrite(ENB, SPEED);
+}
+
+void backward() {
+  digitalWrite(IN1, LOW); digitalWrite(IN2, HIGH);   // left side back
+  digitalWrite(IN3, LOW); digitalWrite(IN4, HIGH);   // right side back
+  analogWrite(ENA, SPEED); analogWrite(ENB, SPEED);
+}
+
+void turnRight() {
+  digitalWrite(IN1, HIGH); digitalWrite(IN2, LOW);   // left side forward
+  digitalWrite(IN3, LOW);  digitalWrite(IN4, HIGH);  // right side back -&gt; spins right
+  analogWrite(ENA, SPEED); analogWrite(ENB, SPEED);
+}
+
+void turnLeft() {
+  digitalWrite(IN1, LOW);  digitalWrite(IN2, HIGH);  // left side back
+  digitalWrite(IN3, HIGH); digitalWrite(IN4, LOW);   // right side forward -&gt; spins left
+  analogWrite(ENA, SPEED); analogWrite(ENB, SPEED);
+}
+
+void stopCar() {
+  analogWrite(ENA, 0); analogWrite(ENB, 0);
+  digitalWrite(IN1, LOW); digitalWrite(IN2, LOW);
+  digitalWrite(IN3, LOW); digitalWrite(IN4, LOW);
+}
+
+// ---------- the sensor ----------
+int getDistanceCm() {
+  digitalWrite(trigPin, LOW);  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH); delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  long duration = pulseIn(echoPin, HIGH, 25000);  // timeout so we never get stuck
+  if (duration == 0) return 999;                  // no echo = nothing close = clear
+  return duration * 0.0343 / 2;
+}
+</textarea>
+  </section>
+
+  <section class="slide">
+    <h2><span class="num">2</span><span class="he">שלב 1א · קוראים את קודי שלט ה-IR</span><span class="en">Level 1a · Read the IR remote&#x27;s codes</span></h2>
+    <p class="desc"><span class="he">פותחים Serial Monitor (9600), לוחצים ▲ ▼ ◀ ▶ OK ורושמים את הקודים.</span><span class="en">Open the Serial Monitor (9600), press ▲ ▼ ◀ ▶ OK and write the codes down.</span></p>
+    <div class="bar">
+      <span class="fname mono">level1_ir_read_codes.ino</span>
+      <a class="btn primary" href="level1_ir_read_codes.ino" download>⬇ <span class="he">הורדה</span><span class="en">Download</span></a>
+      <button class="btn copy">📋 <span class="he">העתקה</span><span class="en">Copy</span></button>
+      <span class="pill">36 <span class="he">שורות</span><span class="en">lines</span></span>
+    </div>
+    <pre tabindex="0"><span class="l"><span class="cm">/*</span></span><span class="l"><span class="cm">  Robotika – Lesson 3 · LEVEL 1a: Learn your IR remote&#x27;s button codes</span></span><span class="l"><span class="cm">  -------------------------------------------------------------------</span></span><span class="l"><span class="cm">  Before we can DRIVE with the remote, we need to know what number each</span></span><span class="l"><span class="cm">  button sends. Every remote is a little different, so we read them once</span></span><span class="l"><span class="cm">  and write the numbers down.</span></span><span class="l"></span><span class="l"><span class="cm">  Upload this, open Tools -&gt; Serial Monitor (9600 baud), point the small</span></span><span class="l"><span class="cm">  remote at the receiver and press each button. Copy the HEX code shown</span></span><span class="l"><span class="cm">  for UP / DOWN / LEFT / RIGHT / OK into the next sketch.</span></span><span class="l"></span><span class="l"><span class="cm">  Library: &quot;IRremote&quot; by shirriff / Armin Joachimsmeyer</span></span><span class="l"><span class="cm">           (Sketch -&gt; Include Library -&gt; Manage Libraries -&gt; search &quot;IRremote&quot;)</span></span><span class="l"></span><span class="l"><span class="cm">  Wiring (IR receiver module, e.g. VS1838 / HX-M121):</span></span><span class="l"><span class="cm">    OUT/S -&gt; D8      VCC/+ -&gt; 5V      GND/- -&gt; GND</span></span><span class="l"><span class="cm">*/</span></span><span class="l"></span><span class="l"><span class="kw">#include</span> &lt;IRremote.h&gt;</span><span class="l"></span><span class="l"><span class="kw">const</span> <span class="kw">int</span> IR_RECEIVE_PIN = <span class="num">8</span>;</span><span class="l"></span><span class="l"><span class="kw">void</span> <span class="fn">setup</span>() {</span><span class="l">  Serial.<span class="fn">begin</span>(<span class="num">9600</span>);</span><span class="l">  IrReceiver.<span class="fn">begin</span>(IR_RECEIVE_PIN);</span><span class="l">  Serial.<span class="fn">println</span>(<span class="str">&quot;Point the remote and press buttons...&quot;</span>);</span><span class="l">}</span><span class="l"></span><span class="l"><span class="kw">void</span> <span class="fn">loop</span>() {</span><span class="l">  <span class="kw">if</span> (IrReceiver.<span class="fn">decode</span>()) {</span><span class="l">    <span class="cm">// the &quot;command&quot; byte is the part that changes per button</span></span><span class="l">    Serial.<span class="fn">print</span>(<span class="str">&quot;command (HEX): 0x&quot;</span>);</span><span class="l">    Serial.<span class="fn">println</span>(IrReceiver.decodedIRData.command, HEX);</span><span class="l">    IrReceiver.<span class="fn">resume</span>();   <span class="cm">// ready for the next button</span></span><span class="l">  }</span><span class="l">}</span></pre>
+    <textarea class="raw" hidden>/*
+  Robotika – Lesson 3 · LEVEL 1a: Learn your IR remote&#x27;s button codes
+  -------------------------------------------------------------------
+  Before we can DRIVE with the remote, we need to know what number each
+  button sends. Every remote is a little different, so we read them once
+  and write the numbers down.
+
+  Upload this, open Tools -&gt; Serial Monitor (9600 baud), point the small
+  remote at the receiver and press each button. Copy the HEX code shown
+  for UP / DOWN / LEFT / RIGHT / OK into the next sketch.
+
+  Library: &quot;IRremote&quot; by shirriff / Armin Joachimsmeyer
+           (Sketch -&gt; Include Library -&gt; Manage Libraries -&gt; search &quot;IRremote&quot;)
+
+  Wiring (IR receiver module, e.g. VS1838 / HX-M121):
+    OUT/S -&gt; D8      VCC/+ -&gt; 5V      GND/- -&gt; GND
+*/
+
+#include &lt;IRremote.h&gt;
+
+const int IR_RECEIVE_PIN = 8;
+
+void setup() {
+  Serial.begin(9600);
+  IrReceiver.begin(IR_RECEIVE_PIN);
+  Serial.println(&quot;Point the remote and press buttons...&quot;);
+}
+
+void loop() {
+  if (IrReceiver.decode()) {
+    // the &quot;command&quot; byte is the part that changes per button
+    Serial.print(&quot;command (HEX): 0x&quot;);
+    Serial.println(IrReceiver.decodedIRData.command, HEX);
+    IrReceiver.resume();   // ready for the next button
+  }
+}
+</textarea>
+  </section>
+
+  <section class="slide">
+    <h2><span class="num">3</span><span class="he">שלב 1ב · נוהגים בשלט IR</span><span class="en">Level 1b · Drive with the IR remote</span></h2>
+    <p class="desc"><span class="he">אותן פונקציות מנוע — רק הקלט השתנה. ממלאים את 5 הקודים משלב 1א.</span><span class="en">Same motor functions — only the input changed. Fill in the 5 codes from 1a.</span></p>
+    <div class="bar">
+      <span class="fname mono">level1_ir_car.ino</span>
+      <a class="btn primary" href="level1_ir_car.ino" download>⬇ <span class="he">הורדה</span><span class="en">Download</span></a>
+      <button class="btn copy">📋 <span class="he">העתקה</span><span class="en">Copy</span></button>
+      <span class="pill">73 <span class="he">שורות</span><span class="en">lines</span></span>
+    </div>
+    <pre tabindex="0"><span class="l"><span class="cm">/*</span></span><span class="l"><span class="cm">  Robotika – Lesson 3 · LEVEL 1b: Drive the car with an IR remote</span></span><span class="l"><span class="cm">  ---------------------------------------------------------------</span></span><span class="l"><span class="cm">  THE BIG IDEA: the motor functions are the SAME ones from the</span></span><span class="l"><span class="cm">  self-driving car (forward/back/left/right/stop). Last time the SENSOR</span></span><span class="l"><span class="cm">  decided which one to call. Now YOU decide, by pressing a button.</span></span><span class="l"><span class="cm">  Only the INPUT changed.</span></span><span class="l"></span><span class="l"><span class="cm">  IR = infrared light, just like a TV remote. It needs a clear line of</span></span><span class="l"><span class="cm">  sight to the receiver, and only goes one way (remote -&gt; car).</span></span><span class="l"></span><span class="l"><span class="cm">  1) First run level1_ir_read_codes.ino and fill in the 5 codes below.</span></span><span class="l"><span class="cm">  2) Then upload this. Point the remote at the car and drive.</span></span><span class="l"></span><span class="l"><span class="cm">  Motors: 4 motors, ONE L298N. Both LEFT motors share channel A, both RIGHT</span></span><span class="l"><span class="cm">  motors share channel B - so the code controls just two sides (as always).</span></span><span class="l"></span><span class="l"><span class="cm">  Wiring:</span></span><span class="l"><span class="cm">    IR receiver:  OUT -&gt; D8   VCC -&gt; 5V   GND -&gt; GND</span></span><span class="l"><span class="cm">    L298N ch. A (both LEFT motors):  ENA D5, IN1 D2, IN2 D3</span></span><span class="l"><span class="cm">    L298N ch. B (both RIGHT motors): ENB D6, IN3 D4, IN4 D7</span></span><span class="l"><span class="cm">*/</span></span><span class="l"></span><span class="l"><span class="kw">#include</span> &lt;IRremote.h&gt;</span><span class="l"></span><span class="l"><span class="kw">const</span> <span class="kw">int</span> IR_RECEIVE_PIN = <span class="num">8</span>;</span><span class="l"></span><span class="l"><span class="cm">// --- L298N motor driver (same pins as Lesson 2) ---</span></span><span class="l"><span class="kw">const</span> <span class="kw">int</span> ENA = <span class="num">5</span>, IN1 = <span class="num">2</span>, IN2 = <span class="num">3</span>, IN3 = <span class="num">4</span>, IN4 = <span class="num">7</span>, ENB = <span class="num">6</span>;</span><span class="l"><span class="kw">const</span> <span class="kw">int</span> SPEED = <span class="num">160</span>;</span><span class="l"></span><span class="l"><span class="cm">// &gt;&gt;&gt; FILL THESE IN from level1_ir_read_codes.ino (your remote&#x27;s codes) &lt;&lt;&lt;</span></span><span class="l"><span class="kw">const</span> <span class="kw">uint8_t</span> BTN_UP    = <span class="num">0x18</span>;</span><span class="l"><span class="kw">const</span> <span class="kw">uint8_t</span> BTN_DOWN  = <span class="num">0x52</span>;</span><span class="l"><span class="kw">const</span> <span class="kw">uint8_t</span> BTN_LEFT  = <span class="num">0x08</span>;</span><span class="l"><span class="kw">const</span> <span class="kw">uint8_t</span> BTN_RIGHT = <span class="num">0x5A</span>;</span><span class="l"><span class="kw">const</span> <span class="kw">uint8_t</span> BTN_OK    = <span class="num">0x1C</span>;</span><span class="l"></span><span class="l"><span class="kw">unsigned</span> <span class="kw">long</span> lastCmd = <span class="num">0</span>;   <span class="cm">// when we last heard a button</span></span><span class="l"><span class="kw">const</span> <span class="kw">int</span> HOLD_MS = <span class="num">200</span>;     <span class="cm">// keep moving this long after a press</span></span><span class="l"></span><span class="l"><span class="kw">void</span> <span class="fn">setup</span>() {</span><span class="l">  Serial.<span class="fn">begin</span>(<span class="num">9600</span>);</span><span class="l">  IrReceiver.<span class="fn">begin</span>(IR_RECEIVE_PIN);</span><span class="l">  <span class="fn">pinMode</span>(ENA, <span class="kw">OUTPUT</span>); <span class="fn">pinMode</span>(IN1, <span class="kw">OUTPUT</span>); <span class="fn">pinMode</span>(IN2, <span class="kw">OUTPUT</span>);</span><span class="l">  <span class="fn">pinMode</span>(ENB, <span class="kw">OUTPUT</span>); <span class="fn">pinMode</span>(IN3, <span class="kw">OUTPUT</span>); <span class="fn">pinMode</span>(IN4, <span class="kw">OUTPUT</span>);</span><span class="l">  <span class="fn">stopCar</span>();</span><span class="l">}</span><span class="l"></span><span class="l"><span class="kw">void</span> <span class="fn">loop</span>() {</span><span class="l">  <span class="kw">if</span> (IrReceiver.<span class="fn">decode</span>()) {</span><span class="l">    <span class="kw">uint8_t</span> cmd = IrReceiver.decodedIRData.command;</span><span class="l"></span><span class="l">    <span class="kw">if</span>      (cmd == BTN_UP)    <span class="fn">forward</span>();</span><span class="l">    <span class="kw">else</span> <span class="kw">if</span> (cmd == BTN_DOWN)  <span class="fn">backward</span>();</span><span class="l">    <span class="kw">else</span> <span class="kw">if</span> (cmd == BTN_LEFT)  <span class="fn">turnLeft</span>();</span><span class="l">    <span class="kw">else</span> <span class="kw">if</span> (cmd == BTN_RIGHT) <span class="fn">turnRight</span>();</span><span class="l">    <span class="kw">else</span> <span class="kw">if</span> (cmd == BTN_OK)    <span class="fn">stopCar</span>();</span><span class="l"></span><span class="l">    lastCmd = <span class="fn">millis</span>();</span><span class="l">    IrReceiver.<span class="fn">resume</span>();   <span class="cm">// ready for the next button</span></span><span class="l">  }</span><span class="l"></span><span class="l">  <span class="cm">// if no button for a moment, stop (so it doesn&#x27;t run away)</span></span><span class="l">  <span class="kw">if</span> (<span class="fn">millis</span>() - lastCmd &gt; HOLD_MS) <span class="fn">stopCar</span>();</span><span class="l">}</span><span class="l"></span><span class="l"><span class="cm">// ---------- the four moves (identical to the self-driving car) ----------</span></span><span class="l"><span class="kw">void</span> <span class="fn">forward</span>()  { <span class="fn">digitalWrite</span>(IN1,<span class="kw">HIGH</span>);<span class="fn">digitalWrite</span>(IN2,<span class="kw">LOW</span>); <span class="fn">digitalWrite</span>(IN3,<span class="kw">HIGH</span>);<span class="fn">digitalWrite</span>(IN4,<span class="kw">LOW</span>); <span class="fn">analogWrite</span>(ENA,SPEED);<span class="fn">analogWrite</span>(ENB,SPEED); }</span><span class="l"><span class="kw">void</span> <span class="fn">backward</span>() { <span class="fn">digitalWrite</span>(IN1,<span class="kw">LOW</span>); <span class="fn">digitalWrite</span>(IN2,<span class="kw">HIGH</span>);<span class="fn">digitalWrite</span>(IN3,<span class="kw">LOW</span>); <span class="fn">digitalWrite</span>(IN4,<span class="kw">HIGH</span>);<span class="fn">analogWrite</span>(ENA,SPEED);<span class="fn">analogWrite</span>(ENB,SPEED); }</span><span class="l"><span class="kw">void</span> <span class="fn">turnRight</span>(){ <span class="fn">digitalWrite</span>(IN1,<span class="kw">HIGH</span>);<span class="fn">digitalWrite</span>(IN2,<span class="kw">LOW</span>); <span class="fn">digitalWrite</span>(IN3,<span class="kw">LOW</span>); <span class="fn">digitalWrite</span>(IN4,<span class="kw">HIGH</span>);<span class="fn">analogWrite</span>(ENA,SPEED);<span class="fn">analogWrite</span>(ENB,SPEED); }</span><span class="l"><span class="kw">void</span> <span class="fn">turnLeft</span>() { <span class="fn">digitalWrite</span>(IN1,<span class="kw">LOW</span>); <span class="fn">digitalWrite</span>(IN2,<span class="kw">HIGH</span>);<span class="fn">digitalWrite</span>(IN3,<span class="kw">HIGH</span>);<span class="fn">digitalWrite</span>(IN4,<span class="kw">LOW</span>); <span class="fn">analogWrite</span>(ENA,SPEED);<span class="fn">analogWrite</span>(ENB,SPEED); }</span><span class="l"><span class="kw">void</span> <span class="fn">stopCar</span>()  { <span class="fn">analogWrite</span>(ENA,<span class="num">0</span>);<span class="fn">analogWrite</span>(ENB,<span class="num">0</span>); <span class="fn">digitalWrite</span>(IN1,<span class="kw">LOW</span>);<span class="fn">digitalWrite</span>(IN2,<span class="kw">LOW</span>);<span class="fn">digitalWrite</span>(IN3,<span class="kw">LOW</span>);<span class="fn">digitalWrite</span>(IN4,<span class="kw">LOW</span>); }</span></pre>
+    <textarea class="raw" hidden>/*
+  Robotika – Lesson 3 · LEVEL 1b: Drive the car with an IR remote
+  ---------------------------------------------------------------
+  THE BIG IDEA: the motor functions are the SAME ones from the
+  self-driving car (forward/back/left/right/stop). Last time the SENSOR
+  decided which one to call. Now YOU decide, by pressing a button.
+  Only the INPUT changed.
+
+  IR = infrared light, just like a TV remote. It needs a clear line of
+  sight to the receiver, and only goes one way (remote -&gt; car).
+
+  1) First run level1_ir_read_codes.ino and fill in the 5 codes below.
+  2) Then upload this. Point the remote at the car and drive.
+
+  Motors: 4 motors, ONE L298N. Both LEFT motors share channel A, both RIGHT
+  motors share channel B - so the code controls just two sides (as always).
+
+  Wiring:
+    IR receiver:  OUT -&gt; D8   VCC -&gt; 5V   GND -&gt; GND
+    L298N ch. A (both LEFT motors):  ENA D5, IN1 D2, IN2 D3
+    L298N ch. B (both RIGHT motors): ENB D6, IN3 D4, IN4 D7
+*/
+
+#include &lt;IRremote.h&gt;
+
+const int IR_RECEIVE_PIN = 8;
+
+// --- L298N motor driver (same pins as Lesson 2) ---
+const int ENA = 5, IN1 = 2, IN2 = 3, IN3 = 4, IN4 = 7, ENB = 6;
+const int SPEED = 160;
+
+// &gt;&gt;&gt; FILL THESE IN from level1_ir_read_codes.ino (your remote&#x27;s codes) &lt;&lt;&lt;
+const uint8_t BTN_UP    = 0x18;
+const uint8_t BTN_DOWN  = 0x52;
+const uint8_t BTN_LEFT  = 0x08;
+const uint8_t BTN_RIGHT = 0x5A;
+const uint8_t BTN_OK    = 0x1C;
+
+unsigned long lastCmd = 0;   // when we last heard a button
+const int HOLD_MS = 200;     // keep moving this long after a press
+
+void setup() {
+  Serial.begin(9600);
+  IrReceiver.begin(IR_RECEIVE_PIN);
+  pinMode(ENA, OUTPUT); pinMode(IN1, OUTPUT); pinMode(IN2, OUTPUT);
+  pinMode(ENB, OUTPUT); pinMode(IN3, OUTPUT); pinMode(IN4, OUTPUT);
+  stopCar();
+}
+
+void loop() {
+  if (IrReceiver.decode()) {
+    uint8_t cmd = IrReceiver.decodedIRData.command;
+
+    if      (cmd == BTN_UP)    forward();
+    else if (cmd == BTN_DOWN)  backward();
+    else if (cmd == BTN_LEFT)  turnLeft();
+    else if (cmd == BTN_RIGHT) turnRight();
+    else if (cmd == BTN_OK)    stopCar();
+
+    lastCmd = millis();
+    IrReceiver.resume();   // ready for the next button
+  }
+
+  // if no button for a moment, stop (so it doesn&#x27;t run away)
+  if (millis() - lastCmd &gt; HOLD_MS) stopCar();
+}
+
+// ---------- the four moves (identical to the self-driving car) ----------
+void forward()  { digitalWrite(IN1,HIGH);digitalWrite(IN2,LOW); digitalWrite(IN3,HIGH);digitalWrite(IN4,LOW); analogWrite(ENA,SPEED);analogWrite(ENB,SPEED); }
+void backward() { digitalWrite(IN1,LOW); digitalWrite(IN2,HIGH);digitalWrite(IN3,LOW); digitalWrite(IN4,HIGH);analogWrite(ENA,SPEED);analogWrite(ENB,SPEED); }
+void turnRight(){ digitalWrite(IN1,HIGH);digitalWrite(IN2,LOW); digitalWrite(IN3,LOW); digitalWrite(IN4,HIGH);analogWrite(ENA,SPEED);analogWrite(ENB,SPEED); }
+void turnLeft() { digitalWrite(IN1,LOW); digitalWrite(IN2,HIGH);digitalWrite(IN3,HIGH);digitalWrite(IN4,LOW); analogWrite(ENA,SPEED);analogWrite(ENB,SPEED); }
+void stopCar()  { analogWrite(ENA,0);analogWrite(ENB,0); digitalWrite(IN1,LOW);digitalWrite(IN2,LOW);digitalWrite(IN3,LOW);digitalWrite(IN4,LOW); }
+</textarea>
+  </section>
+
+  <section class="slide">
+    <h2><span class="num">4</span><span class="he">שלב 2א · השלט של RF433 (משדר)</span><span class="en">Level 2a · The RF433 remote (transmitter)</span></h2>
+    <p class="desc"><span class="he">ארדואינו שני עם 4 כפתורים ששולח קוד רדיו לכל כיוון.</span><span class="en">A second Arduino with 4 buttons that sends a radio code per direction.</span></p>
+    <div class="bar">
+      <span class="fname mono">level2_rf_transmitter.ino</span>
+      <a class="btn primary" href="level2_rf_transmitter.ino" download>⬇ <span class="he">הורדה</span><span class="en">Download</span></a>
+      <button class="btn copy">📋 <span class="he">העתקה</span><span class="en">Copy</span></button>
+      <span class="pill">47 <span class="he">שורות</span><span class="en">lines</span></span>
+    </div>
+    <pre tabindex="0"><span class="l"><span class="cm">/*</span></span><span class="l"><span class="cm">  Robotika – Lesson 3 · LEVEL 2a: RF433 remote (the TRANSMITTER)</span></span><span class="l"><span class="cm">  --------------------------------------------------------------</span></span><span class="l"><span class="cm">  With IR the remote came ready-made. With RF433 we BUILD the remote too:</span></span><span class="l"><span class="cm">  a second Arduino with 4 buttons that sends a radio code for each direction.</span></span><span class="l"></span><span class="l"><span class="cm">  RF = radio waves at 433 MHz. Unlike IR it does NOT need line of sight,</span></span><span class="l"><span class="cm">  goes through walls, and reaches much farther. Still one-way (remote -&gt; car).</span></span><span class="l"></span><span class="l"><span class="cm">  This board is the REMOTE. The car runs level2_rf_car.ino.</span></span><span class="l"></span><span class="l"><span class="cm">  Library: &quot;rc-switch&quot; (Manage Libraries -&gt; search &quot;rc-switch&quot;)</span></span><span class="l"></span><span class="l"><span class="cm">  Wiring (this remote board):</span></span><span class="l"><span class="cm">    RF transmitter (FS1000A): DATA -&gt; D10   VCC -&gt; 5V   GND -&gt; GND</span></span><span class="l"><span class="cm">                              (a ~17 cm wire as antenna helps a lot)</span></span><span class="l"><span class="cm">    Buttons to GND, using the internal pull-ups:</span></span><span class="l"><span class="cm">      UP -&gt; D2   DOWN -&gt; D3   LEFT -&gt; D4   RIGHT -&gt; D5   (STOP = no button)</span></span><span class="l"><span class="cm">*/</span></span><span class="l"></span><span class="l"><span class="kw">#include</span> &lt;RCSwitch.h&gt;</span><span class="l">RCSwitch mySwitch = <span class="fn">RCSwitch</span>();</span><span class="l"></span><span class="l"><span class="kw">const</span> <span class="kw">int</span> TX_PIN = <span class="num">10</span>;</span><span class="l"><span class="kw">const</span> <span class="kw">int</span> BTN_UP = <span class="num">2</span>, BTN_DOWN = <span class="num">3</span>, BTN_LEFT = <span class="num">4</span>, BTN_RIGHT = <span class="num">5</span>;</span><span class="l"></span><span class="l"><span class="cm">// the codes we agree on with the car (any distinct numbers)</span></span><span class="l"><span class="kw">const</span> <span class="kw">long</span> CODE_STOP = <span class="num">10</span>, CODE_UP = <span class="num">11</span>, CODE_DOWN = <span class="num">12</span>, CODE_LEFT = <span class="num">13</span>, CODE_RIGHT = <span class="num">14</span>;</span><span class="l"></span><span class="l"><span class="kw">void</span> <span class="fn">setup</span>() {</span><span class="l">  mySwitch.<span class="fn">enableTransmit</span>(TX_PIN);</span><span class="l">  <span class="fn">pinMode</span>(BTN_UP, <span class="kw">INPUT_PULLUP</span>);</span><span class="l">  <span class="fn">pinMode</span>(BTN_DOWN, <span class="kw">INPUT_PULLUP</span>);</span><span class="l">  <span class="fn">pinMode</span>(BTN_LEFT, <span class="kw">INPUT_PULLUP</span>);</span><span class="l">  <span class="fn">pinMode</span>(BTN_RIGHT, <span class="kw">INPUT_PULLUP</span>);</span><span class="l">}</span><span class="l"></span><span class="l"><span class="kw">void</span> <span class="fn">loop</span>() {</span><span class="l">  <span class="kw">long</span> code = CODE_STOP;                        <span class="cm">// nothing pressed -&gt; tell car to stop</span></span><span class="l">  <span class="kw">if</span> (<span class="fn">digitalRead</span>(BTN_UP)    == <span class="kw">LOW</span>) code = CODE_UP;</span><span class="l">  <span class="kw">else</span> <span class="kw">if</span> (<span class="fn">digitalRead</span>(BTN_DOWN)  == <span class="kw">LOW</span>) code = CODE_DOWN;</span><span class="l">  <span class="kw">else</span> <span class="kw">if</span> (<span class="fn">digitalRead</span>(BTN_LEFT)  == <span class="kw">LOW</span>) code = CODE_LEFT;</span><span class="l">  <span class="kw">else</span> <span class="kw">if</span> (<span class="fn">digitalRead</span>(BTN_RIGHT) == <span class="kw">LOW</span>) code = CODE_RIGHT;</span><span class="l"></span><span class="l">  mySwitch.<span class="fn">send</span>(code, <span class="num">24</span>);   <span class="cm">// send the 24-bit code over the air</span></span><span class="l">  <span class="fn">delay</span>(<span class="num">100</span>);                <span class="cm">// ~10 times a second</span></span><span class="l">}</span></pre>
+    <textarea class="raw" hidden>/*
+  Robotika – Lesson 3 · LEVEL 2a: RF433 remote (the TRANSMITTER)
+  --------------------------------------------------------------
+  With IR the remote came ready-made. With RF433 we BUILD the remote too:
+  a second Arduino with 4 buttons that sends a radio code for each direction.
+
+  RF = radio waves at 433 MHz. Unlike IR it does NOT need line of sight,
+  goes through walls, and reaches much farther. Still one-way (remote -&gt; car).
+
+  This board is the REMOTE. The car runs level2_rf_car.ino.
+
+  Library: &quot;rc-switch&quot; (Manage Libraries -&gt; search &quot;rc-switch&quot;)
+
+  Wiring (this remote board):
+    RF transmitter (FS1000A): DATA -&gt; D10   VCC -&gt; 5V   GND -&gt; GND
+                              (a ~17 cm wire as antenna helps a lot)
+    Buttons to GND, using the internal pull-ups:
+      UP -&gt; D2   DOWN -&gt; D3   LEFT -&gt; D4   RIGHT -&gt; D5   (STOP = no button)
+*/
+
+#include &lt;RCSwitch.h&gt;
+RCSwitch mySwitch = RCSwitch();
+
+const int TX_PIN = 10;
+const int BTN_UP = 2, BTN_DOWN = 3, BTN_LEFT = 4, BTN_RIGHT = 5;
+
+// the codes we agree on with the car (any distinct numbers)
+const long CODE_STOP = 10, CODE_UP = 11, CODE_DOWN = 12, CODE_LEFT = 13, CODE_RIGHT = 14;
+
+void setup() {
+  mySwitch.enableTransmit(TX_PIN);
+  pinMode(BTN_UP, INPUT_PULLUP);
+  pinMode(BTN_DOWN, INPUT_PULLUP);
+  pinMode(BTN_LEFT, INPUT_PULLUP);
+  pinMode(BTN_RIGHT, INPUT_PULLUP);
+}
+
+void loop() {
+  long code = CODE_STOP;                        // nothing pressed -&gt; tell car to stop
+  if (digitalRead(BTN_UP)    == LOW) code = CODE_UP;
+  else if (digitalRead(BTN_DOWN)  == LOW) code = CODE_DOWN;
+  else if (digitalRead(BTN_LEFT)  == LOW) code = CODE_LEFT;
+  else if (digitalRead(BTN_RIGHT) == LOW) code = CODE_RIGHT;
+
+  mySwitch.send(code, 24);   // send the 24-bit code over the air
+  delay(100);                // ~10 times a second
+}
+</textarea>
+  </section>
+
+  <section class="slide">
+    <h2><span class="num">5</span><span class="he">שלב 2ב · המכונית של RF433 (מקלט)</span><span class="en">Level 2b · The RF433 car (receiver)</span></h2>
+    <p class="desc"><span class="he">שינוי חיווט אחד: IN1 עובר מ-D2 ל-D8, ו-DATA של המקלט נכנס ל-D2.</span><span class="en">One wiring change: IN1 moves from D2 to D8, and the receiver&#x27;s DATA goes on D2.</span></p>
+    <div class="bar">
+      <span class="fname mono">level2_rf_car.ino</span>
+      <a class="btn primary" href="level2_rf_car.ino" download>⬇ <span class="he">הורדה</span><span class="en">Download</span></a>
+      <button class="btn copy">📋 <span class="he">העתקה</span><span class="en">Copy</span></button>
+      <span class="pill">68 <span class="he">שורות</span><span class="en">lines</span></span>
+    </div>
+    <pre tabindex="0"><span class="l"><span class="cm">/*</span></span><span class="l"><span class="cm">  Robotika – Lesson 3 · LEVEL 2b: RF433 remote (the CAR / RECEIVER)</span></span><span class="l"><span class="cm">  ----------------------------------------------------------------</span></span><span class="l"><span class="cm">  The car listens for radio codes from level2_rf_transmitter.ino and</span></span><span class="l"><span class="cm">  drives accordingly. Same motor functions as always — only the input</span></span><span class="l"><span class="cm">  changed again (now it arrives by radio).</span></span><span class="l"></span><span class="l"><span class="cm">  !! ONE WIRING CHANGE !!</span></span><span class="l"><span class="cm">  rc-switch must read the radio on an INTERRUPT pin. On the Uno those are</span></span><span class="l"><span class="cm">  D2 and D3 — but our motor wire IN1 was on D2. So we MOVE IN1 from D2 to D8,</span></span><span class="l"><span class="cm">  and put the RF receiver&#x27;s DATA on D2. Everything else stays the same.</span></span><span class="l"></span><span class="l"><span class="cm">  Library: &quot;rc-switch&quot;</span></span><span class="l"></span><span class="l"><span class="cm">  Motors: 4 motors, ONE L298N. Both LEFT motors share channel A, both RIGHT</span></span><span class="l"><span class="cm">  motors share channel B - so the code controls just two sides (as always).</span></span><span class="l"></span><span class="l"><span class="cm">  Wiring (the car):</span></span><span class="l"><span class="cm">    RF receiver (XY-MK-5V): DATA -&gt; D2   VCC -&gt; 5V   GND -&gt; GND</span></span><span class="l"><span class="cm">    L298N ch. A (both LEFT motors):  ENA D5, IN1 D8 (moved!), IN2 D3</span></span><span class="l"><span class="cm">    L298N ch. B (both RIGHT motors): ENB D6, IN3 D4, IN4 D7</span></span><span class="l"><span class="cm">*/</span></span><span class="l"></span><span class="l"><span class="kw">#include</span> &lt;RCSwitch.h&gt;</span><span class="l">RCSwitch mySwitch = <span class="fn">RCSwitch</span>();</span><span class="l"></span><span class="l"><span class="cm">// --- L298N motor driver (IN1 moved to D8 to free the interrupt pin D2) ---</span></span><span class="l"><span class="kw">const</span> <span class="kw">int</span> ENA = <span class="num">5</span>, IN1 = <span class="num">8</span>, IN2 = <span class="num">3</span>, IN3 = <span class="num">4</span>, IN4 = <span class="num">7</span>, ENB = <span class="num">6</span>;</span><span class="l"><span class="kw">const</span> <span class="kw">int</span> SPEED = <span class="num">160</span>;</span><span class="l"></span><span class="l"><span class="cm">// same codes the transmitter agreed on</span></span><span class="l"><span class="kw">const</span> <span class="kw">long</span> CODE_STOP = <span class="num">10</span>, CODE_UP = <span class="num">11</span>, CODE_DOWN = <span class="num">12</span>, CODE_LEFT = <span class="num">13</span>, CODE_RIGHT = <span class="num">14</span>;</span><span class="l"></span><span class="l"><span class="kw">unsigned</span> <span class="kw">long</span> lastCmd = <span class="num">0</span>;</span><span class="l"><span class="kw">const</span> <span class="kw">int</span> HOLD_MS = <span class="num">300</span>;</span><span class="l"></span><span class="l"><span class="kw">void</span> <span class="fn">setup</span>() {</span><span class="l">  Serial.<span class="fn">begin</span>(<span class="num">9600</span>);</span><span class="l">  mySwitch.<span class="fn">enableReceive</span>(<span class="num">0</span>);   <span class="cm">// interrupt 0 = pin D2</span></span><span class="l">  <span class="fn">pinMode</span>(ENA, <span class="kw">OUTPUT</span>); <span class="fn">pinMode</span>(IN1, <span class="kw">OUTPUT</span>); <span class="fn">pinMode</span>(IN2, <span class="kw">OUTPUT</span>);</span><span class="l">  <span class="fn">pinMode</span>(ENB, <span class="kw">OUTPUT</span>); <span class="fn">pinMode</span>(IN3, <span class="kw">OUTPUT</span>); <span class="fn">pinMode</span>(IN4, <span class="kw">OUTPUT</span>);</span><span class="l">  <span class="fn">stopCar</span>();</span><span class="l">}</span><span class="l"></span><span class="l"><span class="kw">void</span> <span class="fn">loop</span>() {</span><span class="l">  <span class="kw">if</span> (mySwitch.<span class="fn">available</span>()) {</span><span class="l">    <span class="kw">long</span> code = mySwitch.<span class="fn">getReceivedValue</span>();</span><span class="l"></span><span class="l">    <span class="kw">if</span>      (code == CODE_UP)    <span class="fn">forward</span>();</span><span class="l">    <span class="kw">else</span> <span class="kw">if</span> (code == CODE_DOWN)  <span class="fn">backward</span>();</span><span class="l">    <span class="kw">else</span> <span class="kw">if</span> (code == CODE_LEFT)  <span class="fn">turnLeft</span>();</span><span class="l">    <span class="kw">else</span> <span class="kw">if</span> (code == CODE_RIGHT) <span class="fn">turnRight</span>();</span><span class="l">    <span class="kw">else</span> <span class="kw">if</span> (code == CODE_STOP)  <span class="fn">stopCar</span>();</span><span class="l"></span><span class="l">    lastCmd = <span class="fn">millis</span>();</span><span class="l">    mySwitch.<span class="fn">resetAvailable</span>();</span><span class="l">  }</span><span class="l"></span><span class="l">  <span class="cm">// radio dropped out? stop, so the car never runs away</span></span><span class="l">  <span class="kw">if</span> (<span class="fn">millis</span>() - lastCmd &gt; HOLD_MS) <span class="fn">stopCar</span>();</span><span class="l">}</span><span class="l"></span><span class="l"><span class="cm">// ---------- the four moves (identical, just IN1 is now D8) ----------</span></span><span class="l"><span class="kw">void</span> <span class="fn">forward</span>()  { <span class="fn">digitalWrite</span>(IN1,<span class="kw">HIGH</span>);<span class="fn">digitalWrite</span>(IN2,<span class="kw">LOW</span>); <span class="fn">digitalWrite</span>(IN3,<span class="kw">HIGH</span>);<span class="fn">digitalWrite</span>(IN4,<span class="kw">LOW</span>); <span class="fn">analogWrite</span>(ENA,SPEED);<span class="fn">analogWrite</span>(ENB,SPEED); }</span><span class="l"><span class="kw">void</span> <span class="fn">backward</span>() { <span class="fn">digitalWrite</span>(IN1,<span class="kw">LOW</span>); <span class="fn">digitalWrite</span>(IN2,<span class="kw">HIGH</span>);<span class="fn">digitalWrite</span>(IN3,<span class="kw">LOW</span>); <span class="fn">digitalWrite</span>(IN4,<span class="kw">HIGH</span>);<span class="fn">analogWrite</span>(ENA,SPEED);<span class="fn">analogWrite</span>(ENB,SPEED); }</span><span class="l"><span class="kw">void</span> <span class="fn">turnRight</span>(){ <span class="fn">digitalWrite</span>(IN1,<span class="kw">HIGH</span>);<span class="fn">digitalWrite</span>(IN2,<span class="kw">LOW</span>); <span class="fn">digitalWrite</span>(IN3,<span class="kw">LOW</span>); <span class="fn">digitalWrite</span>(IN4,<span class="kw">HIGH</span>);<span class="fn">analogWrite</span>(ENA,SPEED);<span class="fn">analogWrite</span>(ENB,SPEED); }</span><span class="l"><span class="kw">void</span> <span class="fn">turnLeft</span>() { <span class="fn">digitalWrite</span>(IN1,<span class="kw">LOW</span>); <span class="fn">digitalWrite</span>(IN2,<span class="kw">HIGH</span>);<span class="fn">digitalWrite</span>(IN3,<span class="kw">HIGH</span>);<span class="fn">digitalWrite</span>(IN4,<span class="kw">LOW</span>); <span class="fn">analogWrite</span>(ENA,SPEED);<span class="fn">analogWrite</span>(ENB,SPEED); }</span><span class="l"><span class="kw">void</span> <span class="fn">stopCar</span>()  { <span class="fn">analogWrite</span>(ENA,<span class="num">0</span>);<span class="fn">analogWrite</span>(ENB,<span class="num">0</span>); <span class="fn">digitalWrite</span>(IN1,<span class="kw">LOW</span>);<span class="fn">digitalWrite</span>(IN2,<span class="kw">LOW</span>);<span class="fn">digitalWrite</span>(IN3,<span class="kw">LOW</span>);<span class="fn">digitalWrite</span>(IN4,<span class="kw">LOW</span>); }</span></pre>
+    <textarea class="raw" hidden>/*
+  Robotika – Lesson 3 · LEVEL 2b: RF433 remote (the CAR / RECEIVER)
+  ----------------------------------------------------------------
+  The car listens for radio codes from level2_rf_transmitter.ino and
+  drives accordingly. Same motor functions as always — only the input
+  changed again (now it arrives by radio).
+
+  !! ONE WIRING CHANGE !!
+  rc-switch must read the radio on an INTERRUPT pin. On the Uno those are
+  D2 and D3 — but our motor wire IN1 was on D2. So we MOVE IN1 from D2 to D8,
+  and put the RF receiver&#x27;s DATA on D2. Everything else stays the same.
+
+  Library: &quot;rc-switch&quot;
+
+  Motors: 4 motors, ONE L298N. Both LEFT motors share channel A, both RIGHT
+  motors share channel B - so the code controls just two sides (as always).
+
+  Wiring (the car):
+    RF receiver (XY-MK-5V): DATA -&gt; D2   VCC -&gt; 5V   GND -&gt; GND
+    L298N ch. A (both LEFT motors):  ENA D5, IN1 D8 (moved!), IN2 D3
+    L298N ch. B (both RIGHT motors): ENB D6, IN3 D4, IN4 D7
+*/
+
+#include &lt;RCSwitch.h&gt;
+RCSwitch mySwitch = RCSwitch();
+
+// --- L298N motor driver (IN1 moved to D8 to free the interrupt pin D2) ---
+const int ENA = 5, IN1 = 8, IN2 = 3, IN3 = 4, IN4 = 7, ENB = 6;
+const int SPEED = 160;
+
+// same codes the transmitter agreed on
+const long CODE_STOP = 10, CODE_UP = 11, CODE_DOWN = 12, CODE_LEFT = 13, CODE_RIGHT = 14;
+
+unsigned long lastCmd = 0;
+const int HOLD_MS = 300;
+
+void setup() {
+  Serial.begin(9600);
+  mySwitch.enableReceive(0);   // interrupt 0 = pin D2
+  pinMode(ENA, OUTPUT); pinMode(IN1, OUTPUT); pinMode(IN2, OUTPUT);
+  pinMode(ENB, OUTPUT); pinMode(IN3, OUTPUT); pinMode(IN4, OUTPUT);
+  stopCar();
+}
+
+void loop() {
+  if (mySwitch.available()) {
+    long code = mySwitch.getReceivedValue();
+
+    if      (code == CODE_UP)    forward();
+    else if (code == CODE_DOWN)  backward();
+    else if (code == CODE_LEFT)  turnLeft();
+    else if (code == CODE_RIGHT) turnRight();
+    else if (code == CODE_STOP)  stopCar();
+
+    lastCmd = millis();
+    mySwitch.resetAvailable();
+  }
+
+  // radio dropped out? stop, so the car never runs away
+  if (millis() - lastCmd &gt; HOLD_MS) stopCar();
+}
+
+// ---------- the four moves (identical, just IN1 is now D8) ----------
+void forward()  { digitalWrite(IN1,HIGH);digitalWrite(IN2,LOW); digitalWrite(IN3,HIGH);digitalWrite(IN4,LOW); analogWrite(ENA,SPEED);analogWrite(ENB,SPEED); }
+void backward() { digitalWrite(IN1,LOW); digitalWrite(IN2,HIGH);digitalWrite(IN3,LOW); digitalWrite(IN4,HIGH);analogWrite(ENA,SPEED);analogWrite(ENB,SPEED); }
+void turnRight(){ digitalWrite(IN1,HIGH);digitalWrite(IN2,LOW); digitalWrite(IN3,LOW); digitalWrite(IN4,HIGH);analogWrite(ENA,SPEED);analogWrite(ENB,SPEED); }
+void turnLeft() { digitalWrite(IN1,LOW); digitalWrite(IN2,HIGH);digitalWrite(IN3,HIGH);digitalWrite(IN4,LOW); analogWrite(ENA,SPEED);analogWrite(ENB,SPEED); }
+void stopCar()  { analogWrite(ENA,0);analogWrite(ENB,0); digitalWrite(IN1,LOW);digitalWrite(IN2,LOW);digitalWrite(IN3,LOW);digitalWrite(IN4,LOW); }
+</textarea>
+  </section>
+
+  <section class="slide">
+    <h2><span class="num">6</span><span class="he">פינאלה · נהיגה מהטלפון (Bluetooth)</span><span class="en">Finale · Drive from your phone (Bluetooth)</span></h2>
+    <p class="desc"><span class="he">מודול HC-05 + אפליקציית Dabble. נשלים את החיבור בשיעור הבא.</span><span class="en">HC-05 module + the Dabble app. We finish wiring it next lesson.</span></p>
+    <div class="bar">
+      <span class="fname mono">bonus_bluetooth_car.ino</span>
+      <a class="btn primary" href="bonus_bluetooth_car.ino" download>⬇ <span class="he">הורדה</span><span class="en">Download</span></a>
+      <button class="btn copy">📋 <span class="he">העתקה</span><span class="en">Copy</span></button>
+      <span class="pill">60 <span class="he">שורות</span><span class="en">lines</span></span>
+    </div>
+    <pre tabindex="0"><span class="l"><span class="cm">/*</span></span><span class="l"><span class="cm">  Robotika – Lesson 3 · FINALE (demo, we finish it next lesson):</span></span><span class="l"><span class="cm">  Drive the car straight from your PHONE over Bluetooth</span></span><span class="l"><span class="cm">  --------------------------------------------------------------</span></span><span class="l"><span class="cm">  No separate remote at all — your phone IS the remote. A Bluetooth</span></span><span class="l"><span class="cm">  module (HC-05 / HC-06) on the car talks to the free &quot;Dabble&quot; app,</span></span><span class="l"><span class="cm">  whose on-screen GamePad sends the direction. Same motor functions again;</span></span><span class="l"><span class="cm">  only the input changed one last time.</span></span><span class="l"></span><span class="l"><span class="cm">  Setup:</span></span><span class="l"><span class="cm">    1) Install &quot;Dabble&quot; from the app store on your phone.</span></span><span class="l"><span class="cm">    2) Library: &quot;Dabble&quot; (Manage Libraries -&gt; search &quot;Dabble&quot;).</span></span><span class="l"><span class="cm">    3) In the app: connect to the HC-05, open the GamePad module.</span></span><span class="l"></span><span class="l"><span class="cm">  Motors: 4 motors, ONE L298N. Both LEFT motors share channel A, both RIGHT</span></span><span class="l"><span class="cm">  motors share channel B - so the code controls just two sides (as always).</span></span><span class="l"></span><span class="l"><span class="cm">  Wiring (the car):</span></span><span class="l"><span class="cm">    HC-05:  VCC -&gt; 5V   GND -&gt; GND</span></span><span class="l"><span class="cm">            HC-05 TX -&gt; Arduino RX (D0)</span></span><span class="l"><span class="cm">            HC-05 RX -&gt; Arduino TX (D1)   (cross TX&lt;-&gt;RX!)</span></span><span class="l"><span class="cm">    L298N ch. A (both LEFT motors):  ENA D5, IN1 D2, IN2 D3</span></span><span class="l"><span class="cm">    L298N ch. B (both RIGHT motors): ENB D6, IN3 D4, IN4 D7</span></span><span class="l"></span><span class="l"><span class="cm">  !! IMPORTANT: D0/D1 are also the USB upload pins. UNPLUG the HC-05&#x27;s</span></span><span class="l"><span class="cm">     TX &amp; RX wires while uploading, then reconnect them. (Cleaner option:</span></span><span class="l"><span class="cm">     use SoftwareSerial on two free pins so you never have to unplug.)</span></span><span class="l"><span class="cm">*/</span></span><span class="l"></span><span class="l"><span class="kw">#define</span> CUSTOM_SETTINGS</span><span class="l"><span class="kw">#define</span> INCLUDE_GAMEPAD_MODULE</span><span class="l"><span class="kw">#include</span> &lt;Dabble.h&gt;</span><span class="l"></span><span class="l"><span class="cm">// --- L298N motor driver (same pins as Lesson 2) ---</span></span><span class="l"><span class="kw">const</span> <span class="kw">int</span> ENA = <span class="num">5</span>, IN1 = <span class="num">2</span>, IN2 = <span class="num">3</span>, IN3 = <span class="num">4</span>, IN4 = <span class="num">7</span>, ENB = <span class="num">6</span>;</span><span class="l"><span class="kw">const</span> <span class="kw">int</span> SPEED = <span class="num">160</span>;</span><span class="l"></span><span class="l"><span class="kw">void</span> <span class="fn">setup</span>() {</span><span class="l">  Dabble.<span class="fn">begin</span>(<span class="num">9600</span>);        <span class="cm">// talk to the HC-05</span></span><span class="l">  <span class="fn">pinMode</span>(ENA, <span class="kw">OUTPUT</span>); <span class="fn">pinMode</span>(IN1, <span class="kw">OUTPUT</span>); <span class="fn">pinMode</span>(IN2, <span class="kw">OUTPUT</span>);</span><span class="l">  <span class="fn">pinMode</span>(ENB, <span class="kw">OUTPUT</span>); <span class="fn">pinMode</span>(IN3, <span class="kw">OUTPUT</span>); <span class="fn">pinMode</span>(IN4, <span class="kw">OUTPUT</span>);</span><span class="l">  <span class="fn">stopCar</span>();</span><span class="l">}</span><span class="l"></span><span class="l"><span class="kw">void</span> <span class="fn">loop</span>() {</span><span class="l">  Dabble.<span class="fn">processInput</span>();     <span class="cm">// read what the phone sent</span></span><span class="l"></span><span class="l">  <span class="kw">if</span>      (GamePad.<span class="fn">isUpPressed</span>())    <span class="fn">forward</span>();</span><span class="l">  <span class="kw">else</span> <span class="kw">if</span> (GamePad.<span class="fn">isDownPressed</span>())  <span class="fn">backward</span>();</span><span class="l">  <span class="kw">else</span> <span class="kw">if</span> (GamePad.<span class="fn">isLeftPressed</span>())  <span class="fn">turnLeft</span>();</span><span class="l">  <span class="kw">else</span> <span class="kw">if</span> (GamePad.<span class="fn">isRightPressed</span>()) <span class="fn">turnRight</span>();</span><span class="l">  <span class="kw">else</span>                               <span class="fn">stopCar</span>();   <span class="cm">// finger off -&gt; stop</span></span><span class="l">}</span><span class="l"></span><span class="l"><span class="cm">// ---------- the four moves (identical to every other version) ----------</span></span><span class="l"><span class="kw">void</span> <span class="fn">forward</span>()  { <span class="fn">digitalWrite</span>(IN1,<span class="kw">HIGH</span>);<span class="fn">digitalWrite</span>(IN2,<span class="kw">LOW</span>); <span class="fn">digitalWrite</span>(IN3,<span class="kw">HIGH</span>);<span class="fn">digitalWrite</span>(IN4,<span class="kw">LOW</span>); <span class="fn">analogWrite</span>(ENA,SPEED);<span class="fn">analogWrite</span>(ENB,SPEED); }</span><span class="l"><span class="kw">void</span> <span class="fn">backward</span>() { <span class="fn">digitalWrite</span>(IN1,<span class="kw">LOW</span>); <span class="fn">digitalWrite</span>(IN2,<span class="kw">HIGH</span>);<span class="fn">digitalWrite</span>(IN3,<span class="kw">LOW</span>); <span class="fn">digitalWrite</span>(IN4,<span class="kw">HIGH</span>);<span class="fn">analogWrite</span>(ENA,SPEED);<span class="fn">analogWrite</span>(ENB,SPEED); }</span><span class="l"><span class="kw">void</span> <span class="fn">turnRight</span>(){ <span class="fn">digitalWrite</span>(IN1,<span class="kw">HIGH</span>);<span class="fn">digitalWrite</span>(IN2,<span class="kw">LOW</span>); <span class="fn">digitalWrite</span>(IN3,<span class="kw">LOW</span>); <span class="fn">digitalWrite</span>(IN4,<span class="kw">HIGH</span>);<span class="fn">analogWrite</span>(ENA,SPEED);<span class="fn">analogWrite</span>(ENB,SPEED); }</span><span class="l"><span class="kw">void</span> <span class="fn">turnLeft</span>() { <span class="fn">digitalWrite</span>(IN1,<span class="kw">LOW</span>); <span class="fn">digitalWrite</span>(IN2,<span class="kw">HIGH</span>);<span class="fn">digitalWrite</span>(IN3,<span class="kw">HIGH</span>);<span class="fn">digitalWrite</span>(IN4,<span class="kw">LOW</span>); <span class="fn">analogWrite</span>(ENA,SPEED);<span class="fn">analogWrite</span>(ENB,SPEED); }</span><span class="l"><span class="kw">void</span> <span class="fn">stopCar</span>()  { <span class="fn">analogWrite</span>(ENA,<span class="num">0</span>);<span class="fn">analogWrite</span>(ENB,<span class="num">0</span>); <span class="fn">digitalWrite</span>(IN1,<span class="kw">LOW</span>);<span class="fn">digitalWrite</span>(IN2,<span class="kw">LOW</span>);<span class="fn">digitalWrite</span>(IN3,<span class="kw">LOW</span>);<span class="fn">digitalWrite</span>(IN4,<span class="kw">LOW</span>); }</span></pre>
+    <textarea class="raw" hidden>/*
+  Robotika – Lesson 3 · FINALE (demo, we finish it next lesson):
+  Drive the car straight from your PHONE over Bluetooth
+  --------------------------------------------------------------
+  No separate remote at all — your phone IS the remote. A Bluetooth
+  module (HC-05 / HC-06) on the car talks to the free &quot;Dabble&quot; app,
+  whose on-screen GamePad sends the direction. Same motor functions again;
+  only the input changed one last time.
+
+  Setup:
+    1) Install &quot;Dabble&quot; from the app store on your phone.
+    2) Library: &quot;Dabble&quot; (Manage Libraries -&gt; search &quot;Dabble&quot;).
+    3) In the app: connect to the HC-05, open the GamePad module.
+
+  Motors: 4 motors, ONE L298N. Both LEFT motors share channel A, both RIGHT
+  motors share channel B - so the code controls just two sides (as always).
+
+  Wiring (the car):
+    HC-05:  VCC -&gt; 5V   GND -&gt; GND
+            HC-05 TX -&gt; Arduino RX (D0)
+            HC-05 RX -&gt; Arduino TX (D1)   (cross TX&lt;-&gt;RX!)
+    L298N ch. A (both LEFT motors):  ENA D5, IN1 D2, IN2 D3
+    L298N ch. B (both RIGHT motors): ENB D6, IN3 D4, IN4 D7
+
+  !! IMPORTANT: D0/D1 are also the USB upload pins. UNPLUG the HC-05&#x27;s
+     TX &amp; RX wires while uploading, then reconnect them. (Cleaner option:
+     use SoftwareSerial on two free pins so you never have to unplug.)
+*/
+
+#define CUSTOM_SETTINGS
+#define INCLUDE_GAMEPAD_MODULE
+#include &lt;Dabble.h&gt;
+
+// --- L298N motor driver (same pins as Lesson 2) ---
+const int ENA = 5, IN1 = 2, IN2 = 3, IN3 = 4, IN4 = 7, ENB = 6;
+const int SPEED = 160;
+
+void setup() {
+  Dabble.begin(9600);        // talk to the HC-05
+  pinMode(ENA, OUTPUT); pinMode(IN1, OUTPUT); pinMode(IN2, OUTPUT);
+  pinMode(ENB, OUTPUT); pinMode(IN3, OUTPUT); pinMode(IN4, OUTPUT);
+  stopCar();
+}
+
+void loop() {
+  Dabble.processInput();     // read what the phone sent
+
+  if      (GamePad.isUpPressed())    forward();
+  else if (GamePad.isDownPressed())  backward();
+  else if (GamePad.isLeftPressed())  turnLeft();
+  else if (GamePad.isRightPressed()) turnRight();
+  else                               stopCar();   // finger off -&gt; stop
+}
+
+// ---------- the four moves (identical to every other version) ----------
+void forward()  { digitalWrite(IN1,HIGH);digitalWrite(IN2,LOW); digitalWrite(IN3,HIGH);digitalWrite(IN4,LOW); analogWrite(ENA,SPEED);analogWrite(ENB,SPEED); }
+void backward() { digitalWrite(IN1,LOW); digitalWrite(IN2,HIGH);digitalWrite(IN3,LOW); digitalWrite(IN4,HIGH);analogWrite(ENA,SPEED);analogWrite(ENB,SPEED); }
+void turnRight(){ digitalWrite(IN1,HIGH);digitalWrite(IN2,LOW); digitalWrite(IN3,LOW); digitalWrite(IN4,HIGH);analogWrite(ENA,SPEED);analogWrite(ENB,SPEED); }
+void turnLeft() { digitalWrite(IN1,LOW); digitalWrite(IN2,HIGH);digitalWrite(IN3,HIGH);digitalWrite(IN4,LOW); analogWrite(ENA,SPEED);analogWrite(ENB,SPEED); }
+void stopCar()  { analogWrite(ENA,0);analogWrite(ENB,0); digitalWrite(IN1,LOW);digitalWrite(IN2,LOW);digitalWrite(IN3,LOW);digitalWrite(IN4,LOW); }
+</textarea>
+  </section>
+
+</div>
+
+<div class="dots" id="dots"></div>
+<div class="navbtns">
+  <button id="prev">‹ <span class="he">הקודם</span><span class="en">Prev</span></button>
+  <span class="counter" id="counter"></span>
+  <button id="next"><span class="he">הבא</span><span class="en">Next</span> ›</button>
+</div>
+
+<script>
+(function(){
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var idx = 0;
+  var dots = document.getElementById('dots');
+  slides.forEach(function(_,i){
+    var d=document.createElement('i'); d.onclick=function(){go(i)}; dots.appendChild(d);
+  });
+  function render(){
+    slides.forEach(function(s,i){ s.classList.toggle('active', i===idx); });
+    Array.prototype.forEach.call(dots.children,function(c,i){ c.className = i===idx?'on':''; });
+    document.getElementById('counter').textContent = (idx+1)+' / '+slides.length;
+    document.getElementById('progress').style.width = (idx/(slides.length-1)*100)+'%';
+    var pre = slides[idx].querySelector('pre');
+    if(pre) pre.focus({preventScroll:true});      // ↑ ↓ scroll the code right away
+    history.replaceState(null,'','#'+idx);
+  }
+  function go(i){ idx = Math.max(0, Math.min(slides.length-1, i)); render(); }
+  document.querySelectorAll('[data-go]').forEach(function(a){
+    a.onclick=function(e){ e.preventDefault(); go(+a.getAttribute('data-go')); };
+  });
+  document.getElementById('next').onclick=function(){go(idx+1)};
+  document.getElementById('prev').onclick=function(){go(idx-1)};
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown') go(idx+1);
+    if(e.key==='ArrowLeft'||e.key==='PageUp') go(idx-1);
+  });
+  var h = parseInt(location.hash.slice(1),10);
+  go(isNaN(h)?0:h);
+
+  // ---- language toggle ----
+  var lang='he';
+  document.getElementById('langBtn').onclick=function(){
+    lang = (lang==='he')?'en':'he';
+    document.body.className = 'lang-'+lang;
+    document.documentElement.lang = lang;
+    document.documentElement.dir = (lang==='he')?'rtl':'ltr';
+  };
+
+  // ---- code font size (projector) ----
+  var fs=0.82;
+  function setFs(d){ fs=Math.max(.5,Math.min(1.6,fs+d)); document.documentElement.style.setProperty('--codefs',fs+'em'); }
+  document.getElementById('fsUp').onclick=function(){setFs(.08)};
+  document.getElementById('fsDown').onclick=function(){setFs(-.08)};
+
+  // ---- copy buttons ----
+  document.querySelectorAll('.copy').forEach(function(b){
+    var label=b.innerHTML;
+    b.onclick=function(){
+      var code=b.closest('.slide').querySelector('.raw').value;
+      var done=function(){ b.textContent='✓'; b.classList.add('ok'); setTimeout(function(){b.innerHTML=label;b.classList.remove('ok')},1200); };
+      if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(code).then(done,fallback); }
+      else fallback();
+      function fallback(){ var ta=document.createElement('textarea'); ta.value=code; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy')}catch(e){} document.body.removeChild(ta); done(); }
+    };
+  });
+})();
+</script>
+</body>
+</html>

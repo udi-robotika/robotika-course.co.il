@@ -119,6 +119,13 @@
     border-radius: 999px; padding: 4px 12px; background: rgba(34,211,238,0.1); color: var(--accent);
     white-space: nowrap;
   }
+  .lesson-item { display: grid; gap: 6px; }
+  .lesson-links { display: flex; flex-wrap: wrap; gap: 8px; padding-inline-start: 86px; }
+  .lesson-links a {
+    font-size: 0.85rem; font-weight: 600; text-decoration: none; color: var(--accent2);
+    border: 1px solid rgba(124,58,237,.3); background: rgba(124,58,237,.06); border-radius: 999px; padding: 4px 12px;
+  }
+  .lesson-links a:hover { background: rgba(124,58,237,.14); }
   .lesson-row.upcoming { opacity: .5; pointer-events: none; }
   .lesson-row.upcoming .num { background: #c7d1e0; }
   .lesson-row.upcoming .tag { background: #eef1f6; color: var(--muted); }
@@ -126,6 +133,7 @@
   @media (max-width: 600px) {
     a.lesson-row { flex-wrap: wrap; }
     .lesson-row .tag { margin-inline-start: 0; }
+    .lesson-links { padding-inline-start: 0; }
   }
 </style>
 <link rel="stylesheet" href="/nav.css">
@@ -219,14 +227,20 @@
       <span class="tag">מצגת אינטראקטיבית</span>
     </a>
 
-    <a class="lesson-row" href="/lessons/course-43/lesson-3/">
-      <div class="num">3</div>
-      <div>
-        <h3>שיעור 3 — שלט רחוק: IR, RF ו-Bluetooth</h3>
-        <p>שולטים במכונית מרחוק בשלוש דרכים — שלט אינפרא-אדום (IR), גלי רדיו (RF433), ונהיגה מהטלפון ב-Bluetooth. וגם: משלימים את המכונית שנוהגת לבד.</p>
+    <div class="lesson-item">
+      <a class="lesson-row" href="/lessons/course-43/lesson-3/">
+        <div class="num">3</div>
+        <div>
+          <h3>שיעור 3 — שלט רחוק: IR, RF ו-Bluetooth</h3>
+          <p>שולטים במכונית מרחוק בשלוש דרכים — שלט אינפרא-אדום (IR), גלי רדיו (RF433), ונהיגה מהטלפון ב-Bluetooth. וגם: משלימים את המכונית שנוהגת לבד.</p>
+        </div>
+        <span class="tag">מצגת אינטראקטיבית</span>
+      </a>
+      <div class="lesson-links">
+        <a href="/lessons/course-43/lesson-3/code/">💻 קבצי הקוד — הסבר והורדה</a>
+        <a href="/lessons/course-43/lesson-3/code/lesson3-code.zip" download>⬇ הורדת כל הקוד (zip)</a>
       </div>
-      <span class="tag">מצגת אינטראקטיבית</span>
-    </a>
+    </div>
   </div>
 </main>
 

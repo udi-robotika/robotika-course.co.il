@@ -1,5 +1,5 @@
 /* מספר הגרסה של כל האתר — המקום היחיד שמעדכנים בו גרסה */
-window.SITE_VERSION = "V107";
+window.SITE_VERSION = "V108";
 (function () {
   function apply() {
     var tags = document.querySelectorAll(".version-tag");

@@ -1,4 +1,13 @@
 ROBOTIKA-COURSE.co.il
+Current version: V108
+Based on: V107
+Lesson 3 code files are now downloadable. New folder /lessons/course-43/lesson-3/code/ with the 6 Arduino sketches (.ino) + lesson3-code.zip (each sketch in its own same-name folder, ready for the Arduino IDE)
+New page: /lessons/course-43/lesson-3/code/ — code walkthrough deck in the same dark RTL style: an index slide with all files, then one slide per sketch with a download button, copy button, and the full code in a scrollable, syntax-highlighted box with line numbers; A−/A+ code font size for the projector; EN/עב toggle
+Lesson-3 deck: every .ino filename mentioned on a slide is now a download link; summary slide links to the code page
+Course-43 hub: lesson-3 row gets "קבצי הקוד" + "zip" links under it
+version.js -> V108
+---
+ROBOTIKA-COURSE.co.il
 Current version: V107
 Based on: V106
 Kit pages get the same color identity as their hub cards: full-width colored band under the nav with the course label (adults: blue "קורס מבוגרים", teens: orange "קורס נוער"), tinted framed title box, colored title, colored section dividers, back-link and card hover
