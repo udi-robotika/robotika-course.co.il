@@ -115,7 +115,10 @@ if(location.protocol!=='file:' && !/\/$/.test(location.pathname) && !/\.html$/.t
 <div class="progress" id="progress"></div>
 <div class="topbar">
   <div class="brand">Robotika <span class="dot">●</span> <span class="he">שיעור 3</span><span class="en">Lesson 3</span></div>
-  <button class="langtoggle" id="langBtn">EN / עב</button>
+  <div style="display:flex;gap:.4rem">
+    <a class="langtoggle" style="text-decoration:none" href="../" onclick="if(history.length>1){history.back();return false}"><span class="he">→ חזרה</span><span class="en">← Back</span></a>
+    <button class="langtoggle" id="langBtn">EN / עב</button>
+  </div>
 </div>
 
 <div class="stage" id="stage">
