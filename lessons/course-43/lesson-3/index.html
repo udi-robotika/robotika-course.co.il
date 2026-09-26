@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>/* relative links (code/...) need a trailing slash on the site */
+if(location.protocol!=='file:' && !/\/$/.test(location.pathname) && !/\.html$/.test(location.pathname)) location.replace(location.pathname+'/'+location.search+location.hash);</script>
 <title>Robotika · שיעור 3 — שלט רחוק: IR, RF ו-Bluetooth</title>
 <style>
   :root{
@@ -87,6 +89,9 @@
   .flowbox{fill:var(--card); stroke:var(--line); stroke-width:2}
   .flowbox.on{stroke:var(--accent); stroke-width:3}
   .flowtext{fill:var(--ink); font-size:15px}
+  a.dl{color:var(--accent); text-decoration:underline dotted; text-underline-offset:.2em}
+  a.dl:hover{text-decoration-style:solid}
+  a.dl::after{content:" ⬇"; font-size:.85em}
   .note{background:#101a30;border:1px dashed var(--line);border-radius:.7rem;padding:.6em .9em;color:var(--muted);font-size:.9em}
 
   /* ---- lesson-3 extras ---- */
@@ -296,7 +301,7 @@
         <div class="readout big" id="avState" style="margin-top:.4rem"></div>
       </div>
     </div>
-    <div class="note" style="margin-top:.8rem"><span class="he">📄 הקוד המלא: <span class="mono">code/level0_selfdriving_car.ino</span></span><span class="en">📄 Full code: <span class="mono">code/level0_selfdriving_car.ino</span></span></div>
+    <div class="note" style="margin-top:.8rem"><span class="he">📄 הקוד המלא: <a class="mono dl" href="code/level0_selfdriving_car.ino" download title="⬇ download">code/level0_selfdriving_car.ino</a></span><span class="en">📄 Full code: <a class="mono dl" href="code/level0_selfdriving_car.ino" download title="⬇ download">code/level0_selfdriving_car.ino</a></span></div>
   </section>
 
   <!-- 6 BRIDGE: take the wheel + comparison -->
@@ -395,7 +400,7 @@
     <span class="fn">IrReceiver.resume</span>();
   }
 }</code></pre></div>
-        <p class="tag"><span class="he">📄 <span class="mono">code/level1_ir_read_codes.ino</span> · רושמים את הקוד של ▲ ▼ ◀ ▶ ו-OK.</span><span class="en">📄 <span class="mono">code/level1_ir_read_codes.ino</span> · write down the code for ▲ ▼ ◀ ▶ and OK.</span></p>
+        <p class="tag"><span class="he">📄 <a class="mono dl" href="code/level1_ir_read_codes.ino" download title="⬇ download">code/level1_ir_read_codes.ino</a> · רושמים את הקוד של ▲ ▼ ◀ ▶ ו-OK.</span><span class="en">📄 <a class="mono dl" href="code/level1_ir_read_codes.ino" download title="⬇ download">code/level1_ir_read_codes.ino</a> · write down the code for ▲ ▼ ◀ ▶ and OK.</span></p>
       </div>
     </div>
   </section>
@@ -430,7 +435,7 @@
           <tr><td>IN3 / IN4</td><td>D4 / D7</td></tr>
         </table>
         <div class="note"><span class="he">חיווט המנועים <b>לא השתנה</b> משלב 0 — רק הוספנו את מקלט ה-IR ל-D8. הורדנו את חיישן המרחק.</span><span class="en">The motor wiring is <b>unchanged</b> from level 0 — we just added the IR receiver on D8. The distance sensor is removed.</span></div>
-        <p class="tag"><span class="he">📄 <span class="mono">code/level1_ir_car.ino</span></span><span class="en">📄 <span class="mono">code/level1_ir_car.ino</span></span></p>
+        <p class="tag"><span class="he">📄 <a class="mono dl" href="code/level1_ir_car.ino" download title="⬇ download">code/level1_ir_car.ino</a></span><span class="en">📄 <a class="mono dl" href="code/level1_ir_car.ino" download title="⬇ download">code/level1_ir_car.ino</a></span></p>
       </div>
     </div>
   </section>
@@ -503,7 +508,7 @@ mySwitch.<span class="fn">send</span>(code, <span class="num">24</span>);   <spa
   <span class="cm">// ... map codes to moves</span>
   mySwitch.<span class="fn">resetAvailable</span>();
 }</code></pre></div>
-        <p class="tag"><span class="he">📄 <span class="mono">level2_rf_transmitter.ino</span> · <span class="mono">level2_rf_car.ino</span></span><span class="en">📄 <span class="mono">level2_rf_transmitter.ino</span> · <span class="mono">level2_rf_car.ino</span></span></p>
+        <p class="tag"><span class="he">📄 <a class="mono dl" href="code/level2_rf_transmitter.ino" download title="⬇ download">level2_rf_transmitter.ino</a> · <a class="mono dl" href="code/level2_rf_car.ino" download title="⬇ download">level2_rf_car.ino</a></span><span class="en">📄 <a class="mono dl" href="code/level2_rf_transmitter.ino" download title="⬇ download">level2_rf_transmitter.ino</a> · <a class="mono dl" href="code/level2_rf_car.ino" download title="⬇ download">level2_rf_car.ino</a></span></p>
       </div>
     </div>
   </section>
@@ -536,7 +541,7 @@ mySwitch.<span class="fn">send</span>(code, <span class="num">24</span>);   <spa
   <span class="kw">else if</span> (GamePad.<span class="fn">isRightPressed</span>()) turnRight();
   <span class="kw">else</span>                             stopCar();
 }</code></pre></div>
-        <p class="tag"><span class="he">📄 <span class="mono">code/bonus_bluetooth_car.ino</span> · נחבר ונסיע מהטלפון בשיעור הבא.</span><span class="en">📄 <span class="mono">code/bonus_bluetooth_car.ino</span> · we'll wire it and drive from phones next lesson.</span></p>
+        <p class="tag"><span class="he">📄 <a class="mono dl" href="code/bonus_bluetooth_car.ino" download title="⬇ download">code/bonus_bluetooth_car.ino</a> · נחבר ונסיע מהטלפון בשיעור הבא.</span><span class="en">📄 <a class="mono dl" href="code/bonus_bluetooth_car.ino" download title="⬇ download">code/bonus_bluetooth_car.ino</a> · we'll wire it and drive from phones next lesson.</span></p>
       </div>
     </div>
   </section>
@@ -564,6 +569,7 @@ mySwitch.<span class="fn">send</span>(code, <span class="num">24</span>);   <spa
           <li class="level lv3"><span class="he"><b>שלט + חיישן יחד:</b> המכונית מקבלת פקודות, אבל <b>מסרבת להתנגש</b> בקיר גם אם תכוונו אליו</span><span class="en"><b>Remote + sensor together:</b> the car takes commands, but <b>refuses to crash</b> into a wall even if you steer at it</span></li>
         </ul>
         <div class="note"><span class="he">רמז לאתגר האחרון: לפני <span class="mono">forward()</span> בדקו את חיישן המרחק — בדיוק ה-if/else משיעור 2, אבל כשכבה עליון על השלט.</span><span class="en">Hint for the last one: before <span class="mono">forward()</span>, check the distance sensor — exactly Lesson 2's if/else, but layered on top of the remote.</span></div>
+        <p style="margin-top:.8rem"><a href="code/" style="color:var(--accent)">💻 <span class="he">כל קבצי הקוד של השיעור — הורדה והסבר</span><span class="en">All of this lesson's code — download &amp; walkthrough</span></a></p>
         <p style="margin-top:.8rem"><span class="he">תודה — נתראה בשיעור הבא! 👋</span><span class="en">Thanks — see you next lesson! 👋</span></p>
       </div>
     </div>
